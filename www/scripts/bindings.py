@@ -31,13 +31,17 @@ try:
 except: # pragma: no cover
     from bindingsData import *
 
+try:
+    from .controlsData import *
+except: # pragma: no cover
+    from controlsData import *
 
 class Config:
     def dirRoot():
         return Path(os.environ.get('CONTEXT_DOCUMENT_ROOT', '..')).resolve()
         
     def webRoot():
-        return urljoin(os.environ.get('SCRIPT_URI', 'https://edrefcard.info/'), '/')
+        return urljoin(os.environ.get('SCRIPT_URI', 'http://172.17.128.10/'), '/')
     
     def newRandom():
         config = Config(Config.randomName())
@@ -79,7 +83,6 @@ class Config:
         fullPath = self.path()
         dirPath = fullPath.parent
         dirPath.mkdir(parents=True, exist_ok=True)
-        
     def refcardURL(self):
         url = urljoin(Config.webRoot(), "binds/%s" % self.name)
         return url
@@ -224,9 +227,9 @@ def createKeyboardImage(physicalKeys, modifiers, source, imageDevices, biggestFo
             context.font = getFontPath('Regular', 'Normal')
             context.text_antialias = True
             context.font_style = 'normal'
-            context.stroke_width = 0
-            context.fill_color = Color('Black')
+            context.stroke_width = 1
             context.fill_opacity = 1
+            context.fill_color = Color('Black')
 
             # Add the ID to the title
             writeUrlToDrawing(config, context, public)
@@ -270,7 +273,7 @@ def createKeyboardImage(physicalKeys, modifiers, source, imageDevices, biggestFo
 
             font = Font(getFontPath('Regular', 'Normal'), antialias=True, size=biggestFontSize)
             groupTitleFont = Font(getFontPath('Regular', 'Normal'), antialias=True, size=biggestFontSize*2)
-            context.stroke_width=2
+            context.stroke_width=1
             context.stroke_color=Color('Black')
             context.fill_opacity=0
 
@@ -323,14 +326,17 @@ def writeText(context, img, text, screenState, font, surround, newLine):
     context.font = font.path
     context.font_style = 'normal'
     context.font_size = font.size
+    
     context.push()
-    context.stroke_width=0
-    context.fill_color=Color('Black')
-    context.fill_opacity=1
+    
+    context.stroke_width = 0
+    context.fill_opacity = 1 
+    context.fill_color = Color('Black')
+    #context.push()
 
     if text is None or text == '':
+        context.fill_color = Color('Red')
         text = 'invalid'
-        context.fill_color=Color('Red')
 
     metrics = context.get_font_metrics(img, text, multiline=False)
     if screenState['currentY'] + int(metrics.text_height + 32) > 2160:
@@ -891,7 +897,6 @@ def parseBindings(runId, xml, displayGroups, errors):
         <p>Possibly you submitted the wrong file, or hand-edited it and made a mistake.</p>''' % html.escape(str(e), quote=True)
         xml = '<root></root>'
         tree = etree.fromstring(bytes(xml, 'utf-8'), parser=parser)
-    
     physicalKeys = {}
     modifiers = {}
     hotasModifierNum = 1
@@ -902,7 +907,6 @@ def parseBindings(runId, xml, displayGroups, errors):
         hasT16000MThrottle = True
     else:
         hasT16000MThrottle = False
-
     xmlBindings = tree.findall(".//Binding") + tree.findall(".//Primary") + tree.findall(".//Secondary")
     for xmlBinding in xmlBindings:
         controlName = xmlBinding.getparent().tag
@@ -916,8 +920,8 @@ def parseBindings(runId, xml, displayGroups, errors):
             device = 'T16000MFCS'
 
         deviceIndex = xmlBinding.get('DeviceIndex', 0)
-
         key = xmlBinding.get('Key')
+
         # Remove the Neg_ and Pos_ headers to put digital buttons on analogue devices
         if key is not None:
             if key.startswith('Neg_'):
@@ -1028,6 +1032,7 @@ def parseBindings(runId, xml, displayGroups, errors):
             bind['Controls'] = OrderedDict()
             physicalKey['Binds'][modifiersKey] = bind
         bind['Controls'][controlName] = control
+    
 
     return (physicalKeys, modifiers, devices)
 
@@ -1127,9 +1132,9 @@ def processForm(form):
     public = False
     createdImages = []
     errors = Errors()
-    
     deviceForBlockImage = form.getvalue('blocks')
     mode = determineMode(form)
+    
     if mode is Mode.invalid:
         errors.errors = 'That is not a valid description. Leading punctuation is not allowed.</h1>'
         xml = '<root></root>'        
@@ -1196,7 +1201,6 @@ def processForm(form):
 
     if mode is Mode.replay or mode is Mode.generate:
         (physicalKeys, modifiers, devices) = parseBindings(runId, xml, displayGroups, errors)
-        
         alreadyHandledDevices = []
         createdImages = []
         for supportedDeviceKey, supportedDevice in supportedDevices.items():
@@ -1248,10 +1252,10 @@ def processForm(form):
     printHTML(mode, options, config, public, createdImages, deviceForBlockImage, errors)
 
 def logError(message):
-    sys.stderr.write("EDRefCard: %s", message)
+    sys.stderr.write("EDRefCard: "+message)
 
 def main():
-    cgitb.enable()
+    cgitb.enable(0,'/var/log/apache2',5,'text')
     form = cgi.FieldStorage()
     processForm(form)
 
