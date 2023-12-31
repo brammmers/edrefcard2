@@ -1,0 +1,8 @@
+ignored
+*.pyc
+www/configs
+.cache
+.coverage
+htmlcov
+.pytest_cache
+.DS_Store

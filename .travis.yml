@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.6"
+# command to install dependencies
+install: "pip install -r requirements.txt; pip install --upgrade pytest"
+# command to run tests
+script:
+  - pytest --cov=. --cov-report term-missing
+branches:
+  only:
+   - live
+   - beta
+   - dev
+   - /^Release\/.*$/
+after_success:
+    - coveralls

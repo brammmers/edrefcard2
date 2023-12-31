@@ -1,0 +1,84 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="all">
+    <title>EDRefCard</title>
+    <link href='https://fonts.googleapis.com/css?family=Domine:400,700' rel='stylesheet' type='text/css'>
+    <style type="text/css" media="all">@import"ed.css";</style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="banner">
+        <h1>EDRefCard</h1>
+      </div>
+      <div id="content">
+        Create and optionally publish a graphical reference card for your Elite: Dangerous keyboard and controller bindings.
+        <p />
+        <a href="list">View a list of published bindings</a>.
+        <p/>
+        <p />
+        <a href="devices">View a list of supported devices</a>.
+        <p/>
+        <form id="uploadbindings" enctype="multipart/form-data" method="post" action="scripts/bindings.py" accept-charset="utf-8">
+          <h3>Choose a bindings file</h3>
+        	Your custom bindings files reside as '.binds' files in your local data directory (typically %LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings).
+        	<p />
+        	Click the button below to pick a file, or drag a '.binds' file onto it.
+        <p />
+          <input id="fileupload" name="bindings" type="file" accept=".binds" required />
+          <p />
+          <h3>Filtering</h3>
+          Select the categories of control to appear on the reference card:
+          <p />
+          <input type="checkbox" checked name="showship" value="on" /> Ship
+          <br />
+          <input type="checkbox" checked name="showsrv" value="on" /> SRV
+          <br />
+          <input type="checkbox" checked name="showscanners" value="on" /> Scanners
+          <br />
+          <input type="checkbox" checked name="showfighter" value="on" /> Fighter
+          <br />
+          <input type="checkbox" checked name="showonfoot" value="on" /> On Foot
+          <br />
+          <input type="checkbox" checked name="showmulticrew" value="on" /> Multicrew
+          <br />
+          <input type="checkbox" checked name="showheadlook" value="on" /> Head Look
+          <br />
+          <input type="checkbox" checked name="showui" value="on" /> UI
+          <br />
+          <input type="checkbox" checked name="showgalaxymap" value="on" /> Galaxy Map
+          <br />
+          <input type="checkbox" checked name="showcamera" value="on" /> Camera
+          <br />
+          <input type="checkbox" checked name="showcommandercreator" value="on" /> Holo-Me
+          <br />
+          <input type="checkbox" checked name="showmisc" value="on" /> Miscellaneous
+          <br />
+          <p />
+          <h3>Color options</h3>
+          You can use colours to highlight modifier buttons or control types:
+          <p />
+          <input type="radio" checked name="styling" value="modifier" /> Color by Modifier
+          <br />
+          <input type="radio" name="styling" value="group" /> Color by Type
+          <br />
+          <input type="radio" name="styling" value="none" /> No Colors
+          <p />
+          <h3>Publishing</h3>
+          To publish your bindings, give a description below (we save a timestamp and which controllers you are using, so no need to mention those):
+          <p />
+          <input type="text" name="description" autofocus size="256"  maxlength="190" style="width: 600px;"/>
+          <br>
+          <p>
+          Descriptions are curated and no leading punctation is allowed. Offensive and/or spammy descriptions will be removed without prejudice.
+          </p>
+		  <div class="button">
+			<button type="submit"><h3>Generate reference card</h3></button>
+		  </div>     
+		  <hr>  
+		  <p>Version 1.3<br>Please direct questions, suggestions and support requests to <a href="https://forums.frontier.co.uk/threads/edrefcard-makes-a-printable-reference-card-of-your-controller-bindings.464400/">the thread on the official Elite: Dangerous forums</a>.</p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
