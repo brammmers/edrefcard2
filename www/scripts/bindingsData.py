@@ -36,7 +36,7 @@ supportedDevices = OrderedDict([
     ('CHProFlightThrottleQuadrant', {'Template': 'chproflightquadrant', 'HandledDevices': ['06A30C2D']}),
     ('CHProPedals', {'Template': 'chpropedals', 'HandledDevices': ['CHProPedals', '068E00F2']}),
     ('SidePanelControlDeck', {'Template': 'sidepanelcontroldeck', 'HandledDevices': ['07382218']}),
-    ('XBox', {'Template': 'xbox', 'HandledDevices': ['XB360 Pad', '045E02FF', '045E02DD']}),
+    ('XBox', {'Template': 'xbox', 'HandledDevices': ['XB360 Pad', '045E02FF', '045E02DD','28DE11FF']}),
     ('XBoxElite', {'Template': 'xboxelite', 'HandledDevices': ['045E02E3']}),
     ('GamePad', {'Template': 'xbox', 'HandledDevices': ['GamePad']}),
     ('Sabretooth', {'Template': 'sabretooth', 'HandledDevices': ['1689FE00']}),
@@ -52,478 +52,20 @@ supportedDevices = OrderedDict([
     ('VPC-ALPHA-Right-Custom', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB9902']}),
     ('VKB-Kosmosima-SCG-Left', {'Template': 'vkb-kosmosima-scg-left', 'HandledDevices': ['231D0127']}),
     ('VKB-Kosmosima-SCG-Right', {'Template': 'vkb-kosmosima-scg-right', 'HandledDevices': ['231D0126']}),
-    ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200']}),
-    ('VKB-Gladiator-NXT-Premium-Left', {'Template': 'vkb-gladiator-nxt-premium-left', 'HandledDevices': ['231D0201']}),
+    ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200','231D3200']}),
+    ('VKB-Gladiator-NXT-Premium-Left', {'Template': 'vkb-gladiator-nxt-premium-left', 'HandledDevices': ['231D0201','231D3201']}),
     ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']})
 ])
 
-controls = {
-    # The 'HideIfSameAs' list is used to specify that a detailed binding such as 'SelectTarget_Buggy' need not be printed if the exact same button is bound to the more general version of that control (in that case 'SelectTarget').
-    #
-    # Controls for the galaxy map
-    #
-    'CamTranslateUp': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 1, 'Name': 'GalMap Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateDown': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 2, 'Name': 'GalMap Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateLeft': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 3, 'Name': 'GalMap Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateRight': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 4, 'Name': 'GalMap Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateForward': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 5, 'Name': 'GalMap Forward', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateBackward': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 6, 'Name': 'GalMap Backward', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamTranslateXAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 7, 'Name': 'GalMap X', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'CamTranslateYAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 8, 'Name': 'GalMap Y', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'CamTranslateZAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 9, 'Name': 'GalMap Z', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'CamTranslateZHold': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 10, 'Name': 'GalMap Z Hold', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CamPitchAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 11, 'Name': 'GalMap Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'CamPitchUp': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 12, 'Name': 'GalMap Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'CamPitchDown': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 13, 'Name': 'GalMap Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'CamYawAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 14, 'Name': 'GalMap Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'CamYawLeft': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 15, 'Name': 'GalMap Yaw Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'CamYawRight': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 16, 'Name': 'GalMap Yaw Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'CamZoomAxis': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 17, 'Name': 'GalMap Zoom', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'CamZoomIn': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 18, 'Name': 'GalMap Zoom In', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'CamZoomOut': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 19, 'Name': 'GalMap Zoom Out', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'GalaxyMapHome': {'Group': 'Galaxy map', 'Category': 'UI', 'Order': 20, 'Name': 'GalMap Home', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
+#controls went in here!
 
-    # General items available on both ship and SRV
-    'RadarRangeAxis': {'Group': 'Misc', 'Category': 'Navigation', 'Order': 1, 'Name': 'Sensor Range', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'RadarDecreaseRange': {'Group': 'Misc', 'Category': 'Navigation', 'Order': 2, 'Name': 'Dec Sensor Range', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'RadarIncreaseRange': {'Group': 'Misc', 'Category': 'Navigation', 'Order': 3, 'Name': 'Inc Sensor Range', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MicrophoneMute': {'Group': 'Misc', 'Category': 'General', 'Order': 4, 'Name': 'Microphone', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HMDReset': {'Group': 'Misc', 'Category': 'General', 'Order': 5, 'Name': 'Reset HMD', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OculusReset': {'Group': 'Misc', 'Category': 'General', 'Order': 6, 'Name': 'Reset Oculus', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'Pause': {'Group': 'Misc', 'Category': 'General', 'Order': 8, 'Name': 'Main Menu', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FriendsMenu': {'Group': 'Misc', 'Category': 'General', 'Order': 9, 'Name': 'Friends', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CommanderCreator_Undo': {'Group': 'Holo-Me', 'Category': 'General', 'Order': 10, 'Name': 'Undo Holo-Me', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CommanderCreator_Redo': {'Group': 'Holo-Me', 'Category': 'General', 'Order': 11, 'Name': 'Redo Holo-Me', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CommanderCreator_Rotation_MouseToggle': {'Group': 'Holo-Me', 'Category': 'General', 'Order': 12, 'Name': 'Toggle Holo-Me Rotation', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CommanderCreator_Rotation': {'Group': 'Holo-Me', 'Category': 'General', 'Order': 13, 'Name': 'Rotate Holo-Me', 'Type': 'Digital', 'HideIfSameAs': []},
-    'NightVisionToggle': {'Group': 'Misc', 'Category': 'General', 'Order': 14, 'Name': 'Night Vision', 'Type': 'Digital', 'HideIfSameAs': []},
-    'OpenCodexGoToDiscovery': {'Group': 'Misc', 'Category': 'General', 'Order': 15, 'Name': 'Codex', 'Type': 'Digital', 'HideIfSameAs': []},
-    'GalnetAudio_Play_Pause': {'Group': 'Misc', 'Category': 'General', 'Order': 16, 'Name': 'Play/Pause Audio', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'GalnetAudio_SkipForward': {'Group': 'Misc', 'Category': 'General', 'Order': 17, 'Name': 'Next Audio Track', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'GalnetAudio_SkipBackward': {'Group': 'Misc', 'Category': 'General', 'Order': 18, 'Name': 'Prev Audio Track', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'GalnetAudio_ClearQueue': {'Group': 'Misc', 'Category': 'General', 'Order': 19, 'Name': 'Clear Audio Queue', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Head look 
-    'HeadLookPitchAxis': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 1, 'Name': 'Look Up/Down', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HeadLookPitchAxisRaw': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 2, 'Name': 'Look Up/Down', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HeadLookPitchUp': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 3, 'Name': 'Look Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HeadLookPitchDown': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 4, 'Name': 'Look Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HeadLookYawAxis': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 5, 'Name': 'Look Left/Right', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HeadLookYawAxisRaw': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 6, 'Name': 'Look Left/Right', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HeadLookYawLeft': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 7, 'Name': 'Look Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HeadLookYawRight': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 8, 'Name': 'Look Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HeadLookReset': {'Group': 'Head look', 'Category': 'Navigation', 'Order': 9, 'Name': 'Reset Headlook', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    #
-    # Controls only available in the SRV
-    #
-    # Driving
-    'SteeringAxis': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 1, 'Name': 'SRV Steer', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'SteerLeftButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 2, 'Name': 'Steer Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'SteerRightButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 3, 'Name': 'Steer Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'DriveSpeedAxis': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 4, 'Name': 'Speed', 'Type': 'Analogue', 'HideIfSameAs': ['ThrottleAxis']},
-    'IncreaseSpeedButtonPartial': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 5, 'Name': 'Inc Speed', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'DecreaseSpeedButtonPartial': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 6, 'Name': 'Dec Speed', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'IncreaseSpeedButtonMax': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 7, 'Name': 'Maximum Speed', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SetSpeed100']},
-    'DecreaseSpeedButtonMax': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 8, 'Name': 'Zero Speed', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SetSpeedZero']},
-    'BuggyPitchAxis': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 9, 'Name': 'Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxis', 'PitchAxisRaw']},
-    'BuggyPitchUpButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 11, 'Name': 'Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'BuggyPitchDownButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 12, 'Name': 'Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'BuggyRollLeft': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 13, 'Name': 'Roll Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollLeftButton']},
-    'BuggyRollAxisRaw': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 14, 'Name': 'Roll', 'Type': 'Analogue', 'HideIfSameAs': ['RollAxisRaw']},
-    'BuggyRollLeftButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 15, 'Name': 'Roll Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollLeftButton']},
-    'BuggyRollRight': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 16, 'Name': 'Roll Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollRightButton']},
-    'BuggyRollRightButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 17, 'Name': 'Roll Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollRightButton']},
-    'AutoBreakBuggyButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 18, 'Name': 'Handbrake', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'BuggyToggleReverseThrottleInput': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 19, 'Name': 'Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ToggleReverseThrottleInput']},
-    'VerticalThrustersButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 20, 'Name': 'Vertical Thrusters', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleDriveAssist': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 21, 'Name': 'Drive Assist', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HeadlightsBuggyButton': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 22, 'Name': 'Lights', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ShipSpotLightToggle']},
-    'ToggleCargoScoop_Buggy': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 23, 'Name': 'Cargo Scoop', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ToggleCargoScoop']},
-    'RecallDismissShip': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 24, 'Name': 'Recall/Dismiss Ship', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-     # Targeting and firing
-    'SelectTarget_Buggy': {'Group': 'SRV', 'Category': 'Combat', 'Order': 101, 'Name': 'Target Ahead', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SelectTarget']},
-    'ToggleBuggyTurretButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 102, 'Name': 'Turret Mode', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'BuggyPrimaryFireButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 103, 'Name': 'Primary Weapons', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['PrimaryFire']},
-    'BuggySecondaryFireButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 104, 'Name': 'Secondary Weapons', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SecondaryFire']},
-    'BuggyTurretPitchAxisRaw': {'Group': 'SRV', 'Category': 'Combat', 'Order': 106, 'Name': 'Turret Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'BuggyTurretPitchDownButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 107, 'Name': 'Turret Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'BuggyTurretPitchUpButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 108, 'Name': 'Turret Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'BuggyTurretYawAxisRaw': {'Group': 'SRV', 'Category': 'Combat', 'Order': 110, 'Name': 'Turret Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'BuggyTurretYawLeftButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 111, 'Name': 'Turret Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'BuggyTurretYawRightButton': {'Group': 'SRV', 'Category': 'Combat', 'Order': 112, 'Name': 'Turret Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'BuggyCycleFireGroupNext': {'Group': 'SRV', 'Category': 'Combat', 'Order': 113, 'Name': 'Next Fire Group', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['CycleFireGroupNext']},
-    'BuggyCycleFireGroupPrevious': {'Group': 'SRV', 'Category': 'Combat', 'Order': 114, 'Name': 'Prev Fire Group', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['CycleFireGroupPrevious']},
-
-     # Managing power
-    'ResetPowerDistribution_Buggy': {'Group': 'SRV', 'Category': 'Combat', 'Order': 201, 'Name': 'RST', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ResetPowerDistribution']},
-    'IncreaseEnginesPower_Buggy': {'Group': 'SRV', 'Category': 'Combat', 'Order': 202, 'Name': 'ENG', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseEnginesPower']},
-    'IncreaseSystemsPower_Buggy': {'Group': 'SRV', 'Category': 'Combat', 'Order': 203, 'Name': 'SYS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseSystemsPower']},
-    'IncreaseWeaponsPower_Buggy': {'Group': 'SRV', 'Category': 'Combat', 'Order': 204, 'Name': 'WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseWeaponsPower']},
-
-     # Navigation
-    'GalaxyMapOpen_Buggy': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 301, 'Name': 'GalMap', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['GalaxyMapOpen']},
-    'SystemMapOpen_Buggy': {'Group': 'SRV', 'Category': 'Navigation', 'Order': 302, 'Name': 'SysMap', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SystemMapOpen']},
-
-     # UI
-    'FocusCommsPanel_Buggy': {'Group': 'SRV', 'Order': 401, 'Name': 'Comms Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['FocusCommsPanel']},
-    'FocusLeftPanel_Buggy': {'Group': 'SRV', 'Order': 402, 'Name': 'Nav Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['FocusLeftPanel']},
-    'FocusRadarPanel_Buggy': {'Group': 'SRV', 'Order': 403, 'Name': 'Role Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['FocusRadarPanel']},
-    'FocusRightPanel_Buggy': {'Group': 'SRV', 'Order': 404, 'Name': 'Systems Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['FocusRightPanel']},
-    'QuickCommsPanel_Buggy': {'Group': 'SRV', 'Order': 405, 'Name': 'Quick Comms', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['QuickCommsPanel']},
-    'UIFocus_Buggy': {'Group': 'SRV', 'Order': 406, 'Name': 'UI Focus', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['UIFocus']},
-
-     # Misc
-    'EjectAllCargo_Buggy': {'Group': 'SRV', 'Order': 501, 'Name': 'Eject All Cargo', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['EjectAllCargo']},
-    'HeadLookToggle_Buggy': {'Group': 'SRV', 'Order': 502, 'Name': 'Toggle Headlook', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['HeadLookToggle']},
-
-    #
-    # Controls only available in the ship
-    #
-    # Flying
-    'PitchAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 2, 'Name': 'Pitch', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'PitchUpButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 3, 'Name': 'Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'PitchDownButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 4, 'Name': 'Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'RollAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 6, 'Name': 'Roll', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'RollLeftButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 7, 'Name': 'Roll Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'RollRightButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 8, 'Name': 'Roll Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'YawAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 10, 'Name': 'Yaw', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'YawLeftButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 11, 'Name': 'Yaw Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'YawRightButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 12, 'Name': 'Yaw Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'YawToRollButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 13, 'Name': 'Yaw To Roll', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ThrottleAxis': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 14, 'Name': 'Throttle', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'SetSpeed100': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 16, 'Name': '100% Throttle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeed75': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 17, 'Name': '75% Throttle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeed50': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 18, 'Name': '50% Throttle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeed25': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 19, 'Name': '25% Throttle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeedZero': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 20, 'Name': 'All Stop', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeedMinus25': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 21, 'Name': '25% Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeedMinus50': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 22, 'Name': '50% Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeedMinus75': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 23, 'Name': '75% Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SetSpeedMinus100': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 24, 'Name': '100% Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'AheadThrust': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 25, 'Name': 'Forward Thrust', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'ForwardKey': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 26, 'Name': 'Forward Thrust', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'ForwardThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 27, 'Name': 'Forward Thrust', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'BackwardKey': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 28, 'Name': 'Reverse Thrust', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'BackwardThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 29, 'Name': 'Reverse thrust', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'VerticalThrustRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 31, 'Name': 'Vertical Thrust', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'UpThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 32, 'Name': 'Thrust Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'DownThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 33, 'Name': 'Thrust Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'LateralThrustRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 35, 'Name': 'Lateral Thrust', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'LeftThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 36, 'Name': 'Thrust Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'RightThrustButton': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 37, 'Name': 'Thrust Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'ToggleReverseThrottleInput': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 38, 'Name': 'Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleFlightAssist': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 39, 'Name': 'Flight Assist', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UseBoostJuice': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 40, 'Name': 'Boost', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleButtonUpInput': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 41, 'Name': 'Silent Running', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleCargoScoop': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 42, 'Name': 'Cargo Scoop', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ShipSpotLightToggle': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 43, 'Name': 'Lights', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UseAlternateFlightValuesToggle': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 44, 'Name': 'Alternate Controls', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'PitchAxisAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 45, 'Name': 'Pitch (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'RollAxisAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 46, 'Name': 'Roll (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['RollAxisRaw']},
-    'YawAxisAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 47, 'Name': 'Yaw (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'VerticalThrustAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 48, 'Name': 'Vertical Thrust (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['VerticalThrustRaw']},
-    'LateralThrustAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 49, 'Name': 'Lateral Thrust (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['LateralThrustRaw']},
-
-    # Selecting a target and firing
-    'SelectTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 101, 'Name': 'Target Ahead', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SelectHighestThreat': {'Group': 'Ship', 'Category': 'Combat', 'Order': 102, 'Name': 'Highest Threat', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleNextTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 103, 'Name': 'Next Contact', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CyclePreviousTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 104, 'Name': 'Prev Contact', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleNextHostileTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 105, 'Name': 'Next Hostile', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CyclePreviousHostileTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 106, 'Name': 'Prev Hostile', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'DeployHardpointToggle': {'Group': 'Ship', 'Category': 'Combat', 'Order': 107, 'Name': 'Hardpoints', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'PrimaryFire': {'Group': 'Ship', 'Category': 'Combat', 'Order': 108, 'Name': 'Fire 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SecondaryFire': {'Group': 'Ship', 'Category': 'Combat', 'Order': 109, 'Name': 'Fire 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleFireGroupNext': {'Group': 'Ship', 'Category': 'Combat', 'Order': 110, 'Name': 'Next Fire Group', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleFireGroupPrevious': {'Group': 'Ship', 'Category': 'Combat', 'Order': 111, 'Name': 'Prev Fire Group', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleNextSubsystem': {'Group': 'Ship', 'Category': 'Combat', 'Order': 112, 'Name': 'Next Subsystem', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CyclePreviousSubsystem': {'Group': 'Ship', 'Category': 'Combat', 'Order': 113, 'Name': 'Prev Subsystem', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FireChaffLauncher': {'Group': 'Ship', 'Category': 'Combat', 'Order': 114, 'Name': 'Chaff', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'DeployHeatSink': {'Group': 'Ship', 'Category': 'Combat', 'Order': 116, 'Name': 'Heatsink', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UseShieldCell': {'Group': 'Ship', 'Category': 'Combat', 'Order': 117, 'Name': 'SCB', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ChargeECM': {'Group': 'Ship', 'Category': 'Combat', 'Order': 118, 'Name': 'ECM', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Managing power
-    'ResetPowerDistribution': {'Group': 'Ship', 'Category': 'Combat', 'Order': 201, 'Name': 'RST', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'IncreaseEnginesPower': {'Group': 'Ship', 'Category': 'Combat', 'Order': 202, 'Name': 'ENG', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'IncreaseSystemsPower': {'Group': 'Ship', 'Category': 'Combat', 'Order': 203, 'Name': 'SYS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'IncreaseWeaponsPower': {'Group': 'Ship', 'Category': 'Combat', 'Order': 204, 'Name': 'WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Fighter
-    'OrderRequestDock': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 251, 'Name': 'Dock SLF', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderDefensiveBehaviour': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 252, 'Name': 'Be Defensive', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderAggressiveBehaviour': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 253, 'Name': 'Be Aggressive', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderFocusTarget': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 253, 'Name': 'Attack My Target', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderHoldFire': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 254, 'Name': 'Hold Fire', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderHoldPosition': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 256, 'Name': 'Hold Position', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrderFollow': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 257, 'Name': 'Follow', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OpenOrders': {'Group': 'Fighter', 'Category': 'Combat', 'Order': 258, 'Name': 'Crew Orders', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Multicrew
-    'MultiCrewToggleMode': {'Group': 'Multicrew', 'Category': 'General', 'Order': 280, 'Name': 'Multicrew Mode', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'MultiCrewThirdPersonPitchAxisRaw': {'Group': 'Multicrew', 'Category': 'General', 'Order': 281, 'Name': 'Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'MultiCrewThirdPersonPitchUpButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 282, 'Name': 'Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'MultiCrewThirdPersonPitchDownButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 283, 'Name': 'Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'MultiCrewThirdPersonYawAxisRaw': {'Group': 'Multicrew', 'Category': 'General', 'Order': 284, 'Name': 'Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'MultiCrewThirdPersonYawLeftButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 285, 'Name': 'Yaw Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'MultiCrewThirdPersonYawRightButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 286, 'Name': 'Yaw Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'MultiCrewThirdPersonFovAxisRaw': {'Group': 'Multicrew', 'Category': 'General', 'Order': 287, 'Name': 'Field of View', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'MultiCrewThirdPersonFovOutButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 288, 'Name': 'Field of View Out', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MultiCrewThirdPersonFovInButton': {'Group': 'Multicrew', 'Category': 'General', 'Order': 289, 'Name': 'Field of View In', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MultiCrewPrimaryFire': {'Group': 'Multicrew', 'Category': 'General', 'Order': 290, 'Name': 'Fire 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['PrimaryFire']},
-    'MultiCrewSecondaryFire': {'Group': 'Multicrew', 'Category': 'General', 'Order': 292, 'Name': 'Fire 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SecondaryFire']},
-    'MultiCrewPrimaryUtilityFire': {'Group': 'Multicrew', 'Category': 'General', 'Order': 292, 'Name': 'Primary Utility', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'MultiCrewSecondaryUtilityFire': {'Group': 'Multicrew', 'Category': 'General', 'Order': 293, 'Name': 'Secondary Utility', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'MultiCrewCockpitUICycleForward': {'Group': 'Multicrew', 'Category': 'General', 'Order': 294, 'Name': 'UI Forward', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['UI_Right']},
-    'MultiCrewCockpitUICycleBackward': {'Group': 'Multicrew', 'Category': 'General', 'Order': 295, 'Name': 'UI Backward', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['UI_Left']},
-
-    # Navigation
-    'GalaxyMapOpen': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 301, 'Name': 'Galaxy Map', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SystemMapOpen': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 302, 'Name': 'System Map', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HyperSuperCombination': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 303, 'Name': 'Hyperspace/Supercruise', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'Hyperspace': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 304, 'Name': 'Hyperspace', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'EngageSupercruise': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 305, 'Name': 'Supercruise', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'Supercruise': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 306, 'Name': 'Supercruise', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'TargetNextRouteSystem': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 307, 'Name': 'Next Jump Dest', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Wings
-    'TargetWingman0': {'Group': 'Ship', 'Order': 401, 'Name': 'Wingman 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'TargetWingman1': {'Group': 'Ship', 'Order': 402, 'Name': 'Wingman 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'TargetWingman2': {'Group': 'Ship', 'Order': 403, 'Name': 'Wingman 3', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SelectTargetsTarget': {'Group': 'Ship', 'Order': 404, 'Name': 'Wingman\'s target', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'WingNavLock': {'Group': 'Ship', 'Order': 405, 'Name': 'Wingman Navlock', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # UI
-    'UIFocus': {'Group': 'Ship', 'Order': 501, 'Name': 'UI Focus', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FocusCommsPanel': {'Group': 'Ship', 'Order': 502, 'Name': 'Comms Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'QuickCommsPanel': {'Group': 'Ship', 'Order': 503, 'Name': 'Quick Comms', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FocusLeftPanel': {'Group': 'Ship', 'Order': 504, 'Name': 'Nav Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FocusRightPanel': {'Group': 'Ship', 'Order': 505, 'Name': 'Systems Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FocusRadarPanel': {'Group': 'Ship', 'Order': 506, 'Name': 'Role Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'PlayerHUDModeToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 507, 'Name': 'HUD Mode', 'Type': 'Digital', 'HideIfSameAs': []},
-
-    # Landing
-    'LandingGearToggle': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 601, 'Name': 'Landing Gear', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'PitchAxis_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 602, 'Name': 'Pitch (Lndg)', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'PitchUpButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 603, 'Name': 'Pitch Up (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'PitchDownButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 604, 'Name': 'Pitch Down (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'RollAxis_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 605, 'Name': 'Roll (Lndg)', 'Type': 'Analogue', 'HideIfSameAs': ['RollAxisRaw']},
-    'RollLeftButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 606, 'Name': 'Roll Left (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollLeftButton']},
-    'RollRightButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 607, 'Name': 'Roll Right (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollRightButton']},
-    'YawAxis_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 608, 'Name': 'Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'YawLeftButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 609, 'Name': 'Yaw Left (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'YawRightButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 610, 'Name': 'Yaw Right (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'AheadThrust_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 611, 'Name': 'Forward Thrust (Lndg)', 'Type': 'Analogue', 'HideIfSameAs': ['AheadThrust']},
-    'ForwardThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 612, 'Name': 'Forward Thrust (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['ForwardThrustButton']},
-    'BackwardThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 613, 'Name': 'Reverse Thrust (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['BackwardThrustButton']},
-    'VerticalThrust_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 614, 'Name': 'Vertical Thrust (Lndg)', 'Type': 'Analogue', 'HideIfSameAs': ['VerticalThrustRaw']},
-    'UpThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 615, 'Name': 'Thrust Up (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['UpThrustButton']},
-    'DownThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 616, 'Name': 'Thrust Down (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['DownThrustButton']},
-    'LateralThrust_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 617, 'Name': 'Lateral Thrust (Lndg)', 'Type': 'Analogue', 'HideIfSameAs': ['LateralThrustRaw']},
-    'LeftThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 618, 'Name': 'Thrust Left (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['LeftThrustButton']},
-    'RightThrustButton_Landing': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 619, 'Name': 'Thrust Right (Lndg)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RightThrustButton']},
-    'DisableRotationCorrectToggle': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 620, 'Name': 'Rotational Correction', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Scanners
-    'ExplorationFSSEnter': {'Group': 'Scanners', 'Category': 'General', 'Order': 1, 'Name': 'Enter FSS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSCameraPitch': {'Group': 'Scanners', 'Category': 'General', 'Order': 2, 'Name': 'FSS Pitch ', 'Type': 'Analogue', 'HasAnalogue': False, 'HideIfSameAs': ['PitchAxisRaw']},
-    'ExplorationFSSCameraPitchIncreaseButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 3, 'Name': 'FSS Pitch Up ', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'ExplorationFSSCameraPitchDecreaseButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 4, 'Name': 'FSS Pitch Down ', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'ExplorationFSSCameraYaw': {'Group': 'Scanners', 'Category': 'General', 'Order': 5, 'Name': 'FSS Yaw ', 'Type': 'Analogue', 'HasAnalogue': False, 'HideIfSameAs': ['YawAxisRaw']},
-    'ExplorationFSSCameraYawIncreaseButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 6, 'Name': 'FSS Yaw Right ', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'ExplorationFSSCameraYawDecreaseButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 7, 'Name': 'FSS Yaw Left ', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'ExplorationFSSZoomIn': {'Group': 'Scanners', 'Category': 'General', 'Order': 8, 'Name': 'Zoom FSS In', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSZoomOut': {'Group': 'Scanners', 'Category': 'General', 'Order': 9, 'Name': 'Zoom FSS Out', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSMiniZoomIn': {'Group': 'Scanners', 'Category': 'General', 'Order': 10, 'Name': 'Step Zoom FSS In', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSMiniZoomOut': {'Group': 'Scanners', 'Category': 'General', 'Order': 11, 'Name': 'Step Zoom FSS Out', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSRadioTuningX_Raw': {'Group': 'Scanners', 'Category': 'General', 'Order': 12, 'Name': 'FSS Tuning', 'Type': 'Analogue', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSRadioTuningX_Increase': {'Group': 'Scanners', 'Category': 'General', 'Order': 13, 'Name': 'FSS Tune Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'ExplorationFSSRadioTuningX_Decrease': {'Group': 'Scanners', 'Category': 'General', 'Order': 14, 'Name': 'FSS Tune Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'ExplorationFSSRadioTuningAbsoluteX': {'Group': 'Scanners', 'Category': 'General', 'Order': 15, 'Name': 'FSS Tuning', 'Type': 'Analogue', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSDiscoveryScan': {'Group': 'Scanners', 'Category': 'General', 'Order': 16, 'Name': 'FSS Honk', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSQuit': {'Group': 'Scanners', 'Category': 'General', 'Order': 17, 'Name': 'Exit FSS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSTarget': {'Group': 'Scanners', 'Category': 'General', 'Order': 18, 'Name': 'Target FSS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationFSSShowHelp': {'Group': 'Scanners', 'Category': 'General', 'Order': 19, 'Name': 'FSS Help', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationSAAChangeScannedAreaViewToggle': {'Group': 'Scanners', 'Category': 'General', 'Order': 20, 'Name': 'Toggle Planet Front/Back', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ExplorationSAAExitThirdPerson': {'Group': 'Scanners', 'Category': 'General', 'Order': 21, 'Name': 'Exit DSS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'SAAThirdPersonPitchAxisRaw': {'Group': 'Scanners', 'Category': 'General', 'Order': 281, 'Name': 'Pitch (DSS)', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'SAAThirdPersonPitchUpButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 282, 'Name': 'Pitch Up (DSS)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'SAAThirdPersonPitchDownButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 283, 'Name': 'Pitch Down (DSS)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'SAAThirdPersonYawAxisRaw': {'Group': 'Scanners', 'Category': 'General', 'Order': 284, 'Name': 'DSS Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'SAAThirdPersonYawLeftButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 285, 'Name': 'Yaw Left (DSS)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'SAAThirdPersonYawRightButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 286, 'Name': 'Yaw Right (DSS)', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'SAAThirdPersonFovAxisRaw': {'Group': 'Scanners', 'Category': 'General', 'Order': 287, 'Name': 'DSS Field of View', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'SAAThirdPersonFovOutButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 288, 'Name': 'DSS Field of View Out', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'SAAThirdPersonFovInButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 289, 'Name': 'DSS Field of View In', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-
-    # Misc
-    'EjectAllCargo': {'Group': 'Ship', 'Category': 'General', 'Order': 701, 'Name': 'Eject All Cargo', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HeadLookToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 702, 'Name': 'Toggle Headlook', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'OrbitLinesToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 703, 'Name': 'Orbit Lines', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ShowPGScoreSummaryInput': {'Group': 'Ship', 'Category': 'General', 'Order': 704, 'Name': 'CQC Score', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'MouseReset': {'Group': 'Ship', 'Category': 'General', 'Order': 705, 'Name': 'Reset Mouse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'WeaponColourToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 706, 'Name': 'Weapon Colour', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'EngineColourToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 707, 'Name': 'Engine Colour', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Camera
-    'PhotoCameraToggle': {'Group': 'Camera', 'Category': 'Camera', 'Order': 801, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'PhotoCameraToggle_Buggy': {'Group': 'Camera', 'Category': 'Camera', 'Order': 802, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['PhotoCameraToggle']},
-    'ToggleFreeCam': {'Group': 'Camera', 'Category': 'General', 'Order': 803, 'Name': 'Free Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'QuitCamera': {'Group': 'Camera', 'Category': 'General', 'Order': 804, 'Name': 'Exit free Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ToggleFreeCam']},
-    'VanityCameraOne': {'Group': 'Camera', 'Category': 'General', 'Order': 805, 'Name': 'Cam - Cockpit Front', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraTwo': {'Group': 'Camera', 'Category': 'General', 'Order': 806, 'Name': 'Cam - Cockpit Back', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraThree': {'Group': 'Camera', 'Category': 'General', 'Order': 808, 'Name': 'Cam - Commander 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraFour': {'Group': 'Camera', 'Category': 'General', 'Order': 808, 'Name': 'Cam - Commander 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraFive': {'Group': 'Camera', 'Category': 'General', 'Order': 809, 'Name': 'Cam - Co-Pilot 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraSix': {'Group': 'Camera', 'Category': 'General', 'Order': 810, 'Name': 'Cam - Co-Pilot 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraSeven': {'Group': 'Camera', 'Category': 'General', 'Order': 811, 'Name': 'Cam - Front', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraEight': {'Group': 'Camera', 'Category': 'General', 'Order': 812, 'Name': 'Cam - Back', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraNine': {'Group': 'Camera', 'Category': 'General', 'Order': 813, 'Name': 'Cam - Low', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraScrollRight': {'Group': 'Camera', 'Category': 'General', 'Order': 814, 'Name': 'Next Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'VanityCameraScrollLeft': {'Group': 'Camera', 'Category': 'General', 'Order': 815, 'Name': 'Prev Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FreeCamToggleHUD': {'Group': 'Camera', 'Category': 'General', 'Order': 816, 'Name': 'Toggle HUD', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FreeCamSpeedInc': {'Group': 'Camera', 'Category': 'General', 'Order': 817, 'Name': 'Inc Cam Speed', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FreeCamSpeedDec': {'Group': 'Camera', 'Category': 'General', 'Order': 818, 'Name': 'Dec Cam Speed', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FreeCamZoomIn': {'Group': 'Camera', 'Category': 'General', 'Order': 819, 'Name': 'Zoom In', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FreeCamZoomOut': {'Group': 'Camera', 'Category': 'General', 'Order': 820, 'Name': 'Zoom Out', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'MoveFreeCamX': {'Group': 'Camera', 'Category': 'General', 'Order': 821, 'Name': 'Cam X', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'MoveFreeCamLeft': {'Group': 'Camera', 'Category': 'General', 'Order': 822, 'Name': 'Cam Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MoveFreeCamRight': {'Group': 'Camera', 'Category': 'General', 'Order': 823, 'Name': 'Cam Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MoveFreeCamY': {'Group': 'Camera', 'Category': 'General', 'Order': 824, 'Name': 'Cam Y', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'MoveFreeCamUp': {'Group': 'Camera', 'Category': 'General', 'Order': 825, 'Name': 'Cam Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MoveFreeCamDown': {'Group': 'Camera', 'Category': 'General', 'Order': 826, 'Name': 'Cam Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MoveFreeCamZ': {'Group': 'Camera', 'Category': 'General', 'Order': 827, 'Name': 'Cam Z', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'MoveFreeCamForward': {'Group': 'Camera', 'Category': 'General', 'Order': 828, 'Name': 'Cam Forwards', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'MoveFreeCamBackwards': {'Group': 'Camera', 'Category': 'General', 'Order': 829, 'Name': 'Cam Backwards', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'PitchCamera': {'Group': 'Camera', 'Category': 'General', 'Order': 830, 'Name': 'Cam Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'PitchCameraUp': {'Group': 'Camera', 'Category': 'General', 'Order': 831, 'Name': 'Cam Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'PitchCameraDown': {'Group': 'Camera', 'Category': 'General', 'Order': 832, 'Name': 'Cam Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'RollCamera': {'Group': 'Camera', 'Category': 'General', 'Order': 833, 'Name': 'Cam Roll', 'Type': 'Analogue', 'HideIfSameAs': ['RollAxisRaw']},
-    'RollCameraLeft': {'Group': 'Camera', 'Category': 'General', 'Order': 834, 'Name': 'Cam Roll Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollLeftButton']},
-    'RollCameraRight': {'Group': 'Camera', 'Category': 'General', 'Order': 835, 'Name': 'Cam Roll Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollRightButton']},
-    'YawCamera': {'Group': 'Camera', 'Category': 'General', 'Order': 836, 'Name': 'Cam Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'YawCameraLeft': {'Group': 'Camera', 'Category': 'General', 'Order': 837, 'Name': 'Cam Yaw Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'YawCameraRight': {'Group': 'Camera', 'Category': 'General', 'Order': 838, 'Name': 'Cam Yaw Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'ToggleRotationLock': {'Group': 'Camera', 'Category': 'General', 'Order': 839, 'Name': 'Cam Rotation Lock', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleReverseThrottleInputFreeCam': {'Group': 'Camera', 'Category': 'General', 'Order': 840, 'Name': 'Cam Reverse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ToggleReverseThrottleInput', 'BuggyToggleReverseThrottleInput']},
-    'FixCameraRelativeToggle': {'Group': 'Camera', 'Category': 'General', 'Order': 841, 'Name': 'Lock to Vehicle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FixCameraWorldToggle': {'Group': 'Camera', 'Category': 'General', 'Order': 842, 'Name': 'Lock to World', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'ToggleAdvanceMode': {'Group': 'Camera', 'Category': 'General', 'Order': 843, 'Name': 'Advanced Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'FStopInc': {'Group': 'Camera', 'Category': 'General', 'Order': 844, 'Name': 'Inc Blur', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'FStopDec': {'Group': 'Camera', 'Category': 'General', 'Order': 845, 'Name': 'Dec Blur', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'FocusDistanceInc': {'Group': 'Camera', 'Category': 'General', 'Order': 846, 'Name': 'Focus Further', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'FocusDistanceDec': {'Group': 'Camera', 'Category': 'General', 'Order': 847, 'Name': 'Focus Nearer', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-
-    # Store camera
-    'StoreEnableRotation': {'Group': 'Camera', 'Category': 'Camera', 'Order': 901, 'Name': 'Store Cam Rotation', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'StorePitchCamera': {'Group': 'Camera', 'Category': 'Camera', 'Order': 902, 'Name': 'Store Cam Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxisRaw']},
-    'StorePitchCameraUp': {'Group': 'Camera', 'Category': 'Camera', 'Order': 903, 'Name': 'Store Cam Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'StorePitchCameraDown': {'Group': 'Camera', 'Category': 'Camera', 'Order': 904, 'Name': 'Store Cam Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'StoreYawCamera': {'Group': 'Camera', 'Category': 'Camera', 'Order': 905, 'Name': 'Store Cam Yaw', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'StoreYawCameraLeft': {'Group': 'Camera', 'Category': 'Camera', 'Order': 906, 'Name': 'Store Cam Yaw Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'StoreYawCameraRight': {'Group': 'Camera', 'Category': 'Camera', 'Order': 907, 'Name': 'Store Cam Yaw Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-    'StoreCamZoomIn': {'Group': 'Camera', 'Category': 'Camera', 'Order': 908, 'Name': 'Store Cam Zoom In', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'StoreCamZoomOut': {'Group': 'Camera', 'Category': 'Camera', 'Order': 909, 'Name': 'Store Cam Zoom Out', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'StoreToggle': {'Group': 'Camera', 'Category': 'Camera', 'Order': 910, 'Name': 'Store Toggle Preview', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    
-    #
-    # Controls for the UI panels
-    #
-    'UI_Up': {'Group': 'UI', 'Category': 'UI', 'Order': 1, 'Name': 'UI Up', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Down': {'Group': 'UI', 'Category': 'UI', 'Order': 2, 'Name': 'UI Down', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Left': {'Group': 'UI', 'Category': 'UI', 'Order': 3, 'Name': 'UI Left', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Right': {'Group': 'UI', 'Category': 'UI', 'Order': 4, 'Name': 'UI Right', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleNextPanel': {'Group': 'UI', 'Category': 'UI', 'Order': 5, 'Name': 'Next Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CyclePreviousPanel': {'Group': 'UI', 'Category': 'UI', 'Order': 6, 'Name': 'Prev Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Select': {'Group': 'UI', 'Category': 'UI', 'Order': 7, 'Name': 'UI Select', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Back': {'Group': 'UI', 'Category': 'UI', 'Order': 8, 'Name': 'UI Back', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'UI_Toggle': {'Group': 'UI', 'Category': 'UI', 'Order': 9, 'Name': 'UI Toggle', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CycleNextPage': {'Group': 'UI', 'Category': 'UI', 'Order': 10, 'Name': 'Next Page', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'CyclePreviousPage': {'Group': 'UI', 'Category': 'UI', 'Order': 11, 'Name': 'Prev Page', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    
-    #
-    # Controls only available On Foot
-    #
-    
-    # Motion
-    'HumanoidForwardAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 4, 'Name': 'Fwd/Back', 'Type': 'Analogue', 'HideIfSameAs': ['ThrottleAxis']},
-    'HumanoidForwardButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 5, 'Name': 'Fwd', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['ForwardKey']},
-    'HumanoidBackwardButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 6, 'Name': 'Back', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['BackwardKey']},
-    'HumanoidPitchAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 9, 'Name': 'Pitch', 'Type': 'Analogue', 'HideIfSameAs': ['PitchAxis', 'PitchAxisRaw']},
-    'HumanoidPitchUpButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 11, 'Name': 'Pitch Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchUpButton']},
-    'HumanoidPitchDownButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 12, 'Name': 'Pitch Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['PitchDownButton']},
-    'HumanoidStrafeAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 13, 'Name': 'Strafe', 'Type': 'Analogue', 'HideIfSameAs': ['RollAxisRaw']},
-    'HumanoidStrafeLeftButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 14, 'Name': 'Strafe Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollLeftButton']},
-    'HumanoidStrafeRightButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 15, 'Name': 'Strafe Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['RollRightButton']},
-    'HumanoidRotateAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 16, 'Name': 'Turn', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
-    'HumanoidRotateLeftButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 17, 'Name': 'Turn Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawLeftButton']},
-    'HumanoidRotateRightButton': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 18, 'Name': 'Turn Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': ['YawRightButton']},
-
-    # Targeting and firing
-    'HumanoidPrimaryFireButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 100, 'Name': 'Fire', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['PrimaryFire']},
-    'HumanoidActivateSuitAbilityButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 101, 'Name': 'Suit Tool', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidConflictContextualUI': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 102, 'Name': 'Combat UI', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidConflictContextualUIButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 103, 'Name': 'Combat UI', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidCrouchButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 104, 'Name': 'Crouch', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidHideWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 105, 'Name': 'Holster', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidJumpButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 106, 'Name': 'Jump', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidMeleeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 107, 'Name': 'Melee', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidOpenAccessPanelButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 108, 'Name': 'Open Access Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidPrimaryInteractButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 109, 'Name': 'Interact', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidPulseScanButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 110, 'Name': 'Pulse Scan', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidReloadButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 111, 'Name': 'Reload', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSecondaryInteractButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 112, 'Name': 'Interact 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectNextGrenadeTypeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 113, 'Name': 'Next Grenade', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectNextWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 114, 'Name': 'Next WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectPreviousGrenadeTypeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 115, 'Name': 'Prev Grenade', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectPreviousWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 116, 'Name': 'Prev WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectPrimaryWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 117, 'Name': 'WEP 1', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectSecondaryWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 118, 'Name': 'WEP 2', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSelectUtilityWeaponButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 119, 'Name': 'Select Util', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSprintButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 120, 'Name': 'Sprint', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSwitchToCompAnalyser': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 121, 'Name': 'Comp Analyser', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSwitchToRechargeTool': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 122, 'Name': 'Recharge Tool', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSwitchToSuitTool': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 123, 'Name': 'Suit Tool', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidSwitchWeapon': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 124, 'Name': 'Switch WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidThrowGrenadeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 125, 'Name': 'Throw Grenade', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleFlashlightButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 126, 'Name': 'Flashlight', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleJumpAssistModuleButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 127, 'Name': 'Jump Assist', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleMissionHelpPanelButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 128, 'Name': 'Mission Help', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleNightVisionButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 129, 'Name': 'Night Vision', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['NightVisionToggle']},
-    'HumanoidToggleShieldBoosterModuleButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 130, 'Name': 'Shield Boost', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleShieldsButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 131, 'Name': 'Shields', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleToolModeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 132, 'Name': 'Tool Mode', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidToggleWeaponBoosterModuleButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 134, 'Name': 'Weapon Booster', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidZoomButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 135, 'Name': 'ZoomButton', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-
-    # Managing power
-    'HumanoidResetPowerDistributionButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 201, 'Name': 'RST', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ResetPowerDistribution']},
-    'HumanoidIncreaseEnginesPowerButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 202, 'Name': 'ENG', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseEnginesPower']},
-    'HumanoidIncreaseSystemsPowerButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 203, 'Name': 'SYS', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseSystemsPower']},
-    'HumanoidIncreaseWeaponsPowerButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 204, 'Name': 'WEP', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['IncreaseWeaponsPower']},
-
-    # Navigation
-    'GalaxyMapOpen_Humanoid': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 301, 'Name': 'GalMap', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['GalaxyMapOpen']},
-    'SystemMapOpen_Humanoid': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 302, 'Name': 'SysMap', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['SystemMapOpen']},
-
-    # UI
-    'FocusCommsPanel_Humanoid': {'Group': 'OnFoot', 'Order': 401, 'Name': 'Comms Panel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['FocusCommsPanel']},
-    'QuickCommsPanel_Humanoid': {'Group': 'OnFoot', 'Order': 405, 'Name': 'Quick Comms', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['QuickCommsPanel']},
-
-    # Item Wheel
-    'HumanoidItemWheelButton': {'Group': 'OnFoot', 'Order': 701, 'Name': 'Item Wheel', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_XAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 702, 'Name': 'Item L/R', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_XLeft': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 703, 'Name': 'Item Left', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_XRight': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 704, 'Name': 'Item Right', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_YAxis': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 705, 'Name': 'Item Up/Dn', 'Type': 'Analogue', 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_YDown': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 706, 'Name': 'Item Down', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    'HumanoidItemWheelButton_YUp': {'Group': 'OnFoot', 'Category': 'Navigation', 'Order': 707, 'Name': 'Item Up', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
-    
-    # Camera
-    'PhotoCameraToggle_Humanoid': {'Group': 'Camera', 'Category': 'Camera', 'Order': 801, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['PhotoCameraToggle']},
+hotasMap = {    # map aliases to rendering box definitions - DRY code out
+    #'XB360 Pad' : 'XB360 Pad',
+    '045E02FF' : 'XB360 Pad',
+    '045E02DD' : 'XB360 Pad',
+    '28DE11FF' : 'XB360 Pad'
 }
+
 
 # default height is 54 (px)
 hotasDetails = {
@@ -1638,6 +1180,50 @@ hotasDetails = {
         'GamePad_LStickX': {'Type': 'Analogue', 'x': 134, 'y': 1040, 'width': 1032, 'height': 108},
         'GamePad_LThumb': {'Type': 'Digital', 'x': 134, 'y': 1150, 'width': 1032, 'height': 108},
     },
+    '28DE11FF': { # Copy of XB360 controls
+        'displayName': 'XB360',
+        'Pad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
+        'Pad_LTrigger': {'Type': 'Digital', 'x': 74, 'y': 518, 'width': 1392},
+        'Pad_RBumper': {'Type': 'Digital', 'x': 2368, 'y': 624, 'width': 1442, 'height': 108},
+        'Pad_RTrigger': {'Type': 'Digital', 'x': 2368, 'y': 520, 'width': 1442},
+        'Pad_Y': {'Type': 'Digital', 'x': 2625, 'y': 894, 'width': 1192},
+        'Pad_B': {'Type': 'Digital', 'x': 2625, 'y': 988, 'width': 1192},
+        'Pad_A': {'Type': 'Digital', 'x': 2625, 'y': 1083, 'width': 1192},
+        'Pad_X': {'Type': 'Digital', 'x': 2625, 'y': 1178, 'width': 1192},
+        'Pad_Back': {'Type': 'Digital', 'x': 74, 'y': 786, 'width': 1192},
+        'Pad_Start': {'Type': 'Digital', 'x': 2625, 'y': 786, 'width': 1192},
+        'Pad_DPadUp': {'Type': 'Digital', 'x': 134, 'y': 1308, 'width': 1032, 'height': 108},
+        'Pad_DPadRight': {'Type': 'Digital', 'x': 134, 'y': 1418, 'width': 1032, 'height': 108},
+        'Pad_DPadDown': {'Type': 'Digital', 'x': 134, 'y': 1528, 'width': 1032, 'height': 108},
+        'Pad_DPadLeft': {'Type': 'Digital', 'x': 134, 'y': 1638, 'width': 1032, 'height': 108},
+        'Pad_RStickY': {'Type': 'Analogue', 'x': 2765, 'y': 1322, 'width': 1052, 'height': 108},
+        'Pad_RStickX': {'Type': 'Analogue', 'x': 2765, 'y': 1432, 'width': 1052, 'height': 108},
+        'Pad_RThumb': {'Type': 'Digital', 'x': 2765, 'y': 1542, 'width': 1052, 'height': 108},
+        'Pad_LStickY': {'Type': 'Analogue', 'x': 134, 'y': 930, 'width': 1032, 'height': 108},
+        'Pad_LStickX': {'Type': 'Analogue', 'x': 134, 'y': 1040, 'width': 1032, 'height': 108},
+        'Pad_LThumb': {'Type': 'Digital', 'x': 134, 'y': 1150, 'width': 1032, 'height': 108},
+        # 2.3 appears to have renamed 'Pad' to 'GamePad'
+        'GamePad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
+        'GamePad_LTrigger': {'Type': 'Digital', 'x': 74, 'y': 518, 'width': 1392},
+        'GamePad_RBumper': {'Type': 'Digital', 'x': 2368, 'y': 624, 'width': 1442, 'height': 108},
+        'GamePad_RTrigger': {'Type': 'Digital', 'x': 2368, 'y': 520, 'width': 1442},
+        'GamePad_FaceUp': {'Type': 'Digital', 'x': 2625, 'y': 894, 'width': 1192},
+        'GamePad_FaceRight': {'Type': 'Digital', 'x': 2625, 'y': 988, 'width': 1192},
+        'GamePad_FaceDown': {'Type': 'Digital', 'x': 2625, 'y': 1083, 'width': 1192},
+        'GamePad_FaceLeft': {'Type': 'Digital', 'x': 2625, 'y': 1178, 'width': 1192},
+        'GamePad_Back': {'Type': 'Digital', 'x': 74, 'y': 786, 'width': 1192},
+        'GamePad_Start': {'Type': 'Digital', 'x': 2625, 'y': 786, 'width': 1192},
+        'GamePad_DPadUp': {'Type': 'Digital', 'x': 134, 'y': 1308, 'width': 1032, 'height': 108},
+        'GamePad_DPadRight': {'Type': 'Digital', 'x': 134, 'y': 1418, 'width': 1032, 'height': 108},
+        'GamePad_DPadDown': {'Type': 'Digital', 'x': 134, 'y': 1528, 'width': 1032, 'height': 108},
+        'GamePad_DPadLeft': {'Type': 'Digital', 'x': 134, 'y': 1638, 'width': 1032, 'height': 108},
+        'GamePad_RStickY': {'Type': 'Analogue', 'x': 2765, 'y': 1322, 'width': 1052, 'height': 108},
+        'GamePad_RStickX': {'Type': 'Analogue', 'x': 2765, 'y': 1432, 'width': 1052, 'height': 108},
+        'GamePad_RThumb': {'Type': 'Digital', 'x': 2765, 'y': 1542, 'width': 1052, 'height': 108},
+        'GamePad_LStickY': {'Type': 'Analogue', 'x': 134, 'y': 930, 'width': 1032, 'height': 108},
+        'GamePad_LStickX': {'Type': 'Analogue', 'x': 134, 'y': 1040, 'width': 1032, 'height': 108},
+        'GamePad_LThumb': {'Type': 'Digital', 'x': 134, 'y': 1150, 'width': 1032, 'height': 108},
+    },
     '045E02E3': { # XBox Elite controller
         'displayName': 'XBox Elite controller',
         'Pad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
@@ -2481,6 +2067,114 @@ hotasDetails = {
         'Joy_POV1Left': {'Type': 'Digital', 'x': 384, 'y': 796, 'width': 918, 'height': 56}, # A1 POV Switch left
     },
     '231D0201': { # VKB Gladiator NXT Premium Left
+        'displayName': 'VKB Gladiator NXT Premium Left',
+        'Joy_1': {'Type': 'Digital', 'x': 2692, 'y': 1390, 'width': 842, 'height': 56}, # Fire first stage
+        'Joy_2': {'Type': 'Digital', 'x': 2692, 'y': 1452, 'width': 842, 'height': 56}, # Fire second stage
+        'Joy_3': {'Type': 'Digital', 'x': 2616, 'y': 1018, 'width': 918, 'height': 56}, # A2
+        'Joy_4': {'Type': 'Digital', 'x': 374, 'y': 546, 'width': 918, 'height': 56}, # B1
+        'Joy_5': {'Type': 'Digital', 'x': 2616, 'y': 2028, 'width': 918, 'height': 56}, # D1
+        'Joy_6': {'Type': 'Digital', 'x': 374, 'y': 1136, 'width': 918, 'height': 56}, # A3 up
+        'Joy_POV3Up': {'Type': 'Digital', 'x': 374, 'y': 1136, 'width': 918, 'height': 56}, # A3 up (rebind)
+        'Joy_7': {'Type': 'Digital', 'x': 374, 'y': 1196, 'width': 918, 'height': 56}, # A3 right
+        'Joy_POV3Right': {'Type': 'Digital', 'x': 374, 'y': 1196, 'width': 918, 'height': 56}, # A3 right (rebind)
+        'Joy_8': {'Type': 'Digital', 'x': 374, 'y': 1258, 'width': 918, 'height': 56}, # A3 down
+        'Joy_POV3Down': {'Type': 'Digital', 'x': 374, 'y': 1258, 'width': 918, 'height': 56}, # A3 down (rebind)
+        'Joy_9': {'Type': 'Digital', 'x': 374, 'y': 1320, 'width': 918, 'height': 56}, # A3 left
+        'Joy_POV3Left': {'Type': 'Digital', 'x': 374, 'y': 1320, 'width': 918, 'height': 56}, # A3 left (rebind)
+        'Joy_10': {'Type': 'Digital', 'x': 374, 'y': 1382, 'width': 918, 'height': 56}, # A3 push
+        'Joy_11': {'Type': 'Digital', 'x': 374, 'y': 720, 'width': 918, 'height': 56}, # A4 up
+        'Joy_POV2Up': {'Type': 'Digital', 'x': 374, 'y': 720, 'width': 918, 'height': 56}, # A4 up (rebind)
+        'Joy_12': {'Type': 'Digital', 'x': 374, 'y': 786, 'width': 918, 'height': 56}, # A4 right
+        'Joy_POV2Right': {'Type': 'Digital', 'x': 374, 'y': 786, 'width': 918, 'height': 56}, # A4 right (rebind)
+        'Joy_13': {'Type': 'Digital', 'x': 374, 'y': 850, 'width': 918, 'height': 56}, # A4 down
+        'Joy_POV2Down': {'Type': 'Digital', 'x': 374, 'y': 850, 'width': 918, 'height': 56}, # A4 down (rebind)
+        'Joy_14': {'Type': 'Digital', 'x': 374, 'y': 916, 'width': 918, 'height': 56}, # A4 left
+        'Joy_POV2Left': {'Type': 'Digital', 'x': 374, 'y': 916, 'width': 918, 'height': 56}, # A4 left (rebind)
+        'Joy_15': {'Type': 'Digital', 'x': 374, 'y': 982, 'width': 918, 'height': 56}, # A4 push
+        'Joy_16': {'Type': 'Digital', 'x': 2616, 'y': 1624, 'width': 918, 'height': 56}, # C1 up
+        'Joy_POV4Up': {'Type': 'Digital', 'x': 2616, 'y': 1624, 'width': 918, 'height': 56}, # C1 up (rebind)
+        'Joy_17': {'Type': 'Digital', 'x': 2616, 'y': 1690, 'width': 918, 'height': 56}, # C1 right
+        'Joy_POV4Right': {'Type': 'Digital', 'x': 2616, 'y': 1690, 'width': 918, 'height': 56}, # C1 right (rebind)
+        'Joy_18': {'Type': 'Digital', 'x': 2616, 'y': 1754, 'width': 918, 'height': 56}, # C1 down
+        'Joy_POV4Down': {'Type': 'Digital', 'x': 2616, 'y': 1754, 'width': 918, 'height': 56}, # C1 down (rebind)
+        'Joy_19': {'Type': 'Digital', 'x': 2616, 'y': 1820, 'width': 918, 'height': 56}, # C1 left
+        'Joy_POV4Left': {'Type': 'Digital', 'x': 2616, 'y': 1820, 'width': 918, 'height': 56}, # C1 left (rebind)
+        'Joy_20': {'Type': 'Digital', 'x': 2616, 'y': 1886, 'width': 918, 'height': 56}, # C1 push
+        'Joy_21': {'Type': 'Digital', 'x': 2692, 'y': 1158, 'width': 842, 'height': 56}, # Rapid fire push
+        'Joy_22': {'Type': 'Digital', 'x': 2692, 'y': 1220, 'width': 842, 'height': 56}, # Rapid fire pull
+        'Joy_23': {'Type': 'Digital', 'x': 456, 'y': 1826, 'width': 842, 'height': 56}, # En1 up
+        'Joy_24': {'Type': 'Digital', 'x': 456, 'y': 1888, 'width': 842, 'height': 56}, # En1 down
+        'Joy_25': {'Type': 'Digital', 'x': 456, 'y': 1948, 'width': 842, 'height': 56}, # En2 up
+        'Joy_26': {'Type': 'Digital', 'x': 456, 'y': 2010, 'width': 842, 'height': 56}, # En2 down
+        'Joy_27': {'Type': 'Digital', 'x': 394, 'y': 1540, 'width': 902, 'height': 56}, # F1
+        'Joy_28': {'Type': 'Digital', 'x': 394, 'y': 1600, 'width': 902, 'height': 56}, # F2
+        'Joy_29': {'Type': 'Digital', 'x': 394, 'y': 1662, 'width': 902, 'height': 56}, # F3
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 1598, 'y': 320, 'width': 758, 'height': 56}, # Joystick x
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 1598, 'y': 382, 'width': 758, 'height': 56}, # Joystick y
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1598, 'y': 446, 'width': 758, 'height': 56}, # Throttle
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 1598, 'y': 508, 'width': 758, 'height': 56}, # A1 Ministick R x
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 1598, 'y': 572, 'width': 758, 'height': 56}, # A1 Ministick R y
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 1598, 'y': 634, 'width': 758, 'height': 56}, # Twist R z
+        'Joy_POV1Up': {'Type': 'Digital', 'x': 2616, 'y': 598, 'width': 918, 'height': 56}, # A1 POV Switch up
+        'Joy_POV1Right': {'Type': 'Digital', 'x': 2616, 'y': 664, 'width': 918, 'height': 56}, # A1 POV Switch right
+        'Joy_POV1Down': {'Type': 'Digital', 'x': 2616, 'y': 730, 'width': 918, 'height': 56}, # A1 POV Switch down
+        'Joy_POV1Left': {'Type': 'Digital', 'x': 2616, 'y': 796, 'width': 918, 'height': 56}, # A1 POV Switch left
+    },
+    '231D3200': { # VKB Gladiator NXT Premium Right
+        'displayName': 'VKB Gladiator NXT Premium Right',
+        'Joy_1': {'Type': 'Digital', 'x': 460, 'y': 1390, 'width': 842, 'height': 56}, # Fire first stage
+        'Joy_2': {'Type': 'Digital', 'x': 460, 'y': 1452, 'width': 842, 'height': 56}, # Fire second stage
+        'Joy_3': {'Type': 'Digital', 'x': 384, 'y': 1018, 'width': 918, 'height': 56}, # A2
+        'Joy_4': {'Type': 'Digital', 'x': 2636, 'y': 546, 'width': 918, 'height': 56}, # B1
+        'Joy_5': {'Type': 'Digital', 'x': 384, 'y': 2028, 'width': 918, 'height': 56}, # D1
+        'Joy_6': {'Type': 'Digital', 'x': 2636, 'y': 1136, 'width': 918, 'height': 56}, # A3 up
+        'Joy_POV3Up': {'Type': 'Digital', 'x': 2636, 'y': 1136, 'width': 918, 'height': 56}, # A3 up (rebind)
+        'Joy_7': {'Type': 'Digital', 'x': 2636, 'y': 1196, 'width': 918, 'height': 56}, # A3 right
+        'Joy_POV3Right': {'Type': 'Digital', 'x': 2636, 'y': 1196, 'width': 918, 'height': 56}, # A3 right (rebind)
+        'Joy_8': {'Type': 'Digital', 'x': 2636, 'y': 1258, 'width': 918, 'height': 56}, # A3 down
+        'Joy_POV3Down': {'Type': 'Digital', 'x': 2636, 'y': 1258, 'width': 918, 'height': 56}, # A3 down (rebind)
+        'Joy_9': {'Type': 'Digital', 'x': 2636, 'y': 1320, 'width': 918, 'height': 56}, # A3 left
+        'Joy_POV3Left': {'Type': 'Digital', 'x': 2636, 'y': 1320, 'width': 918, 'height': 56}, # A3 left (rebind)
+        'Joy_10': {'Type': 'Digital', 'x': 2636, 'y': 1382, 'width': 918, 'height': 56}, # A3 push
+        'Joy_11': {'Type': 'Digital', 'x': 2636, 'y': 720, 'width': 918, 'height': 56}, # A4 up
+        'Joy_POV2Up': {'Type': 'Digital', 'x': 2636, 'y': 720, 'width': 918, 'height': 56}, # A4 up (rebind)
+        'Joy_12': {'Type': 'Digital', 'x': 2636, 'y': 786, 'width': 918, 'height': 56}, # A4 right
+        'Joy_POV2Right': {'Type': 'Digital', 'x': 2636, 'y': 786, 'width': 918, 'height': 56}, # A4 right (rebind)
+        'Joy_13': {'Type': 'Digital', 'x': 2636, 'y': 850, 'width': 918, 'height': 56}, # A4 down
+        'Joy_POV2Down': {'Type': 'Digital', 'x': 2636, 'y': 850, 'width': 918, 'height': 56}, # A4 down (rebind)
+        'Joy_14': {'Type': 'Digital', 'x': 2636, 'y': 916, 'width': 918, 'height': 56}, # A4 left
+        'Joy_POV2Left': {'Type': 'Digital', 'x': 2636, 'y': 916, 'width': 918, 'height': 56}, # A4 left (rebind)
+        'Joy_15': {'Type': 'Digital', 'x': 2636, 'y': 982, 'width': 918, 'height': 56}, # A4 push
+        'Joy_16': {'Type': 'Digital', 'x': 384, 'y': 1624, 'width': 918, 'height': 56}, # C1 up
+        'Joy_POV4Up': {'Type': 'Digital', 'x': 384, 'y': 1624, 'width': 918, 'height': 56}, # C1 up (rebind)
+        'Joy_17': {'Type': 'Digital', 'x': 384, 'y': 1690, 'width': 918, 'height': 56}, # C1 right
+        'Joy_POV4Right': {'Type': 'Digital', 'x': 384, 'y': 1690, 'width': 918, 'height': 56}, # C1 right (rebind)
+        'Joy_18': {'Type': 'Digital', 'x': 384, 'y': 1754, 'width': 918, 'height': 56}, # C1 down
+        'Joy_POV4Down': {'Type': 'Digital', 'x': 384, 'y': 1754, 'width': 918, 'height': 56}, # C1 down (rebind)
+        'Joy_19': {'Type': 'Digital', 'x': 384, 'y': 1820, 'width': 918, 'height': 56}, # C1 left
+        'Joy_POV4Left': {'Type': 'Digital', 'x': 384, 'y': 1820, 'width': 918, 'height': 56}, # C1 left (rebind)
+        'Joy_20': {'Type': 'Digital', 'x': 384, 'y': 1886, 'width': 918, 'height': 56}, # C1 push
+        'Joy_21': {'Type': 'Digital', 'x': 460, 'y': 1158, 'width': 842, 'height': 56}, # Rapid fire push
+        'Joy_22': {'Type': 'Digital', 'x': 460, 'y': 1220, 'width': 842, 'height': 56}, # Rapid fire pull
+        'Joy_23': {'Type': 'Digital', 'x': 2718, 'y': 1826, 'width': 842, 'height': 56}, # En1 up
+        'Joy_24': {'Type': 'Digital', 'x': 2718, 'y': 1888, 'width': 842, 'height': 56}, # En1 down
+        'Joy_25': {'Type': 'Digital', 'x': 2718, 'y': 1948, 'width': 842, 'height': 56}, # En2 up
+        'Joy_26': {'Type': 'Digital', 'x': 2718, 'y': 2010, 'width': 842, 'height': 56}, # En2 down
+        'Joy_27': {'Type': 'Digital', 'x': 2656, 'y': 1540, 'width': 902, 'height': 56}, # F1
+        'Joy_28': {'Type': 'Digital', 'x': 2656, 'y': 1600, 'width': 902, 'height': 56}, # F2
+        'Joy_29': {'Type': 'Digital', 'x': 2656, 'y': 1662, 'width': 902, 'height': 56}, # F3
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 1598, 'y': 320, 'width': 758, 'height': 56}, # Joystick x
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 1598, 'y': 382, 'width': 758, 'height': 56}, # Joystick y
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1598, 'y': 446, 'width': 758, 'height': 56}, # Throttle
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 1598, 'y': 508, 'width': 758, 'height': 56}, # A1 Ministick R x
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 1598, 'y': 572, 'width': 758, 'height': 56}, # A1 Ministick R y
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 1598, 'y': 634, 'width': 758, 'height': 56}, # Twist R z
+        'Joy_POV1Up': {'Type': 'Digital', 'x': 384, 'y': 598, 'width': 918, 'height': 56}, # A1 POV Switch up
+        'Joy_POV1Right': {'Type': 'Digital', 'x': 384, 'y': 664, 'width': 918, 'height': 56}, # A1 POV Switch right
+        'Joy_POV1Down': {'Type': 'Digital', 'x': 384, 'y': 730, 'width': 918, 'height': 56}, # A1 POV Switch down
+        'Joy_POV1Left': {'Type': 'Digital', 'x': 384, 'y': 796, 'width': 918, 'height': 56}, # A1 POV Switch left
+    },
+    '231D3201': { # VKB Gladiator NXT Premium Left
         'displayName': 'VKB Gladiator NXT Premium Left',
         'Joy_1': {'Type': 'Digital', 'x': 2692, 'y': 1390, 'width': 842, 'height': 56}, # Fire first stage
         'Joy_2': {'Type': 'Digital', 'x': 2692, 'y': 1452, 'width': 842, 'height': 56}, # Fire second stage
