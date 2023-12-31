@@ -1,4 +1,10 @@
-##1.3.1
+## 2.0
+  * Completed all the outstanding pull requests from GitHub and merged them
+  * Adjusted for Python 3.10 compatibility
+  * Tested with Python 3.10/Ubuntu 22.04 on WSL2
+  * Added support for Xbox360 controller clone (VOYEE Wired 360 - HY4102)
+
+## 1.3.1
 * Sundry cleanup and fixes.
 
 ## 1.3
