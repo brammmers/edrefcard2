@@ -55,8 +55,10 @@ supportedDevices = OrderedDict([
     ('VPC-MongoosT-50CM3-Throttle-32B', {'Template': 'vpc-mongoost-50cm3-throttle-32b', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2']}),
     ('VKB-Kosmosima-SCG-Left', {'Template': 'vkb-kosmosima-scg-left', 'HandledDevices': ['231D0127']}),
     ('VKB-Kosmosima-SCG-Right', {'Template': 'vkb-kosmosima-scg-right', 'HandledDevices': ['231D0126']}),
-    ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200','231D3200']}),
-    ('VKB-Gladiator-NXT-Premium-Left', {'Template': 'vkb-gladiator-nxt-premium-left', 'HandledDevices': ['231D0201','231D3201']}),
+    ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200']}),
+    ('VKB-Gladiator-NXT-Premium-Left', {'Template': 'vkb-gladiator-nxt-premium-left', 'HandledDevices': ['231D0201']}),
+    ('VKB-Gladiator-NXT-Premium-Right-OTA', {'Template': 'vkb-gladiator-nxt-premium-right-ota', 'HandledDevices': ['231D3200']}),
+    ('VKB-Gladiator-NXT-Premium-Left-OTA', {'Template': 'vkb-gladiator-nxt-premium-left-ota', 'HandledDevices': ['231D3201']}),
     ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']})
 ])
 
@@ -2314,8 +2316,8 @@ hotasDetails = {
         'Joy_POV1Down': {'Type': 'Digital', 'x': 2616, 'y': 730, 'width': 918, 'height': 56}, # A1 POV Switch down
         'Joy_POV1Left': {'Type': 'Digital', 'x': 2616, 'y': 796, 'width': 918, 'height': 56}, # A1 POV Switch left
     },
-    '231D3200': { # VKB Gladiator NXT Premium Right
-        'displayName': 'VKB Gladiator NXT Premium Right',
+    '231D3200': { # VKB Gladiator NXT Premium Right OTA
+        'displayName': 'VKB Gladiator NXT Premium Right OTA',
         'Joy_1': {'Type': 'Digital', 'x': 460, 'y': 1390, 'width': 842, 'height': 56}, # Fire first stage
         'Joy_2': {'Type': 'Digital', 'x': 460, 'y': 1452, 'width': 842, 'height': 56}, # Fire second stage
         'Joy_3': {'Type': 'Digital', 'x': 384, 'y': 1018, 'width': 918, 'height': 56}, # A2
@@ -2368,8 +2370,8 @@ hotasDetails = {
         'Joy_POV1Down': {'Type': 'Digital', 'x': 384, 'y': 730, 'width': 918, 'height': 56}, # A1 POV Switch down
         'Joy_POV1Left': {'Type': 'Digital', 'x': 384, 'y': 796, 'width': 918, 'height': 56}, # A1 POV Switch left
     },
-    '231D3201': { # VKB Gladiator NXT Premium Left
-        'displayName': 'VKB Gladiator NXT Premium Left',
+    '231D3201': { # VKB Gladiator NXT Premium Left OTA
+        'displayName': 'VKB Gladiator NXT Premium Left OTA',
         'Joy_1': {'Type': 'Digital', 'x': 2692, 'y': 1390, 'width': 842, 'height': 56}, # Fire first stage
         'Joy_2': {'Type': 'Digital', 'x': 2692, 'y': 1452, 'width': 842, 'height': 56}, # Fire second stage
         'Joy_3': {'Type': 'Digital', 'x': 2616, 'y': 1018, 'width': 918, 'height': 56}, # A2
