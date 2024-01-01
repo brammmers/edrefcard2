@@ -448,10 +448,11 @@ def createHOTASImage(physicalKeys, modifiers, source, imageDevices, biggestFontS
             for physicalKeySpec, physicalKey in physicalKeys.items():
                 itemDevice = physicalKey.get('Device')
                 itemDeviceIndex = int(physicalKey.get('DeviceIndex'))
+                itemDeviceKey = f'{itemDevice}::{itemDeviceIndex}'
                 itemKey = physicalKey.get('Key')
 
                 # Only show it if we are handling the appropriate image at this time
-                if itemDevice not in imageDevices:
+                if itemDevice not in imageDevices and itemDeviceKey not in imageDevices:
                     continue
 
                 # Only show it if we are handling the appropriate index at this time
@@ -462,7 +463,10 @@ def createHOTASImage(physicalKeys, modifiers, source, imageDevices, biggestFontS
                 texts = []
                 hotasDetail = None
                 try:
-                    hotasDetail = hotasDetails.get(itemDevice).get(itemKey)
+                    if itemDeviceKey in hotasDetails:
+                        hotasDetail = hotasDetails.get(itemDeviceKey).get(itemKey)
+                    else:
+                        hotasDetail = hotasDetails.get(itemDevice).get(itemKey)
                 except AttributeError:
                     hotasDetail = None
                 if hotasDetail is None:
@@ -1042,6 +1046,9 @@ def parseBindings(runId, xml, displayGroups, errors):
         # Obtain the relevant supported device
         thisDevice = None
         for supportedDevice in supportedDevices.values():
+            if deviceKey in supportedDevice['HandledDevices']:
+                thisDevice = supportedDevice
+                break
             if device in supportedDevice['HandledDevices']:
                 thisDevice = supportedDevice
                 break
@@ -1242,15 +1249,20 @@ def processForm(form):
                 # See if we handle this device
                 handled = False
                 for handledDevice in supportedDevice.get('KeyDevices', supportedDevice.get('HandledDevices')):
-                    if devices.get('%s::%s' % (handledDevice, deviceIndex)) is not None:
-                        handled = True
-                        break
-
+                    if handledDevice.find('::') > -1:
+                        if deviceIndex == int(handledDevice.split('::')[1]) and devices.get(handledDevice) is not None:
+                            handled = True
+                            deviceKey = handledDevice
+                            break;
+                    else:
+                        if devices.get('%s::%s' % (handledDevice, deviceIndex)) is not None:
+                            handled = True
+                            deviceKey = f'{handledDevice}::{deviceIndex}'
+                            break
                 if handled is True:
                     # See if we have any new bindings for this device
                     hasNewBindings = False
                     for device in supportedDevice.get('KeyDevices', supportedDevice.get('HandledDevices')):
-                        deviceKey = '%s::%s' % (device, deviceIndex)
                         if deviceKey not in alreadyHandledDevices:
                             hasNewBindings = True
                             break
