@@ -1,4 +1,4 @@
-## 2.0
+## 1.4
   * Completed all the outstanding pull requests from GitHub and merged them
   * Adjusted for Python 3.10 compatibility
   * Tested with Python 3.10/Ubuntu 22.04 on WSL2
