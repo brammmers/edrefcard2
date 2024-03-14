@@ -948,6 +948,15 @@ def parseBindings(runId, xml, displayGroups, errors):
                 device = "VPC-MongoosT-50CM3-Throttle-32B2"
                 deviceIndex = "0"
 
+        # Rewrite the device if it's a VPC MongoosT-50CM3 Throttle running 32 button split mode with no mode shift
+        # This seems to be needed so it will show all the buttons on the one device rather than showing the same device twice with half the buttons on one and half on the other
+        if device == "33448198":
+            if deviceIndex == "0":
+                device = "VPC-MongoosT-50CM3-Throttle-32B-NS0"
+            if deviceIndex == "1":
+                device = "VPC-MongoosT-50CM3-Throttle-32B-NS1"
+                deviceIndex = "0"
+
         key = xmlBinding.get('Key')
 
         # Remove the Neg_ and Pos_ headers to put digital buttons on analogue devices
