@@ -918,6 +918,12 @@ def parseBindings(runId, xml, displayGroups, errors):
             vpcCM3Throttle32buttonmode = True
         else:
             vpcCM3Throttle32buttonmode = False
+
+    if len(tree.findall(".//*[@Device='33440197']")) > 0:
+        if len(tree.findall(".//*[@DeviceIndex='1']")) > 0:
+            vpcCM3Throttle32buttonmode = True
+        else:
+            vpcCM3Throttle32buttonmode = False
         
     xmlBindings = tree.findall(".//Binding") + tree.findall(".//Primary") + tree.findall(".//Secondary")
     for xmlBinding in xmlBindings:
@@ -949,12 +955,22 @@ def parseBindings(runId, xml, displayGroups, errors):
                 deviceIndex = "0"
 
         # Rewrite the device if it's a VPC MongoosT-50CM3 Throttle running 32 button split mode with no mode shift
-        # This seems to be needed so it will show all the buttons on the one device rather than showing the same device twice with half the buttons on one and half on the other
         if device == "33448198":
             if deviceIndex == "0":
                 device = "VPC-MongoosT-50CM3-Throttle-32B-NS0"
             if deviceIndex == "1":
                 device = "VPC-MongoosT-50CM3-Throttle-32B-NS1"
+                deviceIndex = "0"
+
+	# CM3, unknown config
+        if device == "33440197" and vpcCM3Throttle32buttonmode == True:
+            if deviceIndex == "0":
+                device = "VPC-MongoosT-50CM3-Throttle-32B1"
+            if deviceIndex == "1":
+                device = "VPC-MongoosT-50CM3-Throttle-32B0"
+                deviceIndex = "0"
+            if deviceIndex == "2":
+                device = "VPC-MongoosT-50CM3-Throttle-32B2"
                 deviceIndex = "0"
 
         key = xmlBinding.get('Key')
