@@ -600,6 +600,7 @@ hotasDetails = {
         'Joy_30': {'Type': 'Digital', 'x': 3134, 'y': 1884, 'width': 692}, # Pinky spin up
         'Joy_31': {'Type': 'Digital', 'x': 3134, 'y': 1940, 'width': 692}, # Pinky spin down
         'Joy_32': {'Type': 'Digital', 'x': 1224, 'y': 894, 'width': 642}, # Stick press
+        'Joy_33': {'Type': 'Digital', 'x': 104, 'y': 525, 'width': 748}, # Slider press
         'Joy_XAxis': {'Type': 'Analogue', 'x': 84, 'y': 784, 'width': 572}, # Throttle (left/both)
         'Joy_YAxis': {'Type': 'Analogue', 'x': 124, 'y': 694, 'width': 572}, # Throttle (right)
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1874, 'y': 1604, 'width': 672}, # F spin
@@ -644,6 +645,7 @@ hotasDetails = {
         'Joy_30': {'Type': 'Digital', 'x': 3134, 'y': 1884, 'width': 692}, # Pinky spin up
         'Joy_31': {'Type': 'Digital', 'x': 3134, 'y': 1940, 'width': 692}, # Pinky spin down
         'Joy_32': {'Type': 'Digital', 'x': 1224, 'y': 894, 'width': 642}, # Stick press
+        'Joy_33': {'Type': 'Digital', 'x': 104, 'y': 525, 'width': 748}, # Slider press
         'Joy_XAxis': {'Type': 'Analogue', 'x': 84, 'y': 784, 'width': 572}, # Throttle (left/both)
         'Joy_YAxis': {'Type': 'Analogue', 'x': 124, 'y': 694, 'width': 572}, # Throttle (right)
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1874, 'y': 1604, 'width': 672}, # F spin
