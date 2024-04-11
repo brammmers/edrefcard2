@@ -2297,7 +2297,56 @@ hotasDetails = {
         'Joy_30': {'Type': 'Digital', 'x': 2210, 'y': 1212, 'width': 450},      # Throttle Right 4W HAT 3 Up
         'Joy_31': {'Type': 'Digital', 'x': 2210, 'y': 1268, 'width': 450},      # Throttle Right 4W HAT 3 Forwards
         'Joy_32': {'Type': 'Digital', 'x': 842, 'y': 814, 'width': 380},        # Throttle Right Back Button
-        # Elite doesn't see more than 32 buttons so point in adding the rest
+        # As of update 18.02 of Elite Dangerous 4.0 support for 128 buttons per device was added. - 2024-04-10
+        'Joy_33': {'Type': 'Digital', 'x': 842, 'y': 894, 'width': 380},        # Throttle Right Back Button Lower
+        'Joy_34': {'Type': 'Digital', 'x': 2200, 'y': 1731, 'width': 325},      # T1
+        'Joy_35': {'Type': 'Digital', 'x': 2200, 'y': 1914, 'width': 325},      # T2
+        'Joy_36': {'Type': 'Digital', 'x': 720, 'y': 1046, 'width': 370},       # T3
+        'Joy_37': {'Type': 'Digital', 'x': 720, 'y': 1238, 'width': 370},       # T4
+        'Joy_38': {'Type': 'Digital', 'x': 2732, 'y': 340, 'width': 180},       # B1 - Mode 1
+        'Joy_39': {'Type': 'Digital', 'x': 2920, 'y': 340, 'width': 180},       # B2 - Mode 1
+        'Joy_40': {'Type': 'Digital', 'x': 3110, 'y': 340, 'width': 180},       # B3 - Mode 1
+        'Joy_41': {'Type': 'Digital', 'x': 2732, 'y': 470, 'width': 180},       # B4 - Mode 1
+        'Joy_42': {'Type': 'Digital', 'x': 2920, 'y': 470, 'width': 180},       # B5 - Mode 1
+        'Joy_43': {'Type': 'Digital', 'x': 3110, 'y': 470, 'width': 180},       # B6 - Mode 1
+        'Joy_44': {'Type': 'Digital', 'x': 672, 'y': 1464, 'width': 300},       # T5 Forwards
+        'Joy_45': {'Type': 'Digital', 'x': 672, 'y': 1518, 'width': 300},       # T5 Backwards
+        'Joy_46': {'Type': 'Digital', 'x': 672, 'y': 1660, 'width': 300},       # T6 Forwards
+        'Joy_47': {'Type': 'Digital', 'x': 672, 'y': 1716, 'width': 300},       # T6 Backwards
+        'Joy_48': {'Type': 'Digital', 'x': 672, 'y': 1856, 'width': 300},       # T7 Forwards
+        'Joy_49': {'Type': 'Digital', 'x': 672, 'y': 1910, 'width': 300},       # T7 Backwards
+        'Joy_50': {'Type': 'Digital', 'x': 1196, 'y': 2074, 'width': 325},      # E1 Button
+        'Joy_51': {'Type': 'Digital', 'x': 1196, 'y': 1964, 'width': 325},      # E1 Anti-Clockwise
+        'Joy_52': {'Type': 'Digital', 'x': 1196, 'y': 2020, 'width': 325},      # E1 Clockwise
+        'Joy_53': {'Type': 'Digital', 'x': 1662, 'y': 2076, 'width': 325},      # E2 Button
+        'Joy_54': {'Type': 'Digital', 'x': 1662, 'y': 1966, 'width': 325},      # E2 Anti-Clockwise
+        'Joy_55': {'Type': 'Digital', 'x': 1662, 'y': 2022, 'width': 325},      # E2 Clockwise
+        'Joy_56': {'Type': 'Digital', 'x': 2732, 'y': 710, 'width': 180},       # B1 - Mode 2
+        'Joy_57': {'Type': 'Digital', 'x': 2920, 'y': 710, 'width': 180},       # B2 - Mode 2
+        'Joy_58': {'Type': 'Digital', 'x': 3110, 'y': 710, 'width': 180},       # B3 - Mode 2
+        'Joy_59': {'Type': 'Digital', 'x': 2732, 'y': 860, 'width': 180},       # B4 - Mode 2
+        'Joy_60': {'Type': 'Digital', 'x': 2920, 'y': 860, 'width': 180},       # B5 - Mode 2
+        'Joy_61': {'Type': 'Digital', 'x': 3110, 'y': 860, 'width': 180},       # B6 - Mode 2
+        'Joy_62': {'Type': 'Digital', 'x': 2732, 'y': 1090, 'width': 180},      # B1 - Mode 3
+        'Joy_63': {'Type': 'Digital', 'x': 2920, 'y': 1090, 'width': 180},      # B2 - Mode 3
+        'Joy_64': {'Type': 'Digital', 'x': 3110, 'y': 1090, 'width': 180},      # B3 - Mode 3
+
+        'Joy_65': {'Type': 'Digital', 'x': 2732, 'y': 1220, 'width': 180},      # B4 - Mode 3
+        'Joy_66': {'Type': 'Digital', 'x': 2920, 'y': 1220, 'width': 180},      # B5 - Mode 3
+        'Joy_67': {'Type': 'Digital', 'x': 3110, 'y': 1220, 'width': 180},      # B6 - Mode 3
+        'Joy_68': {'Type': 'Digital', 'x': 2732, 'y': 1470, 'width': 180},      # B1 - Mode 4
+        'Joy_69': {'Type': 'Digital', 'x': 2920, 'y': 1470, 'width': 180},      # B2 - Mode 4
+        'Joy_70': {'Type': 'Digital', 'x': 3110, 'y': 1470, 'width': 180},      # B3 - Mode 4
+        'Joy_71': {'Type': 'Digital', 'x': 2732, 'y': 1600, 'width': 180},      # B4 - Mode 4
+        'Joy_72': {'Type': 'Digital', 'x': 2920, 'y': 1600, 'width': 180},      # B5 - Mode 4
+        'Joy_73': {'Type': 'Digital', 'x': 3110, 'y': 1600, 'width': 180},      # B6 - Mode 4
+        'Joy_74': {'Type': 'Digital', 'x': 2732, 'y': 1840, 'width': 180},      # B1 - Mode 5
+        'Joy_75': {'Type': 'Digital', 'x': 2920, 'y': 1840, 'width': 180},      # B2 - Mode 5
+        'Joy_76': {'Type': 'Digital', 'x': 3110, 'y': 1840, 'width': 180},      # B3 - Mode 5
+        'Joy_77': {'Type': 'Digital', 'x': 2732, 'y': 1980, 'width': 180},      # B4 - Mode 5
+        'Joy_79': {'Type': 'Digital', 'x': 2920, 'y': 1980, 'width': 180},      # B5 - Mode 5
+        'Joy_80': {'Type': 'Digital', 'x': 3110, 'y': 1980, 'width': 180},      # B6 - Mode 5
+
         'Joy_XAxis': {'Type': 'Analogue', 'x': 170, 'y': 370, 'width': 474},    # Throttle Analog Stick
         'Joy_YAxis': {'Type': 'Analogue', 'x': 170, 'y': 425, 'width': 474},    # Throttle Analog Stick
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1435, 'y': 194, 'width': 394},   # Throttle Handle Slider
