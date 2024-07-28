@@ -48,7 +48,7 @@ supportedDevices = OrderedDict([
     ('DS4', {'Template': 'ds4', 'HandledDevices': ['DS4', 'DualShock4']}),
     ('VPC-WarBRD-DELTA-Left', {'Template': 'vpc-warbrd-delta-left', 'HandledDevices': ['03EB2042']}),
     ('VPC-WarBRD-DELTA-Right', {'Template': 'vpc-warbrd-delta-right', 'HandledDevices': ['03EB2044']}),
-    ('VPC-ALPHA-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB2046','334483EB', '334403f3']}),
+    ('VPC-ALPHA-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB2046','334483EB','334483F3']}),
     ('VPC-ALPHA-Right', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB2048','334443EB','334440CB']}),
     ('VPC-ALPHA-Left-Custom', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB9901']}),
     ('VPC-ALPHA-Right-Custom', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB9902']}),
@@ -2062,59 +2062,103 @@ hotasDetails = {
     },
     '334483EB': { # VPC Alpha left
         'displayName': 'VPC Alpha left',
-        # Left side of picture (ordered top to bottom)
-		# 2-way hat
-        'Joy_29': {'Type': 'Digital', 'x': 120, 'y': 330, 'width': 1180}, # Up
-        'Joy_30': {'Type': 'Digital', 'x': 120, 'y': 390, 'width': 1180}, # Down
-        'Joy_28': {'Type': 'Digital', 'x': 120, 'y': 450, 'width': 1180}, # Push
-        # 4-way hat top
-        'Joy_9': {'Type': 'Digital', 'x': 120, 'y': 570, 'width': 1180}, # Up
-        'Joy_10': {'Type': 'Digital', 'x': 120, 'y': 630, 'width': 1180}, # Right
-        'Joy_11': {'Type': 'Digital', 'x': 120, 'y': 690, 'width': 1180}, # Down
-        'Joy_12': {'Type': 'Digital', 'x': 120, 'y': 750, 'width': 1180}, # Left
-   		'Joy_8': {'Type': 'Digital', 'x': 120, 'y': 810, 'width': 1180}, # Push
-        # Black button
-        'Joy_13': {'Type': 'Digital', 'x': 120, 'y': 920, 'width': 1180},
-		# 4-way hat bottom		
-        'Joy_15': {'Type': 'Digital', 'x': 120, 'y': 1100, 'width': 1180}, # Up
-        'Joy_18': {'Type': 'Digital', 'x': 120, 'y': 1160, 'width': 1180}, # Right
-        'Joy_17': {'Type': 'Digital', 'x': 120, 'y': 1220, 'width': 1180}, # Down
-        'Joy_16': {'Type': 'Digital', 'x': 120, 'y': 1280, 'width': 1180}, # Left
-        'Joy_14': {'Type': 'Digital', 'x': 120, 'y': 1340, 'width': 1180}, # Push
-        # Wheel
-        'Joy_24': {'Type': 'Digital', 'x': 120, 'y': 1570, 'width': 1180}, # Down
-        'Joy_23': {'Type': 'Digital', 'x': 120, 'y': 1510, 'width': 1180}, # Up
-        'Joy_21': {'Type': 'Digital', 'x': 120, 'y': 1630, 'width': 1180}, # Push first stage
-        'Joy_22': {'Type': 'Digital', 'x': 120, 'y': 1690, 'width': 1180}, # Push second stage
-		# Joystick axis
-        'Joy_XAxis': {'Type': 'Analogue', 'x': 120, 'y': 1860, 'width': 1180}, # Forward/Back
-        'Joy_YAxis': {'Type': 'Analogue', 'x': 120, 'y': 1920, 'width': 1180}, # Left/Right
-        'Joy_ZAxis': {'Type': 'Analogue', 'x': 120, 'y': 1980, 'width': 1180}, # Twist
-        # Right side of picture (ordered top to bottom)
-        # Top Right black button
-        'Joy_7': {'Type': 'Digital', 'x': 2610, 'y': 330, 'width': 1180},
-		# Mini-joystick
-        'Joy_RXAxis': {'Type': 'Analogue', 'x': 2610, 'y': 510, 'width': 1180}, # Mini-joystick Left/Right
-        'Joy_RYAxis': {'Type': 'Analogue', 'x': 2610, 'y': 570, 'width': 1180}, # Mini joystick Up/Down
-        'Joy_6': {'Type': 'Digital', 'x': 2610, 'y': 630, 'width': 1180}, # Mini-joystick push
-        # Flip Trigger
-        'Joy_1': {'Type': 'Digital', 'x': 2610, 'y': 810, 'width': 1180}, # Flip Trigger first stage
-        'Joy_2': {'Type': 'Digital', 'x': 2610, 'y': 870, 'width': 1180}, # Flip Trigger second stage
-        'Joy_3': {'Type': 'Digital', 'x': 2610, 'y': 930, 'width': 1180}, # Flip Trigger third stage
-        # Trigger
-        'Joy_4': {'Type': 'Digital', 'x': 2610, 'y': 1060, 'width': 1180}, # Trigger first stage
+        'Joy_6': {'Type': 'Digital', 'x': 2610, 'y': 810, 'width': 1180}, # Flip Trigger first stage
+        'Joy_7': {'Type': 'Digital', 'x': 2610, 'y': 870, 'width': 1180}, # Flip Trigger second stage
+        'Joy_1': {'Type': 'Digital', 'x': 2610, 'y': 1060, 'width': 1180}, # Trigger first stage
         'Joy_5': {'Type': 'Digital', 'x': 2610, 'y': 1120, 'width': 1180}, # Trigger second stage
+        'Joy_30': {'Type': 'Digital', 'x': 2610, 'y': 630, 'width': 1180}, # Mini-joystick push
+        'Joy_3': {'Type': 'Digital', 'x': 2610, 'y': 330, 'width': 1180}, # Red button
+        # 4-way hat top
+   		'Joy_13': {'Type': 'Digital', 'x': 120, 'y': 810, 'width': 1180}, # Push
+        'Joy_14': {'Type': 'Digital', 'x': 120, 'y': 570, 'width': 1180}, # Up
+        'Joy_15': {'Type': 'Digital', 'x': 120, 'y': 630, 'width': 1180}, # Right
+        'Joy_16': {'Type': 'Digital', 'x': 120, 'y': 690, 'width': 1180}, # Down 
+        'Joy_17': {'Type': 'Digital', 'x': 120, 'y': 750, 'width': 1180}, # Left
+        # Black button
+        'Joy_4': {'Type': 'Digital', 'x': 120, 'y': 920, 'width': 1180},        
+		# 4-way hat bottom
+        'Joy_8': {'Type': 'Digital', 'x': 120, 'y': 1340, 'width': 1180}, # Push		
+        'Joy_9': {'Type': 'Digital', 'x': 120, 'y': 1100, 'width': 1180}, # Up
+        'Joy_10': {'Type': 'Digital', 'x': 120, 'y': 1160, 'width': 1180}, # Right
+        'Joy_11': {'Type': 'Digital', 'x': 120, 'y': 1220, 'width': 1180}, # Down
+        'Joy_12': {'Type': 'Digital', 'x': 120, 'y': 1280, 'width': 1180}, # Left
+		# 2-way hat
+        'Joy_18': {'Type': 'Digital', 'x': 120, 'y': 450, 'width': 1180}, # Push
+        'Joy_19': {'Type': 'Digital', 'x': 120, 'y': 330, 'width': 1180}, # Up
+        'Joy_20': {'Type': 'Digital', 'x': 120, 'y': 390, 'width': 1180}, # Down
+        # Wheel
+        'Joy_22': {'Type': 'Digital', 'x': 120, 'y': 1690, 'width': 1180}, # Push second stage
+        'Joy_21': {'Type': 'Digital', 'x': 120, 'y': 1630, 'width': 1180}, # Push first stage
+        'Joy_23': {'Type': 'Digital', 'x': 120, 'y': 1570, 'width': 1180}, # Down
+        'Joy_24': {'Type': 'Digital', 'x': 120, 'y': 1510, 'width': 1180}, # Up
         # Thumb hat
+        'Joy_25': {'Type': 'Digital', 'x': 2610, 'y': 1540, 'width': 1180}, # Push
         'Joy_26': {'Type': 'Digital', 'x': 2610, 'y': 1300, 'width': 1180}, # Up
         'Joy_27': {'Type': 'Digital', 'x': 2610, 'y': 1360, 'width': 1180}, # Righ
-        'Joy_24': {'Type': 'Digital', 'x': 2610, 'y': 1420, 'width': 1180}, # Down
-        'Joy_25': {'Type': 'Digital', 'x': 2610, 'y': 1480, 'width': 1180}, # Left
-        'Joy_23': {'Type': 'Digital', 'x': 2610, 'y': 1540, 'width': 1180}, # Push
-        # Break Lever axis
-        'Joy_32': {'Type': 'Digital', 'x': 2610, 'y': 1750, 'width': 1180}, # Button press at full close
-        'Joy_UAxis': {'Type': 'Analogue', 'x': 2610, 'y': 1690, 'width': 1180}, # Slider
+        'Joy_28': {'Type': 'Digital', 'x': 2610, 'y': 1420, 'width': 1180}, # Down
+        'Joy_29': {'Type': 'Digital', 'x': 2610, 'y': 1480, 'width': 1180}, # Left
         # Pinky button
-        'Joy_31': {'Type': 'Digital', 'x': 2610, 'y': 1900, 'width': 1180},
+        'Joy_2': {'Type': 'Digital', 'x': 2610, 'y': 1900, 'width': 1180},
+        # Break axis
+        'Joy_31': {'Type': 'Digital', 'x': 2610, 'y': 1750, 'width': 1180},
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 2610, 'y': 1690, 'width': 1180},
+		# Joystick axis
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 120, 'y': 1860, 'width': 1180},
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 120, 'y': 1920, 'width': 1180},
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 120, 'y': 1980, 'width': 1180}, # Twist
+		# Mini-joysticks axis
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 2610, 'y': 510, 'width': 1180},
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 2610, 'y': 570, 'width': 1180},
+    },
+    '334483F3': { # VPC Alpha left
+        'displayName': 'VPC Alpha left',
+        'Joy_6': {'Type': 'Digital', 'x': 2610, 'y': 810, 'width': 1180}, # Flip Trigger first stage
+        'Joy_7': {'Type': 'Digital', 'x': 2610, 'y': 870, 'width': 1180}, # Flip Trigger second stage
+        'Joy_1': {'Type': 'Digital', 'x': 2610, 'y': 1060, 'width': 1180}, # Trigger first stage
+        'Joy_5': {'Type': 'Digital', 'x': 2610, 'y': 1120, 'width': 1180}, # Trigger second stage
+        'Joy_30': {'Type': 'Digital', 'x': 2610, 'y': 630, 'width': 1180}, # Mini-joystick push
+        'Joy_3': {'Type': 'Digital', 'x': 2610, 'y': 330, 'width': 1180}, # Red button
+        # 4-way hat top
+   		'Joy_13': {'Type': 'Digital', 'x': 120, 'y': 810, 'width': 1180}, # Push
+        'Joy_14': {'Type': 'Digital', 'x': 120, 'y': 570, 'width': 1180}, # Up
+        'Joy_15': {'Type': 'Digital', 'x': 120, 'y': 630, 'width': 1180}, # Right
+        'Joy_16': {'Type': 'Digital', 'x': 120, 'y': 690, 'width': 1180}, # Down 
+        'Joy_17': {'Type': 'Digital', 'x': 120, 'y': 750, 'width': 1180}, # Left
+        # Black button
+        'Joy_4': {'Type': 'Digital', 'x': 120, 'y': 920, 'width': 1180},        
+		# 4-way hat bottom
+        'Joy_8': {'Type': 'Digital', 'x': 120, 'y': 1340, 'width': 1180}, # Push		
+        'Joy_9': {'Type': 'Digital', 'x': 120, 'y': 1100, 'width': 1180}, # Up
+        'Joy_10': {'Type': 'Digital', 'x': 120, 'y': 1160, 'width': 1180}, # Right
+        'Joy_11': {'Type': 'Digital', 'x': 120, 'y': 1220, 'width': 1180}, # Down
+        'Joy_12': {'Type': 'Digital', 'x': 120, 'y': 1280, 'width': 1180}, # Left
+		# 2-way hat
+        'Joy_18': {'Type': 'Digital', 'x': 120, 'y': 450, 'width': 1180}, # Push
+        'Joy_19': {'Type': 'Digital', 'x': 120, 'y': 330, 'width': 1180}, # Up
+        'Joy_20': {'Type': 'Digital', 'x': 120, 'y': 390, 'width': 1180}, # Down
+        # Wheel
+        'Joy_22': {'Type': 'Digital', 'x': 120, 'y': 1690, 'width': 1180}, # Push second stage
+        'Joy_21': {'Type': 'Digital', 'x': 120, 'y': 1630, 'width': 1180}, # Push first stage
+        'Joy_23': {'Type': 'Digital', 'x': 120, 'y': 1570, 'width': 1180}, # Down
+        'Joy_24': {'Type': 'Digital', 'x': 120, 'y': 1510, 'width': 1180}, # Up
+        # Thumb hat
+        'Joy_25': {'Type': 'Digital', 'x': 2610, 'y': 1540, 'width': 1180}, # Push
+        'Joy_26': {'Type': 'Digital', 'x': 2610, 'y': 1300, 'width': 1180}, # Up
+        'Joy_27': {'Type': 'Digital', 'x': 2610, 'y': 1360, 'width': 1180}, # Righ
+        'Joy_28': {'Type': 'Digital', 'x': 2610, 'y': 1420, 'width': 1180}, # Down
+        'Joy_29': {'Type': 'Digital', 'x': 2610, 'y': 1480, 'width': 1180}, # Left
+        # Pinky button
+        'Joy_2': {'Type': 'Digital', 'x': 2610, 'y': 1900, 'width': 1180},
+        # Break axis
+        'Joy_31': {'Type': 'Digital', 'x': 2610, 'y': 1750, 'width': 1180},
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 2610, 'y': 1690, 'width': 1180},
+		# Joystick axis
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 120, 'y': 1860, 'width': 1180},
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 120, 'y': 1920, 'width': 1180},
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 120, 'y': 1980, 'width': 1180}, # Twist
+		# Mini-joysticks axis
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 2610, 'y': 510, 'width': 1180},
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 2610, 'y': 570, 'width': 1180},
     },
     '334443EB': { # VPC Alpha right
         'displayName': 'VPC Alpha right',
@@ -2325,7 +2369,15 @@ hotasDetails = {
         'Joy_YAxis': {'Type': 'Analogue', 'x': 2610, 'y': 1920, 'width': 1180},
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 2610, 'y': 1980, 'width': 1180},
 	    # Mini-joysticks axis
-        'Joy_RXAxis': {'Type': 'Analogue', 'x'334483EB'0, 'y': 622, 'width': 450},        # Throttle Left Pinkie Button
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 120, 'y': 510, 'width': 1180},
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 120, 'y': 570, 'width': 1180},
+    },
+    '33448197': { # VPC MongoosT-50CM3 Throttle
+        'displayName': 'VPC MongoosT-50CM3 Throttle',
+        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 450},       # Throttle Left Encoder Button
+        'Joy_2': {'Type': 'Digital', 'x': 2066, 'y': 546, 'width': 450},        # Throttle Left Encoder Backwards
+        'Joy_3': {'Type': 'Digital', 'x': 2066, 'y': 492, 'width': 450},        # Throttle Left Encoder Forwards
+        'Joy_4': {'Type': 'Digital', 'x': 1440, 'y': 622, 'width': 450},        # Throttle Left Pinkie Button
         'Joy_5': {'Type': 'Digital', 'x': 1988, 'y': 348, 'width': 450},        # Throttle Left 2W Hat Button
         'Joy_6': {'Type': 'Digital', 'x': 1988, 'y': 292, 'width': 450},        # Throttle Left 2W Hat Down
         'Joy_7': {'Type': 'Digital', 'x': 1988, 'y': 238, 'width': 450},        # Throttle Left 2W Hat Up
@@ -2450,17 +2502,8 @@ hotasDetails = {
     },
 
     'VPC-MongoosT-50CM3-Throttle-32B1': { # VPC MongoosT-50CM3 Throttle - 32 Button Split Mode - Device 1
-        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 450},        # Throttle Left Encoder Button
-        'Joy_2': {'Type': 'Digital', 'x': 2066, 'y': 546, 'width': 450},        # Throttle Left Encoder Backwards
-        'Joy_3': {'Type': 'Digital', 'x': 2066, 'y': 492, 'width': 450},        # Throttle Left Encoder Forwards
-        'Joy_4': {'Type': 'Digital', 'x': 1440, 'y': 622, 'width': 450},        # Throttle Left Pinkie Button
-        'Joy_5': {'Type': 'Digital', 'x': 1988, 'y': 348, 'width': 450},        # Throttle Left 2W Hat Button
-        'Joy_6': {'Type': 'Digital', 'x': 1988, 'y': 292, 'width': 450},        # Throttle Left 2W Hat Down
-        'Joy_7': {'Type': 'Digital', 'x': 1988, 'y': 238, 'width': 450},        # Throttle Left 2W Hat Up
-        'Joy_8': {'Type': 'Digital', 'x': 804, 'y': 710, 'width': 450},         # Throttle Middle 4W HAT Button
-        'Joy_9': {'Type': 'Digital', 'x': 804, 'y': 602, 'width': 450},         # Throttle Middle 4W HAT Down
-        'Joy_10': {'Type': 'Digital', 'x': 804, 'y': 546, 'width': 450},        # Throttle Middle 4W HAT Right
-        'Joy_11': {'Type': 'Digital', 'x': 804, 'y': 491, 'width': 450},        # Throttle Middle 4W HAT Up
+        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 45
+    ('VPC-ALPHA-Prime-Left', {'Template': 'vpc-alpha-prime-left', 'HandledDevices': ['334403F3']}),0},        # Throttle Middle 4W HAT Up
         'Joy_12': {'Type': 'Digital', 'x': 804, 'y': 656, 'width': 450},        # Throttle Middle 4W HAT Left
         'Joy_13': {'Type': 'Digital', 'x': 170, 'y': 480, 'width': 474},        # Throttle Analog Stick Button
         'Joy_14': {'Type': 'Digital', 'x': 2238, 'y': 1016, 'width': 450},      # Throttle Right Encoder forwards
