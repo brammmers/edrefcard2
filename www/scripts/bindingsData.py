@@ -2502,7 +2502,17 @@ hotasDetails = {
     },
 
     'VPC-MongoosT-50CM3-Throttle-32B1': { # VPC MongoosT-50CM3 Throttle - 32 Button Split Mode - Device 1
-        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 450},        # Throttle Middle 4W HAT Up
+        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 450},        # Throttle Left Encoder Button
+        'Joy_2': {'Type': 'Digital', 'x': 2066, 'y': 546, 'width': 450},        # Throttle Left Encoder Backwards
+        'Joy_3': {'Type': 'Digital', 'x': 2066, 'y': 492, 'width': 450},        # Throttle Left Encoder Forwards
+        'Joy_4': {'Type': 'Digital', 'x': 1440, 'y': 622, 'width': 450},        # Throttle Left Pinkie Button
+        'Joy_5': {'Type': 'Digital', 'x': 1988, 'y': 348, 'width': 450},        # Throttle Left 2W Hat Button
+        'Joy_6': {'Type': 'Digital', 'x': 1988, 'y': 292, 'width': 450},        # Throttle Left 2W Hat Down
+        'Joy_7': {'Type': 'Digital', 'x': 1988, 'y': 238, 'width': 450},        # Throttle Left 2W Hat Up
+        'Joy_8': {'Type': 'Digital', 'x': 804, 'y': 710, 'width': 450},         # Throttle Middle 4W HAT Button
+        'Joy_9': {'Type': 'Digital', 'x': 804, 'y': 602, 'width': 450},         # Throttle Middle 4W HAT Down
+        'Joy_10': {'Type': 'Digital', 'x': 804, 'y': 546, 'width': 450},        # Throttle Middle 4W HAT Right
+        'Joy_11': {'Type': 'Digital', 'x': 804, 'y': 491, 'width': 450},        # Throttle Middle 4W HAT Up
         'Joy_12': {'Type': 'Digital', 'x': 804, 'y': 656, 'width': 450},        # Throttle Middle 4W HAT Left
         'Joy_13': {'Type': 'Digital', 'x': 170, 'y': 480, 'width': 474},        # Throttle Analog Stick Button
         'Joy_14': {'Type': 'Digital', 'x': 2238, 'y': 1016, 'width': 450},      # Throttle Right Encoder forwards
