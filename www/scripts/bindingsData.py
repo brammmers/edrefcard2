@@ -2502,8 +2502,7 @@ hotasDetails = {
     },
 
     'VPC-MongoosT-50CM3-Throttle-32B1': { # VPC MongoosT-50CM3 Throttle - 32 Button Split Mode - Device 1
-        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 45
-    ('VPC-ALPHA-Prime-Left', {'Template': 'vpc-alpha-prime-left', 'HandledDevices': ['334403F3']}),0},        # Throttle Middle 4W HAT Up
+        'Joy_1': {'Type': 'Digital', 'x': 2066, 'y': 602, 'width': 450},        # Throttle Middle 4W HAT Up
         'Joy_12': {'Type': 'Digital', 'x': 804, 'y': 656, 'width': 450},        # Throttle Middle 4W HAT Left
         'Joy_13': {'Type': 'Digital', 'x': 170, 'y': 480, 'width': 474},        # Throttle Analog Stick Button
         'Joy_14': {'Type': 'Digital', 'x': 2238, 'y': 1016, 'width': 450},      # Throttle Right Encoder forwards
