@@ -49,7 +49,7 @@ supportedDevices = OrderedDict([
     ('VPC-WarBRD-DELTA-Left', {'Template': 'vpc-warbrd-delta-left', 'HandledDevices': ['03EB2042']}),
     ('VPC-WarBRD-DELTA-Right', {'Template': 'vpc-warbrd-delta-right', 'HandledDevices': ['03EB2044']}),
     ('VPC-ALPHA-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB2046','334483EB']}),
-    ('VPC-ALPHA-Right', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB2048','334443EB','334440CB']}),
+    ('VPC-ALPHA-Right', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB2048','334443EB','334440CB','334400CB']}),
     ('VPC-ALPHA-Left-Custom', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB9901']}),
     ('VPC-ALPHA-Right-Custom', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB9902']}),
     ('VPC-ALPHA-Prime-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['334483F3','3344838F']}),
@@ -2162,7 +2162,7 @@ hotasDetails = {
         'Joy_RXAxis': {'Type': 'Analogue', 'x': 120, 'y': 510, 'width': 1180},
         'Joy_RYAxis': {'Type': 'Analogue', 'x': 120, 'y': 570, 'width': 1180},
     },
-    '334440CB': { # VPC Alpha right
+    '334400CB': { # VPC Alpha right
         'displayName': 'VPC Alpha right',
         'Joy_1': {'Type': 'Digital', 'x': 120, 'y': 810, 'width': 1180}, # Flip Trigger first stage
         'Joy_2': {'Type': 'Digital', 'x': 120, 'y': 870, 'width': 1180}, # Flip Trigger second stage
