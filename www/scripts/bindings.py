@@ -505,7 +505,7 @@ def createHOTASImage(physicalKeys, modifiers, source, imageDevices, biggestFontS
                             # Check if this is a digital control on an analogue stick with an analogue equivalent
                             if control.get('Type') == 'Digital' and control.get('HasAnalogue') is True and hotasDetail.get('Type') == 'Analogue':
                                 if misconfigurationWarnings == '':
-                                    misconfigurationWarnings = '<h1>Misconfiguration detected</h1>You have one or more analogue controls configured incorrectly. Please see <a href="https://forums.frontier.co.uk/showthread.php?t=209792">this thread</a> for details of the problem and how to correct it.<br/> <b>Your misconfigured controls:</b> <b>%s</b> ' % control['Name']
+                                    misconfigurationWarnings = '<h1>Misconfiguration detected</h1>You have one or more analogue controls configured incorrectly. Please see <a href="https://forums.frontier.co.uk/threads/627609/">this thread</a> for details of the problem and how to correct it.<br/> <b>Your misconfigured controls:</b> <b>%s</b> ' % control['Name']
                                 else:
                                     misconfigurationWarnings = '%s, <b>%s</b>' % (misconfigurationWarnings, control['Name'])
                                 #logError('%s: Digital command %s found on hotas control %s::%s\n' % (runId, control['Name'], itemDevice, itemKey))
