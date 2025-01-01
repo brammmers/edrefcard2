@@ -170,6 +170,9 @@ controls = {
     'YawAxisAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 47, 'Name': 'Yaw (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['YawAxisRaw']},
     'VerticalThrustAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 48, 'Name': 'Vertical Thrust (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['VerticalThrustRaw']},
     'LateralThrustAlternate': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 49, 'Name': 'Lateral Thrust (Alt)', 'Type': 'Analogue', 'HideIfSameAs': ['LateralThrustRaw']},
+    'YawAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 50, 'Name': 'Yaw', 'Type': 'Analogue', 'HideIfSameAs': []},
+    'RollAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order':51, 'Name': 'Roll', 'Type': 'Analogue', 'HideIfSameAs': []},
+    'PitchAxisRaw': {'Group': 'Ship', 'Category': 'Navigation', 'Order': 52, 'Name': 'Pitch', 'Type': 'Analogue', 'HideIfSameAs': []},
 
     # Selecting a target and firing
     'SelectTarget': {'Group': 'Ship', 'Category': 'Combat', 'Order': 101, 'Name': 'Target Ahead', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
@@ -305,6 +308,7 @@ controls = {
     'SAAThirdPersonFovAxisRaw': {'Group': 'Scanners', 'Category': 'General', 'Order': 287, 'Name': 'DSS Field of View', 'Type': 'Analogue', 'HideIfSameAs': []},
     'SAAThirdPersonFovOutButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 288, 'Name': 'DSS Field of View Out', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
     'SAAThirdPersonFovInButton': {'Group': 'Scanners', 'Category': 'General', 'Order': 289, 'Name': 'DSS Field of View In', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
+    'ExplorationSAAShowHelp': {'Group': 'Scanners', 'Category': 'General', 'Order': 290, 'Name': 'DSS Help', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
 
     # Misc
     'EjectAllCargo': {'Group': 'Ship', 'Category': 'General', 'Order': 701, 'Name': 'Eject All Cargo', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
@@ -314,6 +318,7 @@ controls = {
     'MouseReset': {'Group': 'Ship', 'Category': 'General', 'Order': 705, 'Name': 'Reset Mouse', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'WeaponColourToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 706, 'Name': 'Weapon Colour', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'EngineColourToggle': {'Group': 'Ship', 'Category': 'General', 'Order': 707, 'Name': 'Engine Colour', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
+    'BlockMouseDecay': {'Group': 'Ship', 'Category': 'General', 'Order': 708, 'Name': 'Block Mouse Decay', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
 
     # Camera
     'PhotoCameraToggle': {'Group': 'Camera', 'Category': 'Camera', 'Order': 801, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
@@ -363,6 +368,11 @@ controls = {
     'FStopDec': {'Group': 'Camera', 'Category': 'General', 'Order': 845, 'Name': 'Dec Blur', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
     'FocusDistanceInc': {'Group': 'Camera', 'Category': 'General', 'Order': 846, 'Name': 'Focus Further', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
     'FocusDistanceDec': {'Group': 'Camera', 'Category': 'General', 'Order': 847, 'Name': 'Focus Nearer', 'Type': 'Digital', 'HasAnalogue': True, 'HideIfSameAs': []},
+    'VanityCameraTen': {'Group': 'Camera', 'Category': 'General', 'Order': 848, 'Name': 'Cam - Back Low', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
+    'MoveFreeCamUpAxis': {'Group': 'Camera', 'Category': 'General', 'Order': 849, 'Name': 'Cam Up Axis', 'Type': 'Analogue', 'HideIfSameAs': []},
+    'MoveFreeCamDownAxis': {'Group': 'Camera', 'Category': 'General', 'Order': 850, 'Name': 'Cam Down Axis', 'Type': 'Analogue', 'HideIfSameAs': []},
+    'ToggleVanityCamera': {'Group': 'Camera', 'Category': 'Camera', 'Order': 851, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
+    'ToggleVanityCamera_Buggy': {'Group': 'Camera', 'Category': 'Camera', 'Order': 852, 'Name': 'External Cam', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': ['ToggleVanityCamera']},
 
     # Store camera
     'StoreEnableRotation': {'Group': 'Camera', 'Category': 'Camera', 'Order': 901, 'Name': 'Store Cam Rotation', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
