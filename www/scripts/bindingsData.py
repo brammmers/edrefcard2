@@ -66,6 +66,8 @@ supportedDevices = OrderedDict([
     ('VKB-Gladiator-NXT-Premium-Left-OTA', {'Template': 'vkb-gladiator-nxt-premium-left-ota', 'HandledDevices': ['231D3201']}),
     ('VKB-STECS-VC1', {'Template': 'vkb-stecs-1', 'HandledDevices': ['231D012D::0']}),
     ('VKB-STECS-VC2', {'Template': 'vkb-stecs-2', 'HandledDevices': ['231D012D::1']}),
+    ('Winwing-Orion-Throttle-2-F18-Handle', {'Template': 'winwing-orion-throttle2-f18-handle', 'HandledDevices': ['4098BE62']}),
+    ('Winwing-Ursa-Minor-Fighter', {'Template': 'winwing-ursa-minor-fighter-right', 'HandledDevices': ['4098BC2A']}),
     ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']})
 ])
 
@@ -3768,6 +3770,190 @@ hotasDetails = {
         'Joy_24': {'Type': 'Digital', 'x': 50, 'y': 2182, 'width': 842, 'height': 56}, # EN2 Click
         'Joy_25': {'Type': 'Digital', 'x': 50, 'y': 2260, 'width': 842, 'height': 56}, # 3-Position Switch Up
         'Joy_26': {'Type': 'Digital', 'x': 50, 'y': 2338, 'width': 842, 'height': 56}, # 3-Position Switch Down
+    },
+    
+    '4098BE62': { # Winwing Orion Throttle Base II + F18 Handle
+        'displayName': 'Winwing Orion Throttle Base II + F18 Handle',
+        # Handle
+        'Joy_1': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_2': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_3': {'Type': 'Digital', 'x': 164, 'y': 540, 'width': 400, 'height': 60},
+        'Joy_4': {'Type': 'Digital', 'x': 164, 'y': 600, 'width': 400, 'height': 60},
+        'Joy_5': {'Type': 'Digital', 'x': 164, 'y': 660, 'width': 400, 'height': 60},
+        'Joy_6': {'Type': 'Digital', 'x': 764, 'y': 450, 'width': 400, 'height': 60},
+        'Joy_7': {'Type': 'Digital', 'x': 764, 'y': 370, 'width': 400, 'height': 60},
+        'Joy_8': {'Type': 'Digital', 'x': 2824, 'y': 92, 'width': 400, 'height': 60},
+        'Joy_9': {'Type': 'Digital', 'x': 2824, 'y': 152, 'width': 400, 'height': 60},
+        'Joy_10': {'Type': 'Digital', 'x': 2824, 'y': 212, 'width': 400, 'height': 60},
+        'Joy_11': {'Type': 'Digital', 'x': 2824, 'y': 272, 'width': 400, 'height': 60},
+        'Joy_12': {'Type': 'Digital', 'x': 2824, 'y': 332, 'width': 400, 'height': 60},
+        'Joy_13': {'Type': 'Digital', 'x': 164, 'y': 796, 'width': 400, 'height': 60},
+        'Joy_14': {'Type': 'Digital', 'x': 164, 'y': 856, 'width': 400, 'height': 60},
+        'Joy_15': {'Type': 'Digital', 'x': 164, 'y': 916, 'width': 400, 'height': 60},
+        'Joy_16': {'Type': 'Digital', 'x': 164, 'y': 976, 'width': 400, 'height': 60},
+        'Joy_17': {'Type': 'Digital', 'x': 164, 'y': 1036, 'width': 400, 'height': 60},
+        'Joy_18': {'Type': 'Digital', 'x': 3324, 'y': 212, 'width': 400, 'height': 60},
+        'Joy_19': {'Type': 'Digital', 'x': 3324, 'y': 272, 'width': 400, 'height': 60},
+        'Joy_20': {'Type': 'Digital', 'x': 3324, 'y': 332, 'width': 400, 'height': 60},
+        'Joy_21': {'Type': 'Digital', 'x': 764, 'y': 938, 'width': 400, 'height': 60},
+        'Joy_22': {'Type': 'Digital', 'x': 2298, 'y': 154, 'width': 400, 'height': 60},
+        'Joy_23': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_24': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_25': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_26': {'Type': 'Digital', 'x': 2298, 'y': 214, 'width': 400, 'height': 60},
+        'Joy_27': {'Type': 'Digital', 'x': 2298, 'y': 274, 'width': 400, 'height': 60},
+        'Joy_28': {'Type': 'Digital', 'x': 2298, 'y': 334, 'width': 400, 'height': 60},
+        'Joy_29': {'Type': 'Digital', 'x': 2298, 'y': 394, 'width': 400, 'height': 60},
+        
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 764, 'y': 293, 'width': 880, 'height': 60},
+        # End of handle
+        # Base
+        'Joy_30': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_31': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_32': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_33': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_34': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_35': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_36': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_37': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_38': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_39': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_40': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_41': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_42': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_43': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_44': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_45': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_46': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_47': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_48': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_49': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_50': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_51': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_52': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_53': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_54': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_55': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_56': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_57': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_58': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_59': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_60': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_61': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_62': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_63': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_64': {'Type': 'Digital', 'x': 3320, 'y': 2020, 'width': 400, 'height': 60},     # Not sure
+        'Joy_65': {'Type': 'Digital', 'x': 3324, 'y': 594, 'width': 400, 'height': 60},
+        'Joy_66': {'Type': 'Digital', 'x': 3324, 'y': 664, 'width': 400, 'height': 60},
+        'Joy_67': {'Type': 'Digital', 'x': 3324, 'y': 752, 'width': 400, 'height': 60},
+        'Joy_68': {'Type': 'Digital', 'x': 3324, 'y': 812, 'width': 400, 'height': 60},
+        'Joy_69': {'Type': 'Digital', 'x': 2684, 'y': 654, 'width': 400, 'height': 60},
+        'Joy_70': {'Type': 'Digital', 'x': 2684, 'y': 714, 'width': 400, 'height': 60},
+        'Joy_71': {'Type': 'Digital', 'x': 2684, 'y': 774, 'width': 400, 'height': 60},
+        'Joy_72': {'Type': 'Digital', 'x': 2684, 'y': 834, 'width': 400, 'height': 60},
+        'Joy_73': {'Type': 'Digital', 'x': 3324, 'y': 908, 'width': 400, 'height': 60},
+        'Joy_74': {'Type': 'Digital', 'x': 3324, 'y': 964, 'width': 400, 'height': 60},
+        'Joy_75': {'Type': 'Digital', 'x': 3324, 'y': 1068, 'width': 400, 'height': 60},
+        'Joy_76': {'Type': 'Digital', 'x': 3324, 'y': 1128, 'width': 400, 'height': 60},
+        'Joy_77': {'Type': 'Digital', 'x': 3324, 'y': 1236, 'width': 400, 'height': 60},
+        'Joy_78': {'Type': 'Digital', 'x': 3324, 'y': 1296, 'width': 400, 'height': 60},
+        'Joy_79': {'Type': 'Digital', 'x': 3324, 'y': 1356, 'width': 400, 'height': 60},
+        'Joy_80': {'Type': 'Digital', 'x': 3324, 'y': 1466, 'width': 400, 'height': 60},
+        'Joy_81': {'Type': 'Digital', 'x': 2804, 'y': 1782, 'width': 400, 'height': 60},
+        'Joy_82': {'Type': 'Digital', 'x': 2804, 'y': 1842, 'width': 400, 'height': 60},
+        'Joy_83': {'Type': 'Digital', 'x': 2804, 'y': 1576, 'width': 400, 'height': 60},
+        'Joy_84': {'Type': 'Digital', 'x': 2804, 'y': 1696, 'width': 400, 'height': 60},
+        'Joy_85': {'Type': 'Digital', 'x': 2804, 'y': 1636, 'width': 400, 'height': 60},
+        'Joy_86': {'Type': 'Digital', 'x': 164, 'y': 1272, 'width': 400, 'height': 60},
+        'Joy_87': {'Type': 'Digital', 'x': 164, 'y': 1332, 'width': 400, 'height': 60},
+        'Joy_88': {'Type': 'Digital', 'x': 164, 'y': 1392, 'width': 400, 'height': 60},
+        'Joy_89': {'Type': 'Digital', 'x': 164, 'y': 1510, 'width': 400, 'height': 60},
+        'Joy_90': {'Type': 'Digital', 'x': 164, 'y': 1570, 'width': 400, 'height': 60},
+        'Joy_91': {'Type': 'Digital', 'x': 164, 'y': 1630, 'width': 400, 'height': 60},
+        'Joy_92': {'Type': 'Digital', 'x': 764, 'y': 1554, 'width': 400, 'height': 60},
+        'Joy_93': {'Type': 'Digital', 'x': 2124, 'y': 1964, 'width': 400, 'height': 60},
+        'Joy_94': {'Type': 'Digital', 'x': 2124, 'y': 2024, 'width': 400, 'height': 60},
+        'Joy_95': {'Type': 'Digital', 'x': 2124, 'y': 2084, 'width': 400, 'height': 60},
+        'Joy_96': {'Type': 'Digital', 'x': 2264, 'y': 1844, 'width': 400, 'height': 60},
+        'Joy_97': {'Type': 'Digital', 'x': 164, 'y': 1752, 'width': 400, 'height': 60},
+        'Joy_98': {'Type': 'Digital', 'x': 164, 'y': 1872, 'width': 400, 'height': 60},
+        'Joy_99': {'Type': 'Digital', 'x': 164, 'y': 1812, 'width': 400, 'height': 60},
+        'Joy_100': {'Type': 'Digital', 'x': 644, 'y': 1932, 'width': 400, 'height': 60},
+        'Joy_101': {'Type': 'Digital', 'x': 644, 'y': 2052, 'width': 400, 'height': 60},
+        'Joy_102': {'Type': 'Digital', 'x': 644, 'y': 1992, 'width': 400, 'height': 60},
+        'Joy_103': {'Type': 'Digital', 'x': 1164, 'y': 1932, 'width': 400, 'height': 60},
+        'Joy_104': {'Type': 'Digital', 'x': 1164, 'y': 2052, 'width': 400, 'height': 60},
+        'Joy_105': {'Type': 'Digital', 'x': 1164, 'y': 1992, 'width': 400, 'height': 60},
+        'Joy_106': {'Type': 'Digital', 'x': 3324, 'y': 1570, 'width': 400, 'height': 60},
+        'Joy_107': {'Type': 'Digital', 'x': 3324, 'y': 1630, 'width': 400, 'height': 60},
+        'Joy_108': {'Type': 'Digital', 'x': 3324, 'y': 1690, 'width': 400, 'height': 60},
+        'Joy_109': {'Type': 'Digital', 'x': 2804, 'y': 1928, 'width': 400, 'height': 60},
+        'Joy_110': {'Type': 'Digital', 'x': 2804, 'y': 1988, 'width': 400, 'height': 60},
+        'Joy_111': {'Type': 'Digital', 'x': 2804, 'y': 2048, 'width': 400, 'height': 60},
+                       
+    },
+    
+    '4098BC2A': { # Wingwin Ursa Minor Fighter (Right)
+        'displayName': 'Wingwin Ursa Minor Fighter (Right)',
+        'Joy_1': {'Type': 'Digital', 'x': 644, 'y': 1205, 'width': 400, 'height': 80},
+        'Joy_2': {'Type': 'Digital', 'x': 1044, 'y': 1205, 'width': 400, 'height': 80},
+        'Joy_3': {'Type': 'Digital', 'x': 644, 'y': 1285, 'width': 400, 'height': 80},
+        'Joy_4': {'Type': 'Digital', 'x': 1044, 'y': 1285, 'width': 400, 'height': 80},
+        'Joy_5': {'Type': 'Digital', 'x': 644, 'y': 1399, 'width': 400, 'height': 80},
+        'Joy_6': {'Type': 'Digital', 'x': 124, 'y': 1672, 'width': 400, 'height': 80},
+        'Joy_7': {'Type': 'Digital', 'x': 124, 'y': 1749, 'width': 400, 'height': 80},
+        'Joy_8': {'Type': 'Digital', 'x': 3284, 'y': 1190, 'width': 400, 'height': 80},
+        'Joy_9': {'Type': 'Digital', 'x': 2884, 'y': 1190, 'width': 400, 'height': 80},
+        'Joy_10': {'Type': 'Digital', 'x': 3284, 'y': 1270, 'width': 400, 'height': 80},
+        'Joy_11': {'Type': 'Digital', 'x': 2884, 'y': 1270, 'width': 400, 'height': 80},
+        'Joy_12': {'Type': 'Digital', 'x': 3284, 'y': 1790, 'width': 400, 'height': 80},
+        'Joy_13': {'Type': 'Digital', 'x': 3284, 'y': 1408, 'width': 400, 'height': 80},
+        'Joy_14': {'Type': 'Digital', 'x': 3284, 'y': 1485, 'width': 400, 'height': 80},
+        'Joy_15': {'Type': 'Digital', 'x': 2000, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        'Joy_16': {'Type': 'Digital', 'x': 2884, 'y': 1190 , 'width': 400, 'height': 80},  #Not sure
+        'Joy_17': {'Type': 'Digital', 'x': 2400, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        'Joy_18': {'Type': 'Digital', 'x': 2600, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        'Joy_19': {'Type': 'Digital', 'x': 2800, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        'Joy_20': {'Type': 'Digital', 'x': 864, 'y': 390, 'width': 400, 'height': 80},
+        'Joy_21': {'Type': 'Digital', 'x': 124, 'y': 327, 'width': 400, 'height': 80},
+        'Joy_22': {'Type': 'Digital', 'x': 2724, 'y': 159, 'width': 400, 'height': 80},
+        'Joy_23': {'Type': 'Digital', 'x': 3284, 'y': 159, 'width': 400, 'height':80},
+        'Joy_24': {'Type': 'Digital', 'x': 3284, 'y': 239, 'width': 400, 'height': 80},
+        'Joy_25': {'Type': 'Digital', 'x': 3284, 'y': 319, 'width': 400, 'height': 80},
+        'Joy_26': {'Type': 'Digital', 'x': 3284, 'y': 399, 'width': 400, 'height': 80},
+        'Joy_27': {'Type': 'Digital', 'x': 3284, 'y': 479, 'width': 400, 'height': 80},
+        'Joy_28': {'Type': 'Digital', 'x': 2724, 'y': 257, 'width': 400, 'height': 80},
+        'Joy_29': {'Type': 'Digital', 'x': 864, 'y': 680, 'width': 400, 'height': 80},
+        'Joy_30': {'Type': 'Digital', 'x': 864, 'y': 760, 'width': 400, 'height': 80},
+        'Joy_31': {'Type': 'Digital', 'x': 864, 'y': 840, 'width': 400, 'height': 80},
+        'Joy_32': {'Type': 'Digital', 'x': 864, 'y': 920, 'width': 400, 'height': 80},
+        'Joy_33': {'Type': 'Digital', 'x': 864, 'y': 1000, 'width': 400, 'height': 80},
+        'Joy_34': {'Type': 'Digital', 'x': 124, 'y': 755, 'width': 400, 'height': 80},
+        'Joy_35': {'Type': 'Digital', 'x': 3284, 'y': 619, 'width': 400, 'height': 80},
+        'Joy_36': {'Type': 'Digital', 'x': 3284, 'y': 699, 'width': 400, 'height': 80},
+        'Joy_37': {'Type': 'Digital', 'x': 2724, 'y': 723, 'width': 400, 'height': 80},
+        'Joy_38': {'Type': 'Digital', 'x': 2724, 'y': 803, 'width': 400, 'height': 80},
+        'Joy_39': {'Type': 'Digital', 'x': 2884, 'y': 1030, 'width': 400, 'height': 80},
+        'Joy_40': {'Type': 'Digital', 'x': 124, 'y': 1202, 'width': 400, 'height': 80},
+        'Joy_41': {'Type': 'Digital', 'x': 124, 'y': 1282, 'width': 400, 'height': 80},
+        'Joy_42': {'Type': 'Digital', 'x': 124, 'y': 1362, 'width': 400, 'height': 80},
+        'Joy_43': {'Type': 'Digital', 'x': 124, 'y': 1442, 'width': 400, 'height': 80},
+        'Joy_44': {'Type': 'Digital', 'x': 124, 'y': 1522, 'width': 400, 'height': 80},
+        'Joy_45': {'Type': 'Digital', 'x': 124, 'y': 835, 'width': 400, 'height': 80},
+        'Joy_46': {'Type': 'Digital', 'x': 124, 'y': 915, 'width': 400, 'height': 80},
+        'Joy_47': {'Type': 'Digital', 'x': 124, 'y': 995, 'width': 400, 'height': 80},
+        'Joy_48': {'Type': 'Digital', 'x': 124, 'y': 1075, 'width': 400, 'height': 80},
+
+        'Joy_POV1Up': {'Type': 'Digital', 'x': 124, 'y': 407, 'width': 400, 'height': 80}, # PoV up
+        'Joy_POV1Right': {'Type': 'Digital', 'x': 124, 'y': 487, 'width': 400, 'height': 80}, # PoV right
+        'Joy_POV1Down': {'Type': 'Digital', 'x': 124, 'y': 567, 'width': 400, 'height': 80}, # PoV down
+        'Joy_POV1Left': {'Type': 'Digital', 'x': 124, 'y': 647, 'width': 400, 'height': 80}, # PoV left
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 524, 'y': 2040, 'width': 400, 'height': 80},
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 84, 'y': 2040, 'width': 400, 'height': 80},
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 974, 'y': 2040, 'width': 400, 'height': 80},
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 644, 'y': 1732, 'width': 400, 'height': 80}, # Slider?
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 124, 'y': 835, 'width': 400, 'height': 80}, # Pov Axis up/down
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 124, 'y': 915, 'width': 400, 'height': 80}, # Pov Axis left/right
     },
 }
 
