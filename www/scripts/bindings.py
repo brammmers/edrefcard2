@@ -1196,6 +1196,7 @@ def processForm(form):
     errors = Errors()
     deviceForBlockImage = form.getvalue('blocks')
     mode = determineMode(form)
+    skipReplaySave = False
     
     if mode is Mode.invalid:
         errors.errors = 'That is not a valid description. Leading punctuation is not allowed.</h1>'
@@ -1247,6 +1248,7 @@ def processForm(form):
         if xml is None or xml == b'':
             errors.errors = '<h1>No bindings file supplied; please go back and select your binds file as per the instructions.</h1>'
             xml = '<root></root>'
+            skipReplaySave = True
         else:
             xml = xml.decode(encoding='utf-8')
             bindsPath = config.pathWithSuffix('.binds')
@@ -1313,7 +1315,7 @@ def processForm(form):
             errors.errors = '<h1>The file supplied does not have any bindings for a supported controller or keyboard.</h1>'
     
     # Save variables for later replays
-    if (mode is Mode.generate and public):
+    if (mode is Mode.generate and public and not skipReplaySave):
         saveReplayInfo(config, description, styling, displayGroups, devices, errors)
 
     printHTML(mode, options, config, public, createdImages, deviceForBlockImage, errors)
