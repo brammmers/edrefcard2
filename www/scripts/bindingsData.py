@@ -3876,48 +3876,48 @@ hotasDetails = {
     },
     '231D2214': { # VKB GNX WWII Throttle 
         'displayName': 'VKB GNX WWII Throttle',
-        'Joy_1': {'Type': 'Digital', 'x': 3058, 'y': 840, 'width': 536, 'height': 46}, # A1
-        'Joy_2': {'Type': 'Digital', 'x': 3058, 'y': 892, 'width': 536, 'height': 46}, # A2
-        'Joy_3': {'Type': 'Digital', 'x': 2212, 'y': 550, 'width': 536, 'height': 46}, # B1
-        'Joy_4': {'Type': 'Digital', 'x': 2212, 'y': 602, 'width': 536, 'height': 46}, # B2
-        'Joy_5': {'Type': 'Digital', 'x': 2212, 'y': 654, 'width': 536, 'height': 46}, # B3
-        'Joy_6': {'Type': 'Digital', 'x': 3058, 'y': 1042, 'width': 536, 'height': 46}, # White Right Rocker Up
-        'Joy_7': {'Type': 'Digital', 'x': 3058, 'y': 1092, 'width': 536, 'height': 46}, # White Right Rocker Middle
-        'Joy_8': {'Type': 'Digital', 'x': 3058, 'y': 1146, 'width': 536, 'height': 46}, # White Right Rocker Down
-        'Joy_9': {'Type': 'Digital', 'x': 3058, 'y': 1290, 'width': 536, 'height': 46}, # White Left Rocker Up
-        'Joy_10': {'Type': 'Digital', 'x': 3058, 'y': 1342, 'width': 536, 'height': 46}, # White Left Rocker Middle
-        'Joy_11': {'Type': 'Digital', 'x': 3058, 'y': 1396, 'width': 536, 'height': 46}, # White Left Rocker Down
-        'Joy_12': {'Type': 'Digital', 'x': 3058, 'y': 690, 'width': 536, 'height': 46}, # Red Start
-        'Joy_13': {'Type': 'Digital', 'x': 3058, 'y': 544, 'width': 536, 'height': 46}, # Mode 1
-        'Joy_14': {'Type': 'Digital', 'x': 3058, 'y': 492, 'width': 536, 'height': 46}, # Mode 2
-        'Joy_15': {'Type': 'Digital', 'x': 3058, 'y': 438, 'width': 536, 'height': 46}, # Mode 3
-        'Joy_16': {'Type': 'Digital', 'x': 3058, 'y': 386, 'width': 536, 'height': 46}, # Mode 4
-        'Joy_17': {'Type': 'Digital', 'x': 2212, 'y': 392, 'width': 536, 'height': 46}, # C1
-        'Joy_18': {'Type': 'Digital', 'x': 1288, 'y': 788, 'width': 536, 'height': 46}, # Flaps 1
-        'Joy_19': {'Type': 'Digital', 'x': 1288, 'y': 736, 'width': 536, 'height': 46}, # Flaps 2
-        'Joy_20': {'Type': 'Digital', 'x': 1288, 'y': 684, 'width': 536, 'height': 46}, # Flaps 3
-        'Joy_21': {'Type': 'Digital', 'x': 1288, 'y': 634, 'width': 536, 'height': 46}, # Flaps 4
-        'Joy_22': {'Type': 'Digital', 'x': 1288, 'y': 486, 'width': 536, 'height': 46}, # Landing Gear Down
-        'Joy_23': {'Type': 'Digital', 'x': 1288, 'y': 436, 'width': 536, 'height': 46}, # Landing Gear Middle
-        'Joy_24': {'Type': 'Digital', 'x': 1288, 'y': 386, 'width': 536, 'height': 46}, # Landing Gear Up
-        'Joy_25': {'Type': 'Digital', 'x': 362, 'y': 1230, 'width': 536, 'height': 46}, # A1 (THQ)
-        'Joy_26': {'Type': 'Digital', 'x': 362, 'y': 1280, 'width': 536, 'height': 46}, # A2
-        'Joy_27': {'Type': 'Digital', 'x': 362, 'y': 1332, 'width': 536, 'height': 46}, # A3
-        'Joy_28': {'Type': 'Digital', 'x': 362, 'y': 1384, 'width': 536, 'height': 46}, # A4
-        'Joy_29': {'Type': 'Digital', 'x': 362, 'y': 1522, 'width': 536, 'height': 46}, # B1
-        'Joy_30': {'Type': 'Digital', 'x': 362, 'y': 1712, 'width': 536, 'height': 46}, # C1
-        'Joy_31': {'Type': 'Digital', 'x': 362, 'y': 1764, 'width': 536, 'height': 46}, # C2
-        'Joy_32': {'Type': 'Digital', 'x': 362, 'y': 1572, 'width': 536, 'height': 46}, # B2
-        'Joy_33': {'Type': 'Digital', 'x': 362, 'y': 386, 'width': 536, 'height': 46}, # <
-        'Joy_34': {'Type': 'Digital', 'x': 362, 'y': 438, 'width': 536, 'height': 46}, # >
-        'Joy_35': {'Type': 'Digital', 'x': 362, 'y': 626, 'width': 536, 'height': 46}, # V
-        'Joy_36': {'Type': 'Digital', 'x': 362, 'y': 574, 'width': 536, 'height': 46}, # ^
-        'Joy_37': {'Type': 'Digital', 'x': 362, 'y': 768, 'width': 536, 'height': 46}, # Black
-        'Joy_38': {'Type': 'Digital', 'x': 362, 'y': 910, 'width': 536, 'height': 46}, # Red
+        'Joy_1': {'Type': 'Digital', 'x': 3152, 'y': 932, 'width': 548, 'height': 44}, # A1
+        'Joy_2': {'Type': 'Digital', 'x': 3152, 'y': 986, 'width': 548, 'height': 44}, # A2
+        'Joy_3': {'Type': 'Digital', 'x': 2292, 'y': 638, 'width': 548, 'height': 44}, # B1
+        'Joy_4': {'Type': 'Digital', 'x': 2292, 'y': 692, 'width': 548, 'height': 44}, # B2
+        'Joy_5': {'Type': 'Digital', 'x': 2292, 'y': 742, 'width': 548, 'height': 44}, # B3
+        'Joy_6': {'Type': 'Digital', 'x': 3152, 'y': 1134, 'width': 548, 'height': 44}, # White Right Rocker Up
+        'Joy_7': {'Type': 'Digital', 'x': 3152, 'y': 1186, 'width': 548, 'height': 44}, # White Right Rocker Middle
+        'Joy_8': {'Type': 'Digital', 'x': 3152, 'y': 1240, 'width': 548, 'height': 44}, # White Right Rocker Down
+        'Joy_9': {'Type': 'Digital', 'x': 3152, 'y': 1388, 'width': 548, 'height': 44}, # White Left Rocker Up
+        'Joy_10': {'Type': 'Digital', 'x': 3152, 'y': 1442, 'width': 548, 'height': 44}, # White Left Rocker Middle
+        'Joy_11': {'Type': 'Digital', 'x': 3152, 'y': 1496, 'width': 548, 'height': 44}, # White Left Rocker Down
+        'Joy_12': {'Type': 'Digital', 'x': 3152, 'y': 778, 'width': 548, 'height': 44}, # Red Start
+        'Joy_13': {'Type': 'Digital', 'x': 3152, 'y': 630, 'width': 548, 'height': 44}, # Mode 1
+        'Joy_14': {'Type': 'Digital', 'x': 3152, 'y': 576, 'width': 548, 'height': 44}, # Mode 2
+        'Joy_15': {'Type': 'Digital', 'x': 3152, 'y': 522, 'width': 548, 'height': 44}, # Mode 3
+        'Joy_16': {'Type': 'Digital', 'x': 3152, 'y': 470, 'width': 548, 'height': 44}, # Mode 4
+        'Joy_17': {'Type': 'Digital', 'x': 2292, 'y': 472, 'width': 548, 'height': 44}, # C1
+        'Joy_18': {'Type': 'Digital', 'x': 1350, 'y': 878, 'width': 548, 'height': 44}, # Flaps 1
+        'Joy_19': {'Type': 'Digital', 'x': 1350, 'y': 824, 'width': 548, 'height': 44}, # Flaps 2
+        'Joy_20': {'Type': 'Digital', 'x': 1350, 'y': 772, 'width': 548, 'height': 44}, # Flaps 3
+        'Joy_21': {'Type': 'Digital', 'x': 1350, 'y': 720, 'width': 548, 'height': 44}, # Flaps 4
+        'Joy_22': {'Type': 'Digital', 'x': 1350, 'y': 572, 'width': 548, 'height': 44}, # Landing Gear Down
+        'Joy_23': {'Type': 'Digital', 'x': 1350, 'y': 520, 'width': 548, 'height': 44}, # Landing Gear Middle
+        'Joy_24': {'Type': 'Digital', 'x': 1350, 'y': 468, 'width': 548, 'height': 44}, # Landing Gear Up
+        'Joy_25': {'Type': 'Digital', 'x': 412, 'y': 1336, 'width': 548, 'height': 44}, # A1 (THQ)
+        'Joy_26': {'Type': 'Digital', 'x': 412, 'y': 1388, 'width': 548, 'height': 44}, # A2
+        'Joy_27': {'Type': 'Digital', 'x': 412, 'y': 1440, 'width': 548, 'height': 44}, # A3
+        'Joy_28': {'Type': 'Digital', 'x': 412, 'y': 1492, 'width': 548, 'height': 44}, # A4
+        'Joy_29': {'Type': 'Digital', 'x': 412, 'y': 1636, 'width': 548, 'height': 44}, # B1
+        'Joy_30': {'Type': 'Digital', 'x': 412, 'y': 1828, 'width': 548, 'height': 44}, # C1
+        'Joy_31': {'Type': 'Digital', 'x': 412, 'y': 1880, 'width': 548, 'height': 44}, # C2
+        'Joy_32': {'Type': 'Digital', 'x': 412, 'y': 1686, 'width': 548, 'height': 44}, # B2
+        'Joy_33': {'Type': 'Digital', 'x': 412, 'y': 472, 'width': 548, 'height': 44}, # <
+        'Joy_34': {'Type': 'Digital', 'x': 412, 'y': 522, 'width': 548, 'height': 44}, # >
+        'Joy_35': {'Type': 'Digital', 'x': 412, 'y': 712, 'width': 548, 'height': 44}, # V
+        'Joy_36': {'Type': 'Digital', 'x': 412, 'y': 662, 'width': 548, 'height': 44}, # ^
+        'Joy_37': {'Type': 'Digital', 'x': 412, 'y': 856, 'width': 548, 'height': 44}, # Black
+        'Joy_38': {'Type': 'Digital', 'x': 412, 'y': 1002, 'width': 548, 'height': 44}, # Red
 
-        'Joy_XAxis': {'Type': 'Analogue', 'x': 1258, 'y': 1834, 'width': 536, 'height': 46},
-        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1258, 'y': 1884, 'width': 536, 'height': 46}, # Not used for THQ-WW2
-        'Joy_YAxis': {'Type': 'Analogue', 'x': 1258, 'y': 1936, 'width': 536, 'height': 46},
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 1328, 'y': 1942, 'width': 548, 'height': 44},
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1328, 'y': 1994, 'width': 548, 'height': 44}, # Not used for THQ-WW2
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 1328, 'y': 2046, 'width': 548, 'height': 44},
     },
     
     '4098BE62': { # Winwing Orion Throttle Base II + F18 Handle
