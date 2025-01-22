@@ -3918,6 +3918,10 @@ hotasDetails = {
         'Joy_XAxis': {'Type': 'Analogue', 'x': 1328, 'y': 1942, 'width': 548, 'height': 44},
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1328, 'y': 1994, 'width': 548, 'height': 44}, # Not used for THQ-WW2
         'Joy_YAxis': {'Type': 'Analogue', 'x': 1328, 'y': 2046, 'width': 548, 'height': 44},
+
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 2304, 'y': 1944, 'width': 548, 'height': 44},
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 2304, 'y': 1996, 'width': 548, 'height': 44},
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 2304, 'y': 2048, 'width': 548, 'height': 44},
     },
     
     '4098BE62': { # Winwing Orion Throttle Base II + F18 Handle
