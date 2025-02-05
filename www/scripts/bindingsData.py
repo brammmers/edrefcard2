@@ -68,7 +68,8 @@ supportedDevices = OrderedDict([
     ('VKB-STECS-VC2', {'Template': 'vkb-stecs-2', 'HandledDevices': ['231D012D::1']}),
     ('VKB-GNX-WWII-Throttle', {'Template': 'vkb-gnx-ww2-throttle', 'HandledDevices': ['231D2214']}),
     ('Winwing-Orion-Throttle-2-F18-Handle', {'Template': 'winwing-orion-throttle2-f18-handle', 'HandledDevices': ['4098BE62']}),
-    ('Winwing-Ursa-Minor-Fighter', {'Template': 'winwing-ursa-minor-fighter-right', 'HandledDevices': ['4098BC2A']}),
+    ('Winwing-Ursa-Minor-Fighter-Right', {'Template': 'winwing-ursa-minor-fighter-right', 'HandledDevices': ['4098BC2A']}),
+    ('Winwing-Ursa-Minor-Fighter-Left', {'Template': 'winwing-ursa-minor-fighter-left', 'HandledDevices': ['4098BC29']}),
     ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']})
 ])
 
@@ -4106,6 +4107,68 @@ hotasDetails = {
         'Joy_UAxis': {'Type': 'Analogue', 'x': 644, 'y': 1732, 'width': 400, 'height': 80}, # Slider?
         'Joy_RXAxis': {'Type': 'Analogue', 'x': 124, 'y': 835, 'width': 400, 'height': 80}, # Pov Axis up/down
         'Joy_RYAxis': {'Type': 'Analogue', 'x': 124, 'y': 915, 'width': 400, 'height': 80}, # Pov Axis left/right
+    },
+    '4098BC29': { # Wingwin Ursa Minor Fighter (Left)
+        'displayName': 'Wingwin Ursa Minor Fighter (Left)',
+        'Joy_1': {'Type': 'Digital', 'x': 367, 'y': 1398, 'width': 400, 'height': 80},
+        'Joy_2': {'Type': 'Digital', 'x': 767, 'y': 1398, 'width': 400, 'height': 80},
+        'Joy_3': {'Type': 'Digital', 'x': 367, 'y': 1478, 'width': 400, 'height': 80},
+        'Joy_4': {'Type': 'Digital', 'x': 767, 'y': 1478, 'width': 400, 'height': 80},
+        'Joy_5': {'Type': 'Digital', 'x': 767, 'y': 1825, 'width': 400, 'height': 80},
+        'Joy_6': {'Type': 'Digital', 'x': 767, 'y': 1986, 'width': 400, 'height': 80},
+        'Joy_7': {'Type': 'Digital', 'x': 767, 'y': 2066, 'width': 400, 'height': 80},
+        'Joy_8': {'Type': 'Digital', 'x': 3388, 'y': 1209, 'width': 400, 'height': 80},
+        'Joy_9': {'Type': 'Digital', 'x': 2987, 'y': 1209, 'width': 400, 'height': 80},
+        'Joy_10': {'Type': 'Digital', 'x': 3386, 'y': 1290, 'width': 400, 'height': 80},
+        'Joy_11': {'Type': 'Digital', 'x': 2989, 'y': 1290, 'width': 400, 'height': 80},
+        'Joy_12': {'Type': 'Digital', 'x': 2989, 'y': 1402, 'width': 400, 'height': 80},
+        'Joy_13': {'Type': 'Digital', 'x': 3947, 'y': 1637, 'width': 400, 'height': 80},
+        'Joy_14': {'Type': 'Digital', 'x': 3947, 'y': 1717, 'width': 400, 'height': 80},
+        # 'Joy_15': {'Type': 'Digital', 'x': 2000, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        # 'Joy_16': {'Type': 'Digital', 'x': 2884, 'y': 1190 , 'width': 400, 'height': 80},  #Not sure
+        # 'Joy_17': {'Type': 'Digital', 'x': 2400, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        # 'Joy_18': {'Type': 'Digital', 'x': 2600, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        # 'Joy_19': {'Type': 'Digital', 'x': 2800, 'y': 2030, 'width': 400, 'height': 80},  #Not sure
+        'Joy_20': {'Type': 'Digital', 'x': 2989, 'y': 363, 'width': 400, 'height': 80},
+        'Joy_21': {'Type': 'Digital', 'x': 3948, 'y': 293, 'width': 400, 'height': 80},
+        'Joy_22': {'Type': 'Digital', 'x': 846, 'y': 343, 'width': 400, 'height': 80},
+        'Joy_23': {'Type': 'Digital', 'x': 357, 'y': 343, 'width': 400, 'height':80},
+        'Joy_24': {'Type': 'Digital', 'x': 357, 'y': 423, 'width': 400, 'height': 80},
+        'Joy_25': {'Type': 'Digital', 'x': 357, 'y': 503, 'width': 400, 'height': 80},
+        'Joy_26': {'Type': 'Digital', 'x': 357, 'y': 583, 'width': 400, 'height': 80},
+        'Joy_27': {'Type': 'Digital', 'x': 357, 'y': 663, 'width': 400, 'height': 80},
+        'Joy_28': {'Type': 'Digital', 'x': 846, 'y': 442, 'width': 400, 'height': 80},
+        'Joy_29': {'Type': 'Digital', 'x': 2997, 'y': 643, 'width': 400, 'height': 80},
+        'Joy_30': {'Type': 'Digital', 'x': 2997, 'y': 723, 'width': 400, 'height': 80},
+        'Joy_31': {'Type': 'Digital', 'x': 2997, 'y': 803, 'width': 400, 'height': 80},
+        'Joy_32': {'Type': 'Digital', 'x': 2997, 'y': 883, 'width': 400, 'height': 80},
+        'Joy_33': {'Type': 'Digital', 'x': 2997, 'y': 963, 'width': 400, 'height': 80},
+        'Joy_34': {'Type': 'Digital', 'x': 3947, 'y': 721, 'width': 400, 'height': 80},
+        'Joy_35': {'Type': 'Digital', 'x': 357, 'y': 803, 'width': 400, 'height': 80},
+        'Joy_36': {'Type': 'Digital', 'x': 357, 'y': 883, 'width': 400, 'height': 80},
+        'Joy_37': {'Type': 'Digital', 'x': 847, 'y': 907, 'width': 400, 'height': 80},
+        'Joy_38': {'Type': 'Digital', 'x': 847, 'y': 987, 'width': 400, 'height': 80},
+        'Joy_39': {'Type': 'Digital', 'x': 367, 'y': 1237, 'width': 400, 'height': 80},
+        'Joy_40': {'Type': 'Digital', 'x': 3947, 'y': 1169, 'width': 400, 'height': 80},
+        'Joy_41': {'Type': 'Digital', 'x': 3947, 'y': 1249, 'width': 400, 'height': 80},
+        'Joy_42': {'Type': 'Digital', 'x': 3947, 'y': 1329, 'width': 400, 'height': 80},
+        'Joy_43': {'Type': 'Digital', 'x': 3947, 'y': 1404, 'width': 400, 'height': 80},
+        'Joy_44': {'Type': 'Digital', 'x': 3947, 'y': 1485, 'width': 400, 'height': 80},
+        'Joy_45': {'Type': 'Digital', 'x': 3947, 'y': 801, 'width': 400, 'height': 80},
+        'Joy_46': {'Type': 'Digital', 'x': 3947, 'y': 881, 'width': 400, 'height': 80},
+        'Joy_47': {'Type': 'Digital', 'x': 3947, 'y': 961, 'width': 400, 'height': 80},
+        'Joy_48': {'Type': 'Digital', 'x': 3947, 'y': 1041, 'width': 400, 'height': 80},
+
+        'Joy_POV1Up': {'Type': 'Digital', 'x': 3947, 'y': 373, 'width': 400, 'height': 80}, # PoV up
+        'Joy_POV1Right': {'Type': 'Digital', 'x': 3947, 'y': 453, 'width': 400, 'height': 80}, # PoV right
+        'Joy_POV1Down': {'Type': 'Digital', 'x': 3947, 'y': 533, 'width': 400, 'height': 80}, # PoV down
+        'Joy_POV1Left': {'Type': 'Digital', 'x': 3947, 'y': 613, 'width': 400, 'height': 80}, # PoV left
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 3467, 'y': 2013, 'width': 400, 'height': 80},
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 3957, 'y': 2013, 'width': 400, 'height': 80},
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 2977, 'y': 2013, 'width': 400, 'height': 80},
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 2987, 'y': 1735, 'width': 400, 'height': 80}, # Slider?
+        'Joy_RXAxis': {'Type': 'Analogue', 'x': 3547, 'y': 801, 'width': 400, 'height': 80}, # Pov Axis up/down
+        'Joy_RYAxis': {'Type': 'Analogue', 'x': 3547, 'y': 881, 'width': 400, 'height': 80}, # Pov Axis left/right
     },
 }
 
