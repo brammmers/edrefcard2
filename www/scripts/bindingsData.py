@@ -48,7 +48,7 @@ supportedDevices = OrderedDict([
     ('DS4', {'Template': 'ds4', 'HandledDevices': ['DS4', 'DualShock4']}),
     ('VPC-WarBRD-DELTA-Left', {'Template': 'vpc-warbrd-delta-left', 'HandledDevices': ['03EB2042']}),
     ('VPC-WarBRD-DELTA-Right', {'Template': 'vpc-warbrd-delta-right', 'HandledDevices': ['03EB2044']}),
-    ('VPC-ALPHA-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB2046','334483EB', '334480CB']}),
+    ('VPC-ALPHA-Left', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB2046','334483EB', '334480CB','3344C0CB']}),
     ('VPC-ALPHA-Right', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB2048','334443EB','334440CB','334400CB','3344412F']}),
     ('VPC-ALPHA-Left-Custom', {'Template': 'vpc-alpha-left', 'HandledDevices': ['03EB9901']}),
     ('VPC-ALPHA-Right-Custom', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB9902']}),
