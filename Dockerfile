@@ -6,7 +6,7 @@ RUN apt-get update -y \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*    
 
-RUN pip install lxml wand
+RUN pip install lxml wand legacy-cgi
 
 # Copy over the apache configuration file and enable the site
 RUN a2enmod headers rewrite cgi
