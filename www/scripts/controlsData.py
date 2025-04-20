@@ -455,7 +455,7 @@ controls = {
     'HumanoidToggleToolModeButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 132, 'Name': 'Tool Mode', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'HumanoidToggleWeaponBoosterModuleButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 134, 'Name': 'Weapon Booster', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'HumanoidZoomButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 135, 'Name': 'ZoomButton', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
-    'HumanoidWalkButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 136, 'Name': 'Sprint', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
+    'HumanoidWalkButton': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 136, 'Name': 'Walk', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'HumanoidHealthPack': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 137, 'Name': 'Health Pack', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'HumanoidBattery': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 138, 'Name': 'Battery Pack', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
     'HumanoidSelectFragGrenade': {'Group': 'OnFoot', 'Category': 'Combat', 'Order': 139, 'Name': 'Frag Grenade', 'Type': 'Digital', 'HasAnalogue': False, 'HideIfSameAs': []},
