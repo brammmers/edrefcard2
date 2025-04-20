@@ -16,7 +16,7 @@ supportedDevices = OrderedDict([
     ('TCASidestickLeft', {'Template': 'tca-left', 'HandledDevices': ['044F0405']}),
     ('TCASidestickRight', {'Template': 'tca-right', 'HandledDevices': ['044F0406']}),
     ('TFlightHOTASX', {'Template': 'hotasx', 'HandledDevices': ['ThrustMasterTFlightHOTASX']}),
-    ('ThrustMasterHOTAS4', {'Template': 'hotas4', 'HandledDevices': ['ThrustMasterHOTAS4']}),
+    ('ThrustMasterHOTAS4', {'Template': 'hotas4', 'HandledDevices': ['ThrustMasterHOTAS4','TFlightHotasOne']}),
     ('T-Rudder', {'Template': 'tfrp', 'HandledDevices': ['T-Rudder']}),
     ('TFlightStickX', {'Template': 'stickx', 'HandledDevices': ['044FB106']}),
     ('Warthog', {'Template': 'warthog', 'HandledDevices': ['ThrustMasterWarthogJoystick', 'ThrustMasterWarthogThrottle', 'ThrustMasterWarthogCombined']}),
@@ -841,6 +841,29 @@ hotasDetails = {
         'Joy_6': {'Type': 'Digital', 'x': 2614, 'y': 1540, 'width': 932}, # Switch 3 down
     },
     'ThrustMasterHOTAS4': {
+        'Joy_1': {'Type': 'Digital', 'x': 1394, 'y': 614, 'width': 1082}, # Stick primary trigger
+        'Joy_2': {'Type': 'Digital', 'x': 2114, 'y': 264, 'width': 1192}, # Stick L1 button
+        'Joy_3': {'Type': 'Digital', 'x': 2954, 'y': 544, 'width': 792, 'height': 108}, # Stick R3 button
+        'Joy_4': {'Type': 'Digital', 'x': 2754, 'y': 374, 'width': 832, 'height': 108}, # Stick L3 button
+        'Joy_5': {'Type': 'Digital', 'x': 950, 'y': 734, 'width': 592, 'height': 108}, # Throttle 'square'
+        'Joy_6': {'Type': 'Digital', 'x': 950, 'y': 898, 'width': 592, 'height': 108}, # Throttle 'cross'
+        'Joy_7': {'Type': 'Digital', 'x': 950, 'y': 1046, 'width': 592, 'height': 108}, # Throttle 'circle'
+        'Joy_8': {'Type': 'Digital', 'x': 1044, 'y': 1374, 'width': 592, 'height': 108}, # Throttle 'triangle'
+        'Joy_9': {'Type': 'Digital', 'x': 1628, 'y': 710, 'width': 832}, # Throttle R2 button
+        'Joy_10': {'Type': 'Digital', 'x': 1928, 'y': 790, 'width': 532, 'height': 108}, # Throttle L2 button
+        'Joy_11': {'Type': 'Digital', 'x': 284, 'y': 2044, 'width': 592}, # Throttle SE button
+        'Joy_12': {'Type': 'Digital', 'x': 984, 'y': 2044, 'width': 592}, # Throttle ST button
+        'Joy_POV1Up': {'Type': 'Digital', 'x': 994, 'y': 354, 'width': 1532}, # PoV hat up
+        'Joy_POV1Right': {'Type': 'Digital', 'x': 994, 'y': 410, 'width': 1532}, # PoV hat right
+        'Joy_POV1Down': {'Type': 'Digital', 'x': 994, 'y': 466, 'width': 1532}, # PoV hat down
+        'Joy_POV1Left': {'Type': 'Digital', 'x': 994, 'y': 522, 'width': 1532}, # PoV hat left
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 3018, 'y': 1988, 'width': 792, 'height': 108}, # Stick twist
+        'Joy_XAxis': {'Type': 'Analogue', 'x': 3018, 'y': 1878, 'width': 792, 'height': 108}, # Stick left/right
+        'Joy_YAxis': {'Type': 'Analogue', 'x': 3018, 'y': 1768, 'width': 792, 'height': 108}, # Stick up/down
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 96, 'y': 736, 'width': 692}, # Throttle
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 1114, 'y': 1504, 'width': 932, 'height': 108}, # Throttle rocker
+    },
+    'TFlightHotasOne': {
         'Joy_1': {'Type': 'Digital', 'x': 1394, 'y': 614, 'width': 1082}, # Stick primary trigger
         'Joy_2': {'Type': 'Digital', 'x': 2114, 'y': 264, 'width': 1192}, # Stick L1 button
         'Joy_3': {'Type': 'Digital', 'x': 2954, 'y': 544, 'width': 792, 'height': 108}, # Stick R3 button
