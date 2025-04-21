@@ -54,6 +54,7 @@ supportedDevices = OrderedDict([
     ('VPC-ALPHA-Right-Custom', {'Template': 'vpc-alpha-right', 'HandledDevices': ['03EB9902']}),
     ('VPC-ALPHA-Prime-Left', {'Template': 'vpc-alpha-prime-left', 'HandledDevices': ['334483F3','3344838F','334403F3','3344038F']}),
     ('VPC-ALPHA-Prime-Right', {'Template': 'vpc-alpha-prime-right', 'HandledDevices': ['334443F4','33444390','3344C3F3','334483F4','334403F4','334440D4','33440390']}),
+    ('VPC-FLNKR-Right', {'Template': 'vpc-alpha-prime-right', 'HandledDevices': ['334443F4','33444390','3344C3F3','334483F4','334403F4','334440D4','33440390']}),
     ('VPC-MongoosT-50CM2-Throttle', {'Template': 'vpc-mongoost-50cm2-throttle', 'HandledDevices': ['33448195']}),
     ('VPC-MongoosT-50CM3-Throttle', {'Template': 'vpc-mongoost-50cm3-throttle', 'HandledDevices': ['33448197','33440197','VPCThrottle']}),
     ('VPC-MongoosT-50CM3-Throttle-32B', {'Template': 'vpc-mongoost-50cm3-throttle-32b', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2']}),
