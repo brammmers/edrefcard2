@@ -3073,13 +3073,13 @@ hotasDetails = {
         'Joy_5': {'Type': 'Digital', 'x': 613, 'y': 143, 'width': 1180}, # down
         'Joy_6': {'Type': 'Digital', 'x': 613, 'y': 203, 'width': 1180}, # left
         # Right button        
-        'Joy_7': {'Type': 'Digital', 'x': 933, 'y': 373, 'width': 1180}, # Right Thumb button
+        'Joy_7': {'Type': 'Digital', 'x': 933, 'y': 373, 'width': 1205}, # Right Thumb button
         # 4-way hat right
         'Joy_9': {'Type': 'Digital', 'x': 1313, 'y': 1157, 'width': 1180}, # Push		
         'Joy_10': {'Type': 'Digital', 'x': 1313, 'y': 919, 'width': 1180}, # Up
         'Joy_11': {'Type': 'Digital', 'x': 1313, 'y': 977, 'width': 1180}, # Right
         'Joy_12': {'Type': 'Digital', 'x': 1313, 'y': 1038, 'width': 1180}, # Down
-        'Joy_13': {'Type': 'Digital', 'x': 1313, 'y': 1080, 'width': 1180}, # Left
+        'Joy_13': {'Type': 'Digital', 'x': 1313, 'y': 1085, 'width': 1180}, # Left
 	    # 4-way hat right side
 	    'Joy_20': {'Type': 'Digital', 'x': 1379, 'y': 710, 'width': 1180}, # Push
         'Joy_21': {'Type': 'Digital', 'x': 1379, 'y': 470, 'width': 1180}, # Up
@@ -3103,12 +3103,12 @@ hotasDetails = {
         'Joy_17': {'Type': 'Digital', 'x': 2593, 'y': 264, 'width': 1180}, # Down
         'Joy_18': {'Type': 'Digital', 'x': 2593, 'y': 322, 'width': 1180}, # Left
         # Lower left side thumb button
-        'Joy_19': {'Type': 'Digital', 'x': 1813, 'y': 1440, 'width': 1200},
+        'Joy_19': {'Type': 'Digital', 'x': 1813, 'y': 1440, 'width': 1205},
         # Break axis
         'Joy_30': {'Type': 'Digital', 'x': 1822, 'y': 1747, 'width': 1180},
         'Joy_UAxis': {'Type': 'Analogue', 'x': 1822, 'y': 1792, 'width': 1180}, #TODO: verify this one's name in binds file!
         # Trigger
-        'Joy_29': {'Type': 'Digital', 'x': 1882, 'y': 1370, 'width': 1200},
+        'Joy_29': {'Type': 'Digital', 'x': 1882, 'y': 1370, 'width': 1205},
 	    # Joystick axis
         'Joy_XAxis': {'Type': 'Analogue', 'x': 1000, 'y': 1951, 'width': 1180},
         'Joy_YAxis': {'Type': 'Analogue', 'x': 1000, 'y': 2010, 'width': 1180},
