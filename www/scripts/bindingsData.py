@@ -3087,9 +3087,9 @@ hotasDetails = {
         'Joy_23': {'Type': 'Digital', 'x': 1379, 'y': 591, 'width': 1180}, # Down 
         'Joy_24': {'Type': 'Digital', 'x': 1379, 'y': 649, 'width': 1180}, # Left
 	    # 2-way hat left
-        'Joy_8': {'Type': 'Digital', 'x': 77, 'y': 977, 'width': 1180}, # Push
-        'Joy_RXAxis': {'Type': 'Digital', 'x': 77, 'y': 856, 'width': 1180}, # Left/Right
-        'Joy_RYAxis': {'Type': 'Digital', 'x': 77, 'y': 916, 'width': 1180}, # Up/Down
+        'Joy_8': {'Type': 'Digital', 'x': 77, 'y': 977, 'width': 423}, # Push
+        'Joy_RXAxis': {'Type': 'Digital', 'x': 77, 'y': 856, 'width': 423}, # Left/Right
+        'Joy_RYAxis': {'Type': 'Digital', 'x': 77, 'y': 916, 'width': 423}, # Up/Down
         # two-stage trigger
         'Joy_27': {'Type': 'Digital', 'x': 1117, 'y': 1519, 'width': 1180}, # Push first stage
         'Joy_28': {'Type': 'Digital', 'x': 1117, 'y': 1579, 'width': 1180}, # Push second stage
@@ -3097,18 +3097,18 @@ hotasDetails = {
         'Joy_25': {'Type': 'Digital', 'x': 1584, 'y': 1231, 'width': 1180}, # Up
         'Joy_26': {'Type': 'Digital', 'x': 1584, 'y': 1290, 'width': 1180}, # Push
         # Lower Thumb hat
-        'Joy_14': {'Type': 'Digital', 'x': 2593, 'y': 382, 'width': 423}, # Push
-        'Joy_15': {'Type': 'Digital', 'x': 2593, 'y': 144, 'width': 423}, # Up
-        'Joy_16': {'Type': 'Digital', 'x': 2593, 'y': 202, 'width': 423}, # Right
-        'Joy_17': {'Type': 'Digital', 'x': 2593, 'y': 264, 'width': 423}, # Down
-        'Joy_18': {'Type': 'Digital', 'x': 2593, 'y': 322, 'width': 423}, # Left
+        'Joy_14': {'Type': 'Digital', 'x': 2593, 'y': 382, 'width': 1180}, # Push
+        'Joy_15': {'Type': 'Digital', 'x': 2593, 'y': 144, 'width': 1180}, # Up
+        'Joy_16': {'Type': 'Digital', 'x': 2593, 'y': 202, 'width': 1180}, # Right
+        'Joy_17': {'Type': 'Digital', 'x': 2593, 'y': 264, 'width': 1180}, # Down
+        'Joy_18': {'Type': 'Digital', 'x': 2593, 'y': 322, 'width': 1180}, # Left
         # Lower left side thumb button
-        'Joy_19': {'Type': 'Digital', 'x': 1813, 'y': 1440, 'width': 1180},
+        'Joy_19': {'Type': 'Digital', 'x': 1813, 'y': 1440, 'width': 1200},
         # Break axis
         'Joy_30': {'Type': 'Digital', 'x': 1822, 'y': 1747, 'width': 1180},
         'Joy_UAxis': {'Type': 'Analogue', 'x': 1822, 'y': 1792, 'width': 1180}, #TODO: verify this one's name in binds file!
         # Trigger
-        'Joy_29': {'Type': 'Digital', 'x': 1882, 'y': 1370, 'width': 1180},
+        'Joy_29': {'Type': 'Digital', 'x': 1882, 'y': 1370, 'width': 1200},
 	    # Joystick axis
         'Joy_XAxis': {'Type': 'Analogue', 'x': 1000, 'y': 1951, 'width': 1180},
         'Joy_YAxis': {'Type': 'Analogue', 'x': 1000, 'y': 2010, 'width': 1180},
