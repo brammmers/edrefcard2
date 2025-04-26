@@ -3073,7 +3073,7 @@ hotasDetails = {
         'Joy_5': {'Type': 'Digital', 'x': 613, 'y': 143, 'width': 1180}, # down
         'Joy_6': {'Type': 'Digital', 'x': 613, 'y': 203, 'width': 1180}, # left
         # Right button        
-        'Joy_7': {'Type': 'Digital', 'x': 2610, 'y': 920, 'width': 1180}, # Right Thumb button
+        'Joy_7': {'Type': 'Digital', 'x': 933, 'y': 373, 'width': 1180}, # Right Thumb button
         # 4-way hat right
         'Joy_9': {'Type': 'Digital', 'x': 1313, 'y': 1157, 'width': 1180}, # Push		
         'Joy_10': {'Type': 'Digital', 'x': 1313, 'y': 919, 'width': 1180}, # Up
@@ -3097,16 +3097,16 @@ hotasDetails = {
         'Joy_25': {'Type': 'Digital', 'x': 1584, 'y': 1231, 'width': 1180}, # Up
         'Joy_26': {'Type': 'Digital', 'x': 1584, 'y': 1290, 'width': 1180}, # Push
         # Lower Thumb hat
-        'Joy_14': {'Type': 'Digital', 'x': 2593, 'y': 382, 'width': 1180}, # Push
-        'Joy_15': {'Type': 'Digital', 'x': 2593, 'y': 144, 'width': 1180}, # Up
-        'Joy_16': {'Type': 'Digital', 'x': 2593, 'y': 202, 'width': 1180}, # Right
-        'Joy_17': {'Type': 'Digital', 'x': 2593, 'y': 264, 'width': 1180}, # Down
-        'Joy_18': {'Type': 'Digital', 'x': 2593, 'y': 322, 'width': 1180}, # Left
+        'Joy_14': {'Type': 'Digital', 'x': 2593, 'y': 382, 'width': 423}, # Push
+        'Joy_15': {'Type': 'Digital', 'x': 2593, 'y': 144, 'width': 423}, # Up
+        'Joy_16': {'Type': 'Digital', 'x': 2593, 'y': 202, 'width': 423}, # Right
+        'Joy_17': {'Type': 'Digital', 'x': 2593, 'y': 264, 'width': 423}, # Down
+        'Joy_18': {'Type': 'Digital', 'x': 2593, 'y': 322, 'width': 423}, # Left
         # Lower left side thumb button
         'Joy_19': {'Type': 'Digital', 'x': 1813, 'y': 1440, 'width': 1180},
         # Break axis
-        'Joy_30': {'Type': 'Digital', 'x': 1822, 'y': 1750, 'width': 1180},
-        'Joy_UAxis': {'Type': 'Analogue', 'x': 1822, 'y': 1798, 'width': 1180}, #TODO: verify this one's name in binds file!
+        'Joy_30': {'Type': 'Digital', 'x': 1822, 'y': 1747, 'width': 1180},
+        'Joy_UAxis': {'Type': 'Analogue', 'x': 1822, 'y': 1792, 'width': 1180}, #TODO: verify this one's name in binds file!
         # Trigger
         'Joy_29': {'Type': 'Digital', 'x': 1882, 'y': 1370, 'width': 1180},
 	    # Joystick axis
