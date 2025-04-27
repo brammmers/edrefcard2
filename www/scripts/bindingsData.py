@@ -18,6 +18,7 @@ supportedDevices = OrderedDict([
     ('TFlightHOTASX', {'Template': 'hotasx', 'HandledDevices': ['ThrustMasterTFlightHOTASX']}),
     ('ThrustMasterHOTAS4', {'Template': 'hotas4', 'HandledDevices': ['ThrustMasterHOTAS4','TFlightHotasOne']}),
     ('T-Rudder', {'Template': 'tfrp', 'HandledDevices': ['T-Rudder']}),
+    ('TPR-Rudder', {'Template': 'tpr-rudder', 'HandledDevices': ['044FB68F']}),
     ('TFlightStickX', {'Template': 'stickx', 'HandledDevices': ['044FB106']}),
     ('Warthog', {'Template': 'warthog', 'HandledDevices': ['ThrustMasterWarthogJoystick', 'ThrustMasterWarthogThrottle', 'ThrustMasterWarthogCombined']}),
     ('CobraM5', {'Template': 'cobram5', 'HandledDevices': ['11C05603', '11C05605']}),
@@ -1616,6 +1617,12 @@ hotasDetails = {
     'T-Rudder': {
         # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
         'Joy_XAxis': {'Type': 'Digital', 'x': 164, 'y': 588, 'width': 1332, 'height': 162}, # Left pedal
+        'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 588, 'width': 1332, 'height': 162}, # Right pedal
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1332, 'height': 162}, # Rudder
+    },
+    '044FB68F': {
+        # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
+        'Joy_XAxis': {'Type': 'Digital', 'x': 52, 'y': 248, 'width': 1332, 'height': 162}, # Left pedal
         'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 588, 'width': 1332, 'height': 162}, # Right pedal
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1332, 'height': 162}, # Rudder
     },
