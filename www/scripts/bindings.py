@@ -208,7 +208,7 @@ def writeUrlToDrawing(config, drawing, public):
     url = config.refcardURL() if public else Config.webRoot()
     drawing.push()
     drawing.font = getFontPath('SemiBold', 'Normal')
-    drawing.font_size = 72
+    drawing.font_size = 36
     drawing.text(x=23, y=252, body=url)
     drawing.pop()
 
