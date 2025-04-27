@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = '1.4'
+__version__ = '1.4.20250427'
 
 from lxml import etree
 
