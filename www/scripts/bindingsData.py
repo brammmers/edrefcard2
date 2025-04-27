@@ -3067,13 +3067,13 @@ hotasDetails = {
         'displayName': 'VPC FLNKR Grip',
         'Joy_1': {'Type': 'Digital', 'x': 25, 'y': 349, 'width': 561}, # Left Thumb button
         # centre hat
-        'Joy_2': {'Type': 'Digital', 'x': 613, 'y': 263, 'width': 1180}, # push
-        'Joy_3': {'Type': 'Digital', 'x': 613, 'y': 24, 'width': 1180}, # up
-        'Joy_4': {'Type': 'Digital', 'x': 613, 'y': 83, 'width': 1180}, # right
-        'Joy_5': {'Type': 'Digital', 'x': 613, 'y': 143, 'width': 1180}, # down
-        'Joy_6': {'Type': 'Digital', 'x': 613, 'y': 203, 'width': 1180}, # left
+        'Joy_2': {'Type': 'Digital', 'x': 1155, 'y': 263, 'width': 1180}, # push
+        'Joy_3': {'Type': 'Digital', 'x': 1155, 'y': 24, 'width': 1180}, # up
+        'Joy_4': {'Type': 'Digital', 'x': 1155, 'y': 83, 'width': 1180}, # right
+        'Joy_5': {'Type': 'Digital', 'x': 1155, 'y': 143, 'width': 1180}, # down
+        'Joy_6': {'Type': 'Digital', 'x': 1155, 'y': 203, 'width': 1180}, # left
         # Right button        
-        'Joy_7': {'Type': 'Digital', 'x': 933, 'y': 373, 'width': 1215}, # Right Thumb button
+        'Joy_7': {'Type': 'Digital', 'x': 1155, 'y': 373, 'width': 1215}, # Right Thumb button
         # 4-way hat right
         'Joy_9': {'Type': 'Digital', 'x': 1313, 'y': 1157, 'width': 1180}, # Push		
         'Joy_10': {'Type': 'Digital', 'x': 1313, 'y': 919, 'width': 1180}, # Up
