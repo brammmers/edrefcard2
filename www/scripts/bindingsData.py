@@ -59,6 +59,7 @@ supportedDevices = OrderedDict([
     ('VPC-MongoosT-50CM3-Throttle', {'Template': 'vpc-mongoost-50cm3-throttle', 'HandledDevices': ['33448197','33440197','33448198','VPCThrottle']}),
     ('VPC-MongoosT-50CM3-Throttle-32B', {'Template': 'vpc-mongoost-50cm3-throttle-32b', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2']}),
     ('VPC-MongoosT-50CM3-Throttle-32B-No-Shift', {'Template': 'vpc-mongoost-50cm3-throttle-32b-no-shift', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B-NS0', 'VPC-MongoosT-50CM3-Throttle-32B-NS1'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B-NS0', 'VPC-MongoosT-50CM3-Throttle-32B-NS1']}),
+    ('VPC-Control-Panel-2', {'Template': 'vpc-controlpanel2', 'HandledDevices': ['3344825A']}),
     ('VKB-Kosmosima-SCG-Left', {'Template': 'vkb-kosmosima-scg-left', 'HandledDevices': ['231D0127']}),
     ('VKB-Kosmosima-SCG-Right', {'Template': 'vkb-kosmosima-scg-right', 'HandledDevices': ['231D0126']}),
     ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200']}),
@@ -3794,6 +3795,52 @@ hotasDetails = {
 
     },
 
+    '3344825A': { # VPC control panel #2
+        'displayName': 'VPC control panel #2',
+        'Joy_1': {'Type': 'Digital', 'x': 2412 , 'y': 175, 'width': 390},       #B1
+        'Joy_2': {'Type': 'Digital', 'x': 2532 , 'y': 435, 'width': 390},       #B2
+        'Joy_3': {'Type': 'Digital', 'x': 2412 , 'y': 95, 'width': 390},        #B3
+        'Joy_4': {'Type': 'Digital', 'x': 2532, 'y': 355, 'width': 390},        #B4
+        'Joy_5': {'Type': 'Digital', 'x': 3102, 'y': 1415, 'width': 390},       #B5
+        'Joy_6': {'Type': 'Digital', 'x': 3102, 'y': 1503, 'width': 390},       #B6
+        'Joy_7': {'Type': 'Digital', 'x': 3102, 'y': 1585, 'width': 390},       #B7
+        'Joy_8': {'Type': 'Digital', 'x': 3102, 'y': 1669, 'width': 390},       #B8
+        'Joy_9': {'Type': 'Digital', 'x': 3102, 'y': 1749, 'width': 390},       #B9
+        'Joy_10': {'Type': 'Digital', 'x': 3102, 'y': 1833, 'width': 390},      #B10
+        'Joy_11': {'Type': 'Digital', 'x': 135, 'y': 855, 'width': 390},        #T1 - up
+        'Joy_12': {'Type': 'Digital', 'x': 135, 'y': 915, 'width': 390},        #T1 - down
+        'Joy_13': {'Type': 'Digital', 'x': 131, 'y': 997, 'width': 390},        #T2 - up
+        'Joy_14': {'Type': 'Digital', 'x': 131, 'y': 1057, 'width': 390},       #T2 - down
+        'Joy_15': {'Type': 'Digital', 'x': 131, 'y': 1141, 'width': 390},       #T3 - up
+        'Joy_16': {'Type': 'Digital', 'x': 131, 'y': 1201, 'width': 390},       #T3 - down
+        'Joy_17': {'Type': 'Digital', 'x': 131, 'y': 1355, 'width': 390},       #T4 - up
+        'Joy_18': {'Type': 'Digital', 'x': 131, 'y': 1415, 'width': 390},       #T4 - down
+        'Joy_19': {'Type': 'Digital', 'x': 131, 'y': 1525, 'width': 390},       #T5 - up
+        'Joy_20': {'Type': 'Digital', 'x': 131, 'y': 1585, 'width': 390},       #T5 - down
+        'Joy_21': {'Type': 'Digital', 'x': 131, 'y': 1685, 'width': 390},       #T6 - up
+        'Joy_22': {'Type': 'Digital', 'x': 131, 'y': 1745, 'width': 390},       #T6 - down
+        'Joy_23': {'Type': 'Digital', 'x': 3062, 'y': 385, 'width': 390},       #T7 - up
+        'Joy_24': {'Type': 'Digital', 'x': 3062, 'y': 445, 'width': 390},       #T7 - down
+        'Joy_25': {'Type': 'Digital', 'x': 3062, 'y': 523, 'width': 390},       #T8 - up
+        'Joy_26': {'Type': 'Digital', 'x': 3062, 'y': 583, 'width': 390},       #T8 - down
+        'Joy_27': {'Type': 'Digital', 'x': 3102, 'y': 1060, 'width': 390},      #T9 - left
+        'Joy_28': {'Type': 'Digital', 'x': 3102, 'y': 1120, 'width': 390},      #T9 - right
+        'Joy_29': {'Type': 'Digital', 'x': 3102, 'y': 1220, 'width': 390},      #T10 - left
+        'Joy_30': {'Type': 'Digital', 'x': 3102, 'y': 1280, 'width': 390},      #T10 - right
+        'Joy_31': {'Type': 'Digital', 'x': 645, 'y': 785, 'width': 390},        #E1 - Press
+        'Joy_32': {'Type': 'Digital', 'x': 645, 'y': 725, 'width': 390},        #E1 - Clockwise
+        'Joy_33': {'Type': 'Digital', 'x': 645, 'y': 845, 'width': 390},        #E1 - Anti-Clockwise
+        'Joy_34': {'Type': 'Digital', 'x': 135, 'y': 641, 'width': 390},        #E2 - Press
+        'Joy_35': {'Type': 'Digital', 'x': 135, 'y': 581, 'width': 390},        #E2 - Clockwise
+        'Joy_36': {'Type': 'Digital', 'x': 135, 'y': 701, 'width': 390},        #E2 - Anti-Clockwise
+        'Joy_37': {'Type': 'Digital', 'x': 648, 'y': 514, 'width': 390},        #E3 - Press
+        'Joy_38': {'Type': 'Digital', 'x': 648, 'y': 454, 'width': 390},        #E3 - Clockwise
+        'Joy_39': {'Type': 'Digital', 'x': 648, 'y': 574, 'width': 390},        #E3 - Anti-Clockwise
+        'Joy_40': {'Type': 'Digital', 'x': 135, 'y': 276, 'width': 390},        #Gear Toggle
+        'Joy_41': {'Type': 'Digital', 'x': 135, 'y': 336, 'width': 390},        #Gear Up
+        'Joy_42': {'Type': 'Digital', 'x': 135, 'y': 396, 'width': 390},        #Gear Middle
+        'Joy_43': {'Type': 'Digital', 'x': 135, 'y': 456, 'width': 390},        #Gear Down
+    },
     '231D0127': { # VKB Kosmosima SCG Left
         'displayName': 'VKB Kosmosima SCG Left',
         'Joy_1': {'Type': 'Digital', 'x': 2052, 'y': 1798, 'width': 739, 'height': 68}, # Fire first stage
