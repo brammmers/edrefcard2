@@ -40,7 +40,7 @@ supportedDevices = OrderedDict([
     ('CHProPedals', {'Template': 'chpropedals', 'HandledDevices': ['CHProPedals', '068E00F2']}),
     ('SidePanelControlDeck', {'Template': 'sidepanelcontroldeck', 'HandledDevices': ['07382218']}),
     ('XBox', {'Template': 'xbox', 'HandledDevices': ['XB360 Pad', '045E02FF', '045E02DD','28DE11FF','045E02E0','045E02FD']}),
-    ('XBoxElite', {'Template': 'xboxelite', 'HandledDevices': ['045E02E3']}),
+    ('XBoxElite', {'Template': 'xboxelite', 'HandledDevices': ['045E02E3','045E0B22']}),
     ('GamePad', {'Template': 'xbox', 'HandledDevices': ['GamePad']}),
     ('Sabretooth', {'Template': 'sabretooth', 'HandledDevices': ['1689FE00']}),
     ('LogitechG940Pedals', {'Template': 'g940pedals', 'HandledDevices': ['LogitechG940Pedals']}),
@@ -60,6 +60,7 @@ supportedDevices = OrderedDict([
     ('VPC-MongoosT-50CM3-Throttle', {'Template': 'vpc-mongoost-50cm3-throttle', 'HandledDevices': ['33448197','33440197','33448198','VPCThrottle']}),
     ('VPC-MongoosT-50CM3-Throttle-32B', {'Template': 'vpc-mongoost-50cm3-throttle-32b', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B0', 'VPC-MongoosT-50CM3-Throttle-32B1', 'VPC-MongoosT-50CM3-Throttle-32B2']}),
     ('VPC-MongoosT-50CM3-Throttle-32B-No-Shift', {'Template': 'vpc-mongoost-50cm3-throttle-32b-no-shift', 'KeyDevices': ['VPC-MongoosT-50CM3-Throttle-32B-NS0', 'VPC-MongoosT-50CM3-Throttle-32B-NS1'], 'HandledDevices': ['VPC-MongoosT-50CM3-Throttle-32B-NS0', 'VPC-MongoosT-50CM3-Throttle-32B-NS1']}),
+    ('VPC-Control-Panel-2', {'Template': 'vpc-controlpanel2', 'HandledDevices': ['3344825A']}),
     ('VKB-Kosmosima-SCG-Left', {'Template': 'vkb-kosmosima-scg-left', 'HandledDevices': ['231D0127']}),
     ('VKB-Kosmosima-SCG-Right', {'Template': 'vkb-kosmosima-scg-right', 'HandledDevices': ['231D0126']}),
     ('VKB-Gladiator-NXT-Premium-Right', {'Template': 'vkb-gladiator-nxt-premium-right', 'HandledDevices': ['231D0200']}),
@@ -1368,6 +1369,50 @@ hotasDetails = {
     },
     '045E02E3': { # XBox Elite controller
         'displayName': 'XBox Elite controller',
+        'Pad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
+        'Pad_LTrigger': {'Type': 'Digital', 'x': 74, 'y': 518, 'width': 1392},
+        'Pad_RBumper': {'Type': 'Digital', 'x': 2368, 'y': 624, 'width': 1442, 'height': 108},
+        'Pad_RTrigger': {'Type': 'Digital', 'x': 2368, 'y': 520, 'width': 1442},
+        'Pad_Y': {'Type': 'Digital', 'x': 2625, 'y': 894, 'width': 1192},
+        'Pad_B': {'Type': 'Digital', 'x': 2625, 'y': 988, 'width': 1192},
+        'Pad_A': {'Type': 'Digital', 'x': 2625, 'y': 1083, 'width': 1192},
+        'Pad_X': {'Type': 'Digital', 'x': 2625, 'y': 1178, 'width': 1192},
+        'Pad_Back': {'Type': 'Digital', 'x': 74, 'y': 786, 'width': 1192},
+        'Pad_Start': {'Type': 'Digital', 'x': 2625, 'y': 786, 'width': 1192},
+        'Pad_DPadUp': {'Type': 'Digital', 'x': 134, 'y': 1308, 'width': 1032, 'height': 108},
+        'Pad_DPadRight': {'Type': 'Digital', 'x': 134, 'y': 1418, 'width': 1032, 'height': 108},
+        'Pad_DPadDown': {'Type': 'Digital', 'x': 134, 'y': 1528, 'width': 1032, 'height': 108},
+        'Pad_DPadLeft': {'Type': 'Digital', 'x': 134, 'y': 1638, 'width': 1032, 'height': 108},
+        'Pad_RStickY': {'Type': 'Analogue', 'x': 2765, 'y': 1322, 'width': 1052, 'height': 108},
+        'Pad_RStickX': {'Type': 'Analogue', 'x': 2765, 'y': 1432, 'width': 1052, 'height': 108},
+        'Pad_RThumb': {'Type': 'Digital', 'x': 2765, 'y': 1542, 'width': 1052, 'height': 108},
+        'Pad_LStickY': {'Type': 'Analogue', 'x': 134, 'y': 930, 'width': 1032, 'height': 108},
+        'Pad_LStickX': {'Type': 'Analogue', 'x': 134, 'y': 1040, 'width': 1032, 'height': 108},
+        'Pad_LThumb': {'Type': 'Digital', 'x': 134, 'y': 1150, 'width': 1032, 'height': 108},
+        # 2.3 appears to have renamed 'Pad' to 'GamePad'
+        'GamePad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
+        'GamePad_LTrigger': {'Type': 'Digital', 'x': 74, 'y': 518, 'width': 1392},
+        'GamePad_RBumper': {'Type': 'Digital', 'x': 2368, 'y': 624, 'width': 1442, 'height': 108},
+        'GamePad_RTrigger': {'Type': 'Digital', 'x': 2368, 'y': 520, 'width': 1442},
+        'GamePad_FaceUp': {'Type': 'Digital', 'x': 2625, 'y': 894, 'width': 1192},
+        'GamePad_FaceRight': {'Type': 'Digital', 'x': 2625, 'y': 988, 'width': 1192},
+        'GamePad_FaceDown': {'Type': 'Digital', 'x': 2625, 'y': 1083, 'width': 1192},
+        'GamePad_FaceLeft': {'Type': 'Digital', 'x': 2625, 'y': 1178, 'width': 1192},
+        'GamePad_Back': {'Type': 'Digital', 'x': 74, 'y': 786, 'width': 1192},
+        'GamePad_Start': {'Type': 'Digital', 'x': 2625, 'y': 786, 'width': 1192},
+        'GamePad_DPadUp': {'Type': 'Digital', 'x': 134, 'y': 1308, 'width': 1032, 'height': 108},
+        'GamePad_DPadRight': {'Type': 'Digital', 'x': 134, 'y': 1418, 'width': 1032, 'height': 108},
+        'GamePad_DPadDown': {'Type': 'Digital', 'x': 134, 'y': 1528, 'width': 1032, 'height': 108},
+        'GamePad_DPadLeft': {'Type': 'Digital', 'x': 134, 'y': 1638, 'width': 1032, 'height': 108},
+        'GamePad_RStickY': {'Type': 'Analogue', 'x': 2765, 'y': 1322, 'width': 1052, 'height': 108},
+        'GamePad_RStickX': {'Type': 'Analogue', 'x': 2765, 'y': 1432, 'width': 1052, 'height': 108},
+        'GamePad_RThumb': {'Type': 'Digital', 'x': 2765, 'y': 1542, 'width': 1052, 'height': 108},
+        'GamePad_LStickY': {'Type': 'Analogue', 'x': 134, 'y': 930, 'width': 1032, 'height': 108},
+        'GamePad_LStickX': {'Type': 'Analogue', 'x': 134, 'y': 1040, 'width': 1032, 'height': 108},
+        'GamePad_LThumb': {'Type': 'Digital', 'x': 134, 'y': 1150, 'width': 1032, 'height': 108},
+    },
+    '045E0B22': { # XBox Elite Series 2 controller
+        'displayName': 'XBox Elite Series 2 Controller',
         'Pad_LBumper': {'Type': 'Digital', 'x': 74, 'y': 624, 'width': 1392, 'height': 108},
         'Pad_LTrigger': {'Type': 'Digital', 'x': 74, 'y': 518, 'width': 1392},
         'Pad_RBumper': {'Type': 'Digital', 'x': 2368, 'y': 624, 'width': 1442, 'height': 108},
@@ -3801,6 +3846,52 @@ hotasDetails = {
 
     },
 
+    '3344825A': { # VPC control panel #2
+        'displayName': 'VPC control panel #2',
+        'Joy_1': {'Type': 'Digital', 'x': 2412 , 'y': 175, 'width': 390},       #B1
+        'Joy_2': {'Type': 'Digital', 'x': 2532 , 'y': 435, 'width': 390},       #B2
+        'Joy_3': {'Type': 'Digital', 'x': 2412 , 'y': 95, 'width': 390},        #B3
+        'Joy_4': {'Type': 'Digital', 'x': 2532, 'y': 355, 'width': 390},        #B4
+        'Joy_5': {'Type': 'Digital', 'x': 3102, 'y': 1415, 'width': 390},       #B5
+        'Joy_6': {'Type': 'Digital', 'x': 3102, 'y': 1503, 'width': 390},       #B6
+        'Joy_7': {'Type': 'Digital', 'x': 3102, 'y': 1585, 'width': 390},       #B7
+        'Joy_8': {'Type': 'Digital', 'x': 3102, 'y': 1669, 'width': 390},       #B8
+        'Joy_9': {'Type': 'Digital', 'x': 3102, 'y': 1749, 'width': 390},       #B9
+        'Joy_10': {'Type': 'Digital', 'x': 3102, 'y': 1833, 'width': 390},      #B10
+        'Joy_11': {'Type': 'Digital', 'x': 135, 'y': 855, 'width': 390},        #T1 - up
+        'Joy_12': {'Type': 'Digital', 'x': 135, 'y': 915, 'width': 390},        #T1 - down
+        'Joy_13': {'Type': 'Digital', 'x': 131, 'y': 997, 'width': 390},        #T2 - up
+        'Joy_14': {'Type': 'Digital', 'x': 131, 'y': 1057, 'width': 390},       #T2 - down
+        'Joy_15': {'Type': 'Digital', 'x': 131, 'y': 1141, 'width': 390},       #T3 - up
+        'Joy_16': {'Type': 'Digital', 'x': 131, 'y': 1201, 'width': 390},       #T3 - down
+        'Joy_17': {'Type': 'Digital', 'x': 131, 'y': 1355, 'width': 390},       #T4 - up
+        'Joy_18': {'Type': 'Digital', 'x': 131, 'y': 1415, 'width': 390},       #T4 - down
+        'Joy_19': {'Type': 'Digital', 'x': 131, 'y': 1525, 'width': 390},       #T5 - up
+        'Joy_20': {'Type': 'Digital', 'x': 131, 'y': 1585, 'width': 390},       #T5 - down
+        'Joy_21': {'Type': 'Digital', 'x': 131, 'y': 1685, 'width': 390},       #T6 - up
+        'Joy_22': {'Type': 'Digital', 'x': 131, 'y': 1745, 'width': 390},       #T6 - down
+        'Joy_23': {'Type': 'Digital', 'x': 3062, 'y': 385, 'width': 390},       #T7 - up
+        'Joy_24': {'Type': 'Digital', 'x': 3062, 'y': 445, 'width': 390},       #T7 - down
+        'Joy_25': {'Type': 'Digital', 'x': 3062, 'y': 523, 'width': 390},       #T8 - up
+        'Joy_26': {'Type': 'Digital', 'x': 3062, 'y': 583, 'width': 390},       #T8 - down
+        'Joy_27': {'Type': 'Digital', 'x': 3102, 'y': 1060, 'width': 390},      #T9 - left
+        'Joy_28': {'Type': 'Digital', 'x': 3102, 'y': 1120, 'width': 390},      #T9 - right
+        'Joy_29': {'Type': 'Digital', 'x': 3102, 'y': 1220, 'width': 390},      #T10 - left
+        'Joy_30': {'Type': 'Digital', 'x': 3102, 'y': 1280, 'width': 390},      #T10 - right
+        'Joy_31': {'Type': 'Digital', 'x': 645, 'y': 785, 'width': 390},        #E1 - Press
+        'Joy_32': {'Type': 'Digital', 'x': 645, 'y': 725, 'width': 390},        #E1 - Clockwise
+        'Joy_33': {'Type': 'Digital', 'x': 645, 'y': 845, 'width': 390},        #E1 - Anti-Clockwise
+        'Joy_34': {'Type': 'Digital', 'x': 135, 'y': 641, 'width': 390},        #E2 - Press
+        'Joy_35': {'Type': 'Digital', 'x': 135, 'y': 581, 'width': 390},        #E2 - Clockwise
+        'Joy_36': {'Type': 'Digital', 'x': 135, 'y': 701, 'width': 390},        #E2 - Anti-Clockwise
+        'Joy_37': {'Type': 'Digital', 'x': 648, 'y': 514, 'width': 390},        #E3 - Press
+        'Joy_38': {'Type': 'Digital', 'x': 648, 'y': 454, 'width': 390},        #E3 - Clockwise
+        'Joy_39': {'Type': 'Digital', 'x': 648, 'y': 574, 'width': 390},        #E3 - Anti-Clockwise
+        'Joy_40': {'Type': 'Digital', 'x': 135, 'y': 276, 'width': 390},        #Gear Toggle
+        'Joy_41': {'Type': 'Digital', 'x': 135, 'y': 336, 'width': 390},        #Gear Up
+        'Joy_42': {'Type': 'Digital', 'x': 135, 'y': 396, 'width': 390},        #Gear Middle
+        'Joy_43': {'Type': 'Digital', 'x': 135, 'y': 456, 'width': 390},        #Gear Down
+    },
     '231D0127': { # VKB Kosmosima SCG Left
         'displayName': 'VKB Kosmosima SCG Left',
         'Joy_1': {'Type': 'Digital', 'x': 2052, 'y': 1798, 'width': 739, 'height': 68}, # Fire first stage
