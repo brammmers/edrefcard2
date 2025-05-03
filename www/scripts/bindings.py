@@ -798,8 +798,8 @@ def printList(mode, searchOpts):
     print('<div id="list"><h1>%s</h1></div>' % modeTitle(mode))
 
     printSearchForm(searchOpts)
-    print(str(searchOpts))
-    if searchOpts['sortOrder'][0]=='date':
+    print(searchOpts['sortOrder'].get())
+    if str(searchOpts['sortOrder'].get())=='date':
         sortOpts = lambda obj: eval(obj['timestamp'])
         print("date")
     else:
