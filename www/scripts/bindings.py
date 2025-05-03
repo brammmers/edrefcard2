@@ -805,7 +805,7 @@ def printList(mode, searchOpts):
         sortOpts = lambda obj: str(obj['description']).casefold()
         
     objs = Config.allConfigs(sortKey=sortOpts)
-    print objs
+    print(objs)
     print('<table>')
     print('''
         <tr>
