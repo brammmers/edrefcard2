@@ -91,3 +91,8 @@ table {
 	max-width: 13em;
 	min-width: 13em;
 }
+
+div.supported-ids {
+  font-size: 0.75em;
+  display: inline;
+}

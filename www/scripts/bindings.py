@@ -765,7 +765,7 @@ def printDeviceList(mode):
     print('<ul>')
     devices = sorted(supportedDevices.keys())
     for device in devices:
-        print('<li><a href=device/%s>%s</a> <div style="font-size: 0.75em;">Supported IDs: %s</div> <a href="list?deviceFilter=%s" title="search">&#128269;</a></li>' % (device, device, supportedDevices[device]['HandledDevices'],device))
+        print('<li><a href=device/%s>%s</a> <a href="list?deviceFilter=%s" title="search">&#128269;</a> &nbsp;&nbsp;<div class="supported-ids">Supported IDs: %s</div> </li>' % (device, device,device,supportedDevices[device]['HandledDevices']))
     print('</ul>')
 
 def printSearchForm(searchOptions):
