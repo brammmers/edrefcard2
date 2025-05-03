@@ -781,7 +781,7 @@ def printSearchForm(searchOptions):
         print('<option value="%s" %s>%s</option>' % (controller, selected, controller))
     print('</select></td>')
     print('</tr>')
-    print('<tr><select name="sortOrder" id="sortOrder"><option value="name">Name</option><option value="date">Date</option></select></tr>')
+    print('<tr><td>Order results by</td><td><select name="sortOrder" id="sortOrder"><option value="name">Name</option><option value="date">Date</option></select></td></tr>')
     print('<tr>')
     print('<td colspan=2><input type="submit" value="Search"></input></td>')
     print('</tr>')
