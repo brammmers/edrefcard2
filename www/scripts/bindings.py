@@ -799,7 +799,7 @@ def printList(mode, searchOpts):
 
     printSearchForm(searchOpts)
     print(str(searchOpts))
-    if searchOpts['sortOrder']=='date':
+    if searchOpts['sortOrder'][0]=='date':
         sortOpts = lambda obj: eval(obj['timestamp'])
         print("date")
     else:
