@@ -781,6 +781,7 @@ def printSearchForm(searchOptions):
         print('<option value="%s" %s>%s</option>' % (controller, selected, controller))
     print('</select></td>')
     print('</tr>')
+    print('<tr><select name="sortOrder" id="sortOrder"><option value="name">Name</option><option value="date">Date</option></select></tr>')
     print('<tr>')
     print('<td colspan=2><input type="submit" value="Search"></input></td>')
     print('</tr>')
@@ -793,7 +794,11 @@ def printList(mode, searchOpts):
     print('<div id="list"><h1>%s</h1></div>' % modeTitle(mode))
 
     printSearchForm(searchOpts)
-
+    
+   # if 
+   #     sortOpts = 
+   # else
+    
     objs = Config.allConfigs(sortKey=lambda obj: str(obj['description']).casefold())
     print('<table>')
     print('''
