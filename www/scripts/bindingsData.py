@@ -1667,8 +1667,8 @@ hotasDetails = {
     },
     '044FB68F': { # TM TPR Rudder
         # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
-        'Joy_XAxis': {'Type': 'Digital', 'x': 169, 'y': 593, 'width': 1332, 'height': 162}, # Left pedal
-        'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 593, 'width': 1332, 'height': 162}, # Right pedal
+        'Joy_XAxis': {'Type': 'Digital', 'x': 169, 'y': 591, 'width': 1332, 'height': 162}, # Left pedal
+        'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 591, 'width': 1332, 'height': 162}, # Right pedal
         'Joy_ZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1332, 'height': 162}, # Rudder
     },
     'SaitekProFlightRudderPedals': {
