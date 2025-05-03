@@ -800,7 +800,7 @@ def printList(mode, searchOpts):
     printSearchForm(searchOpts)
     
     if str(searchOpts['sortOrder'])=='date':
-        sortOpts = lambda obj: obj['timestamp'].ctime()
+        sortOpts = lambda obj: obj['timestamp']
     else:
         sortOpts = lambda obj: str(obj['description']).casefold()
         
