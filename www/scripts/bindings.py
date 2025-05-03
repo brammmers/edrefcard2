@@ -799,14 +799,14 @@ def printList(mode, searchOpts):
 
     printSearchForm(searchOpts)
     
-    if str(searchOpts['sortOrder'])=='date':
+    if searchOpts['sortOrder']=='date':
         sortOpts = lambda obj: obj['timestamp']
     else:
         sortOpts = lambda obj: str(obj['description']).casefold()
         
     objs = Config.allConfigs(sortKey=sortOpts)
-    print(objs)
-    print(sortOpts)
+    print(str(objs))
+    print(str(sortOpts))
     print('<table>')
     print('''
         <tr>
