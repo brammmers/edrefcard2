@@ -806,6 +806,7 @@ def printList(mode, searchOpts):
         
     objs = Config.allConfigs(sortKey=sortOpts)
     print(objs)
+    print(sortOpts)
     print('<table>')
     print('''
         <tr>
