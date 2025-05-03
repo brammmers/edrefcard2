@@ -782,7 +782,7 @@ def printSearchForm(searchOptions):
     print('</select></td>')
     print('</tr>')
     print('<tr><td>Order results by</td><td><select name="sortOrder" id="sortOrder">')
-    for sortorder in ['name','date']
+    for sortorder in ['name','date']:
         selected = "selected" if sortorder in searchOptions.get("sortOrder",[]) else ""
         print('<option value="%s" %s>%s</option>' % (sortorder, selected, sortorder))
     print('</select></td></tr>')
