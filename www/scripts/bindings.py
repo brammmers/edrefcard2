@@ -801,8 +801,10 @@ def printList(mode, searchOpts):
     
     if searchOpts['sortOrder']=='date':
         sortOpts = lambda obj: eval(obj['timestamp'])
+        print("date")
     else:
         sortOpts = lambda obj: str(obj['description']).casefold()
+        print("name")
         
     objs = Config.allConfigs(sortKey=sortOpts)
     print(str(objs))
