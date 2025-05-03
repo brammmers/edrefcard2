@@ -881,7 +881,7 @@ def printHTML(mode, options, config, public, createdImages, deviceForBlockImage,
     <meta name="robots" content="all">
     <title>%s</title>
     <link href='https://fonts.googleapis.com/css?family=Domine:400,700' rel='stylesheet' type='text/css'>
-    <style type="text/css" media="all">@import"ed.css";</style>
+    <style type="text/css" media="all">@import"ed.css?030525";</style>
 </head>
 <body>''' % modeTitle(mode))
     printBody(mode, options, config, public, createdImages, deviceForBlockImage, errors)
