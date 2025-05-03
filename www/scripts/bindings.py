@@ -1271,6 +1271,11 @@ def processForm(form):
             if type(deviceFilters) is not type([]):
                 deviceFilters = [ deviceFilters ]
             options['controllers'] = set(deviceFilters)
+        sortOrder = form.getvalue("sortOrder", [])
+        if sortOrder:
+            if type(sortOrder) is not type([]):
+                sortOrder = [ sortOrder ]
+            options['sortOrder'] = set(sortOrder)
 
     if mode is Mode.replay or mode is Mode.generate:
         (physicalKeys, modifiers, devices) = parseBindings(runId, xml, displayGroups, errors)
