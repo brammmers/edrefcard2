@@ -1656,16 +1656,16 @@ hotasDetails = {
     'LogitechG940Pedals': {
         # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
         'Joy_XAxis': {'Type': 'Digital', 'x': 2264, 'y': 588, 'width': 1332, 'height': 162}, # Right pedal (unconfirmed)
-        'Joy_YAxis': {'Type': 'Digital', 'x': 164, 'y': 588, 'width': 1332, 'height': 162}, # Left pedal (unconfirmed)
-        'Joy_RZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1332, 'height': 162}, # Rudder
+        'Joy_YAxis': {'Type': 'Digital', 'x': 168, 'y': 591, 'width': 1332, 'height': 162}, # Left pedal (unconfirmed)
+        'Joy_RZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1314, 'height': 151}, # Rudder
     },
     'T-Rudder': {
         # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
         'Joy_XAxis': {'Type': 'Digital', 'x': 164, 'y': 588, 'width': 1332, 'height': 162}, # Left pedal
-        'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 588, 'width': 1332, 'height': 162}, # Right pedal
-        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1208, 'y': 331, 'width': 1332, 'height': 162}, # Rudder
+        'Joy_YAxis': {'Type': 'Digital', 'x': 2269, 'y': 594, 'width': 1323, 'height': 152}, # Right pedal
+        'Joy_ZAxis': {'Type': 'Analogue', 'x': 1213, 'y': 343, 'width': 1323, 'height': 152}, # Rudder
     },
-    '044FB68F': {
+    '044FB68F': { # TM TPR Rudder
         # Although the individual pedals are analogue, they often have digital binds due to their nature so we pretend they are digital
         'Joy_XAxis': {'Type': 'Digital', 'x': 52, 'y': 248, 'width': 1332, 'height': 162}, # Left pedal
         'Joy_YAxis': {'Type': 'Digital', 'x': 2264, 'y': 588, 'width': 1332, 'height': 162}, # Right pedal
