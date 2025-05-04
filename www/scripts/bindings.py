@@ -802,7 +802,7 @@ def printList(mode, searchOpts):
     print(str(searchOpts['sortOrder']))
     
     if str(searchOpts['sortOrder'])=="{'date'}": # one day I'll figure out how to decode this properly!
-        sortOpts = lambda obj: eval(obj['timestamp'])
+        sortOpts = lambda obj: obj['timestamp']
         print("date")
     else:
         sortOpts = lambda obj: str(obj['description']).casefold()
