@@ -801,7 +801,7 @@ def printList(mode, searchOpts):
     
     print(str(searchOpts['sortOrder']))
     
-    if str(searchOpts['sortOrder'])=="{'date'}": # one day I'll figure out how to decode this properly!
+    if str(searchOpts['sortOrder'])=="date": # one day I'll figure out how to decode this properly!
         sortOpts = lambda obj: obj['timestamp']
         print("date")
     else:
@@ -1278,7 +1278,7 @@ def processForm(form):
             if type(deviceFilters) is not type([]):
                 deviceFilters = [ deviceFilters ]
             options['controllers'] = set(deviceFilters)
-        sortOrder = form.getvalue("sortOrder", [])
+        sortOrder = form.getvalue("sortOrder","name")
         if sortOrder:
             if type(sortOrder) is not type([]):
                 sortOrder = [ sortOrder ]
