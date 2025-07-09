@@ -145,35 +145,35 @@ def getFontPath(weight, style):
 
 # Command group styling
 groupStyles = {
-    'General': {'Color': Color('Black'), 'Font': getFontPath('Regular', 'Normal')},
-    'Misc': {'Color': Color('Black'), 'Font': getFontPath('Regular', 'Normal')},
-    'Modifier': {'Color': Color('Black'), 'Font': getFontPath('Bold', 'Normal')},
+    'General': {'Color': Color('Teal'), 'Font': getFontPath('Regular', 'Normal')},
+    'Misc': {'Color': Color('Goldenrod'), 'Font': getFontPath('Regular', 'Normal')},
+    'Modifier': {'Color': Color('SlateGray'), 'Font': getFontPath('Bold', 'Normal')},
     'Galaxy map': {'Color': Color('ForestGreen'), 'Font': getFontPath('Regular', 'Normal')},
     'Holo-Me': {'Color': Color('Sienna'), 'Font': getFontPath('Regular', 'Normal')},
     'Multicrew': {'Color': Color('SteelBlue'), 'Font': getFontPath('Bold', 'Normal')},
-    'Fighter': {'Color': Color('DarkSlateBlue'), 'Font': getFontPath('Regular', 'Normal')},
+    'Fighter': {'Color': Color('SlateBlue'), 'Font': getFontPath('Regular', 'Normal')},
     'Camera': {'Color': Color('OliveDrab'), 'Font': getFontPath('Regular', 'Normal')},
-    'Head look': {'Color': Color('IndianRed'), 'Font': getFontPath('Regular', 'Normal')},
-    'Ship': {'Color': Color('Crimson'), 'Font': getFontPath('Regular', 'Normal')},
+    'Head look': {'Color': Color('RosyBrown'), 'Font': getFontPath('Regular', 'Normal')},
+    'Ship': {'Color': Color('LightCoral'), 'Font': getFontPath('Regular', 'Normal')},
     'SRV': {'Color': Color('MediumPurple'), 'Font': getFontPath('Regular', 'Normal')},
-    'Scanners': {'Color': Color('DarkOrchid'), 'Font': getFontPath('Regular', 'Normal')},
+    'Scanners': {'Color': Color('Orchid'), 'Font': getFontPath('Regular', 'Normal')},
     'UI': {'Color': Color('DarkOrange'), 'Font': getFontPath('Regular', 'Normal')},
     'OnFoot': {'Color': Color('CornflowerBlue'), 'Font': getFontPath('Regular', 'Normal')},
 }
 
 # Command category styling
 categoryStyles = {
-    'General': {'Color': Color('DarkSlateBlue'), 'Font': getFontPath('Regular', 'Normal')},
-    'Combat': {'Color': Color('Crimson'), 'Font': getFontPath('Regular', 'Normal')},
-    'Social': {'Color': Color('ForestGreen'), 'Font': getFontPath('Regular', 'Normal')},
-    'Navigation': {'Color': Color('Black'), 'Font': getFontPath('Regular', 'Normal')},
+    'General': {'Color': Color('ForestGreen'), 'Font': getFontPath('Regular', 'Normal')},
+    'Flight': {'Color': Color('#0099cc'), 'Font': getFontPath('Regular', 'Normal')},
+    'Combat': {'Color': Color('#f05c79'), 'Font': getFontPath('Regular', 'Normal')},
+    'Camera': {'Color': Color('MediumPurple'), 'Font': getFontPath('Regular', 'Normal')},
     'UI': {'Color': Color('DarkOrange'), 'Font': getFontPath('Regular', 'Normal')},
 }
 
 # Modifier styling - note a list not a dictionary as modifiers are numeric
 class ModifierStyles:
     styles = [
-        {'Color': Color('Black'), 'Font': getFontPath('Regular', 'Normal')},
+        {'Color': Color('Grey'), 'Font': getFontPath('Regular', 'Normal')}, #TODO find a better color - not black
         {'Color': Color('Crimson'), 'Font': getFontPath('Regular', 'Normal')},
         {'Color': Color('ForestGreen'), 'Font': getFontPath('Regular', 'Normal')},
         {'Color': Color('DarkSlateBlue'), 'Font': getFontPath('Regular', 'Normal')},
@@ -197,9 +197,7 @@ class ModifierStyles:
 def transKey(key):
     if key is None:
         return None
-    trans = keymap.get(key)
-    if trans is None:
-        trans = key.replace('Key_', '')
+    trans = keymap.get(key, key.replace('Key_', ''))
     return trans
 
 # Output section
@@ -212,8 +210,274 @@ def writeUrlToDrawing(config, drawing, public):
     drawing.text(x=23, y=252, body=url)
     drawing.pop()
 
+# Allocate controls and modifiers to bound keycaps
+def prepareCapList(physicalKeys, modifiers, styling):
+    # Prepare a reverse button map
+    buttonReverseMap = {}
+    for buttonIndex, buttonKeys in buttonMap.items():
+        #for buttonKey in buttonKeys:
+        if buttonKeys[0] not in buttonReverseMap:
+            buttonReverseMap[buttonKeys[0]] = buttonIndex
+
+    capBandSet = {}
+    for physicalKeySpec, physicalKey in physicalKeys.items():
+        itemDevice = physicalKey.get('Device')
+        if itemDevice != 'Keyboard':
+            continue
+
+        itemKey = physicalKey.get('Key')
+        # itemKey is e.g. "Key_5", keyCap is e.g. "%\n5"
+        keyCap = buttonReverseMap[itemKey]
+        binds = physicalKey.get('Binds',{}).items()
+        if len(binds) > 0:
+            capBandSet[keyCap] = {}
+
+        for bindIndex, controlList in binds:
+            for controlTag, control in controlList.get('Controls').items():
+                entry = None
+                if styling == 'Group':
+                    entry = control.get('Group')
+                elif styling == 'Category':
+                    entry = control.get('Category')
+                bandIndex = f'{entry}::{controlTag}::{bindIndex}'
+                # skip if any of the sameAs are already in the capBands, e.g. ToggleReverseThrottleInputFreeCam
+                skip = False
+                for sameAs in control['HideIfSameAs']:
+                    sameCheck = f'{entry}::{sameAs}::{bindIndex}' 
+                    if sameCheck in capBandSet[keyCap]:
+                        skip = True
+                        continue
+
+                # Collect the label and color
+                if not skip and bandIndex not in capBandSet[keyCap]:
+                    color = "White"
+                    if styling == 'Group':
+                        color = groupStyles.get(entry).get('Color')
+                    elif styling == 'Category':
+                        color = categoryStyles.get(entry).get('Color')
+                    if bindIndex == 'Unmodified':
+                        capBandSet[keyCap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[]}
+                    else:
+                        # TODO - process all modifiers
+                        modcolor = ModifierStyles.index(modifiers[bindIndex][0].get('Number')-101).get('Color')
+                        capBandSet[keyCap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[modcolor]}
+
+        #scan modifiers for matching key and add to caplist
+        keyModifiers = modifiers.get(physicalKeySpec)
+        if keyModifiers is not None:
+            bandIndex = f'Modifier::{keyModifiers[0].get('Number')}::Modifier'
+            color = ModifierStyles.index(keyModifiers[0].get('Number')-101).get('Color')
+            capBandSet[keyCap][bandIndex] = {'Label':f"Modifier-{str(keyModifiers[0].get('Number')-100)}", 'Color':color, 'StripColors':['White']}
+
+    return capBandSet
+
+def writeCenteredWrapableText(sourceImg, context, x, y, w, h, text):
+
+    def writeCenteredText(sourceImg, context, x, y, w, h, text):
+        metrics = context.get_font_metrics(sourceImg, text, multiline=True)
+        text_width = metrics.text_width
+        text_height = metrics.text_height
+        x2 = int(x + (w - text_width) / 2)
+        y2 = int(y + (h - text_height) / 2 + metrics.ascender)
+        context.text(x=x2, y=y2, body=text)
+
+    metrics = context.get_font_metrics(sourceImg, "A", multiline=False)
+    standardTextHeight = metrics.text_height
+    # Split text at space(s) if multiple lines will fit vertically
+    maxLines = max(int(h / standardTextHeight), 1)
+    text = text.replace(" ", "\n", maxLines - 1)
+    textLines = text.split('\n')
+
+    # Adjust initial y to cater for multiple lines
+    y2 = y - standardTextHeight * (len(textLines) - 1) / 2
+    for oneLine in textLines:
+        writeCenteredText(sourceImg, context, x, y2, w, h, oneLine)
+        y2 += standardTextHeight
+
+def drawKey(sourceImg, context, keyPosition, keyCap, capBands):
+    xPos = keyPosition['x']
+    yPos = keyPosition['y']
+    buttonWidth = keyPosition['w']
+    buttonHeight = keyPosition['h']
+    buttonSideInset = keyPosition['s']
+    buttonTopInset =keyPosition['t']
+    buttonBottomInset =keyPosition['b']
+    buttonRadius =keyPosition['r']
+
+    # Draw the outline of the button with the cap to be filled in later
+    context.fill_opacity = 1
+    context.stroke_width = 3
+    context.stroke_color = Color('Black')
+    context.fill_color = Color('Silver')
+    context.rectangle(int(xPos), top=int(yPos), width=buttonWidth, height=buttonHeight, radius=buttonRadius)
+
+    # Defaults for the cap
+    context.stroke_width = 1
+    context.stroke_color = Color('DarkGrey')
+
+    # Prepare and draw the keycap
+    if len(capBands) == 0:
+        # No bound controls or modifiers for this physicalKey so print it white
+        context.fill_color = Color('White')
+        context.rectangle(int(xPos+buttonSideInset), top=int(yPos+buttonTopInset), width=buttonWidth-(buttonSideInset*2), height=buttonHeight-(buttonTopInset+buttonBottomInset), radius=5)
+    else:
+        # Draw the key cap using horizontal bands for its category/bind pairings it has
+        bandTop = int(yPos+buttonTopInset)
+        bandHeight = int((buttonHeight-(buttonTopInset+buttonBottomInset)) / len(capBands))
+        for bandIndex, controlSet in capBands.items():
+            # draw the band rectangle
+            context.stroke_color = Color('DarkGrey')
+            bandInset = 0 # Default inset from left if no modifiers and this key is not itself a modifier
+            if bandIndex.split('::')[2] != 'Unmodified':
+                # Stripe to the left, indicating this is either a modifier or is modified
+                bandInset = 50
+                if bandIndex.split('::')[2] == 'Modifier':
+                    context.fill_color = 'Black' # Indicate this key is a modifier
+                else:
+                    # TODO allow for multiple modifiers
+                    context.fill_color = controlSet['StripColors'][0] # Color with the modifier
+                context.rectangle(int(xPos+buttonSideInset), top=bandTop, width=bandInset, height=bandHeight, radius=5)
+
+            # Remainder of band for the control
+            context.fill_color = controlSet['Color']
+            context.rectangle(int(xPos+buttonSideInset+bandInset), top=bandTop, width=buttonWidth-(buttonSideInset*2)-bandInset, height=bandHeight, radius=5)
+
+            # Add the label to the band
+            context.stroke_color = Color('Black')
+            context.fill_color = Color('Black')
+            writeCenteredWrapableText(sourceImg, context, xPos, bandTop, buttonWidth, bandHeight, controlSet['Label'])
+            bandTop += bandHeight
+
+    # Add the label to the keytop
+    if (keyCap!=''):
+        # trim off any trailing '__R' etc to get the printable keycap label
+        keyLabel = keyCap.split('__')[0]
+        context.stroke_color = Color('Black')
+        context.fill_color = Color('Black')
+        context.fill_opacity = 1
+        keyLabel = keyLabel.replace('\n', ' .. ')
+        metrics = context.get_font_metrics(sourceImg, keyLabel, multiline=False)
+        text_width = metrics.text_width
+        context.text(x=int(xPos+(buttonWidth-text_width)/2), y=int(yPos+buttonHeight-buttonBottomInset)+24 , body=keyLabel)
+
+# Draw the keyboard following keyLayout and colour by group(s)
+def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling):
+    # TODO - simulated pass through layout to count and measure keys to get max keyboard width then scale keys accordingly
+    capBandSet = prepareCapList(physicalKeys, modifiers, styling)
+
+    stdButtonWidth = 165
+    stdButtonHeight = 220
+    buttonWidth = stdButtonWidth
+    buttonHeight = stdButtonHeight
+    buttonTopInset = 10
+    buttonBottomInset = 35
+    buttonSideInset = 15
+    buttonRadius = 25
+    buttonFontSize = 22
+    leftX = 60
+    yPos = 320
+
+    context.font = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf' # Need a font that has Unicode arrows
+    context.font_size = 28
+    context.text_antialias = True
+    context.stroke_color=Color('Black')
+    context.fill_color=Color('Black')
+    context.fill_opacity = 1
+
+    # Legend
+    legendX = 60
+    legendXStep = stdButtonWidth * 1.5
+    legendY = 1850
+    legendYStep = 0
+    context.push()
+    context.font_size = 36
+    context.text(x=legendX, y=legendY+70, body='Legend')
+    legendX += legendXStep
+    legendY += legendYStep
+    context.pop()
+
+    # Buttons for the legend
+    if styling == 'Group':
+        for group, groupStyle in groupStyles.items():
+            fakeCapBands = {f'Legend::Legend::Unmodified': {'Label': group, 'Color': groupStyle['Color'], 'StripColors': []}}
+            fakePosition = {'x': legendX, 'y': legendY, 'w': stdButtonWidth * 1.2, 'h': stdButtonHeight / 1.5,
+                't': buttonTopInset, 'b': buttonBottomInset, 's': buttonSideInset, 'r': buttonRadius}
+            drawKey(sourceImg, context, fakePosition, '', fakeCapBands)
+            legendX += legendXStep
+            legendY += legendYStep
+    elif styling == 'Category':
+        for category, categoryStyle in categoryStyles.items():
+            fakeCapBands = {f'Legend::Legend::Unmodified': {'Label': category, 'Color': categoryStyle['Color'], 'StripColors': []}}
+            fakePosition = {'x': legendX, 'y': legendY, 'w': stdButtonWidth * 1.2, 'h': stdButtonHeight / 1.5,
+                't': buttonTopInset, 'b': buttonBottomInset, 's': buttonSideInset, 'r': buttonRadius}
+            drawKey(sourceImg, context, fakePosition, '', fakeCapBands)
+            legendX += legendXStep
+            legendY += legendYStep
+
+    # Now layout the actual keys by iterating through the keyboard rows and keys
+    context.font_size = buttonFontSize
+    keyPositionSet = {}
+    for keyboardRow in keyboardLayout:
+        xPos = leftX
+        for keyCap in keyboardRow:
+            if type(keyCap).__name__ == 'dict':
+                # leave space
+                if 'x' in keyCap:
+                    xPos += buttonWidth * keyCap.get('x')
+                if 'y' in keyCap:
+                    yPos += buttonHeight * keyCap.get('y')
+                # sizing directions for following button
+                if 'w' in keyCap:
+                    buttonWidth = buttonWidth * keyCap.get('w')
+                if 'h' in keyCap:
+                    buttonHeight = buttonHeight * keyCap.get('h')
+                continue
+
+            keyPositionSet[keyCap] = {'x':xPos, 'y':yPos, 'w':buttonWidth, 'h':buttonHeight,
+                                     't':buttonTopInset, 'b':buttonBottomInset, 's':buttonSideInset, 'r':buttonRadius}
+            xPos += buttonWidth
+
+            capBands = capBandSet.get(keyCap,{})
+            drawKey(sourceImg, context, keyPositionSet[keyCap], keyCap, capBands)
+
+            # Reset button sizing to the default
+            buttonWidth = stdButtonWidth
+            buttonHeight = stdButtonHeight
+
+        yPos += stdButtonHeight
+
 # Create a keyboard image from the template plus bindings
-def createKeyboardImage(physicalKeys, modifiers, source, imageDevices, biggestFontSize, displayGroups, runId, public):
+def appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling):
+
+    source = 'keyboard-layout'
+    config = Config(runId)
+    filePath = config.pathWithNameAndSuffix(source, '.jpg')
+
+    # See if it already exists or if we need to recreate it
+    if filePath.exists():
+        return True
+    with Image(filename='../res/' + source + '.jpg') as sourceImg:
+        with Drawing() as context:
+
+            # Defaults for the font
+            context.font = getFontPath('Regular', 'Normal')
+            context.text_antialias = True
+            context.font_style = 'normal'
+            context.stroke_width = 1
+            context.fill_opacity = 1
+            context.fill_color = Color('Black')
+
+            # Add the ID to the title
+            writeUrlToDrawing(config, context, public)
+
+            writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling)
+
+            context.draw(sourceImg)
+            sourceImg.save(filename=str(filePath))
+    createdImages.append('Keyboard-layout')
+
+# Create a keyboard image from the template plus bindings
+def createKeyboardListImage(physicalKeys, modifiers, source, imageDevices, biggestFontSize, displayGroups, runId, public):
     config = Config(runId)
     filePath = config.pathWithNameAndSuffix(source, '.jpg')
 
@@ -295,7 +559,7 @@ def createKeyboardImage(physicalKeys, modifiers, source, imageDevices, biggestFo
             sourceImg.save(filename=str(filePath))
     return True
 
-def appendKeyboardImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public):
+def appendKeyboardListImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public):
     def countKeyboardItems(physicalKeys):
         keyboardItems = 0
         for  physicalKey in physicalKeys.values():
@@ -315,7 +579,7 @@ def appendKeyboardImage(createdImages, physicalKeys, modifiers, displayGroups, r
         return fontSize
     
     fontSize = fontSizeForKeyBoardItems(physicalKeys)
-    createKeyboardImage(physicalKeys, modifiers, 'keyboard', ['Keyboard'], fontSize, displayGroups, runId, public)
+    createKeyboardListImage(physicalKeys, modifiers, 'keyboard', ['Keyboard'], fontSize, displayGroups, runId, public)
     createdImages.append('Keyboard')
 
 # Write text, possible wrapping
@@ -1268,7 +1532,7 @@ def processForm(form):
         alreadyHandledDevices = []
         createdImages = []
         for supportedDeviceKey, supportedDevice in supportedDevices.items():
-            if supportedDeviceKey == 'Keyboard':
+            if supportedDeviceKey == 'Keyboard' or supportedDeviceKey == 'Keyboard-layout':
                 # We handle the keyboard separately below
                 continue
 
@@ -1300,7 +1564,8 @@ def processForm(form):
                             alreadyHandledDevices.append('%s::%s' % (handledDevice, deviceIndex))
         
         if devices.get('Keyboard::0') is not None:
-            appendKeyboardImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public)
+            appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling)
+            appendKeyboardListImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public)
         
         for deviceKey, device in devices.items():
             # Arduino Leonardo is used for head tracking so ignore it, along with vJoy (Tobii Eyex) and 16D00AEA (EDTracker)
