@@ -4547,7 +4547,7 @@ keymap = {
     'Key_LeftControl': 'Left Ctrl',
     'Key_LeftShift': 'Left Shift',
     'Key_LeftWin': 'Left Win',
-     'Key_Minus': '-',
+    'Key_Minus': '-',
     'Key_Plus': '+',
     'Key_Equals': '=',
     'Key_Period': '.',
@@ -4602,6 +4602,7 @@ keyboardLayout = [
     [{'w':1.25},'Ctrl__L',{'w':1.25},'Win__L',{'w':1.25},'Alt__L',{'a':7,'w':6.25},'',{'a':4,'w':1.25},'Alt__R',{'w':1.25},'Win__R',{'w':1.25},'Menu',{'w':1.25},'Ctrl__R',{'x':0.25},'←','↓','→',{'x':0.25,'w':2},'0\nIns','.\nDel']
 ]
 
+# First value in the list is the unshifted key
 buttonMap = {
     'Esc': ['Key_Esc'],
     'F1': ['Key_F1'],
