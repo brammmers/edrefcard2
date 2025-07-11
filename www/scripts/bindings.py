@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__version__ = '1.4.20250503'
+__version__ = '1.4.20250712'
 
 from lxml import etree
 
@@ -404,7 +404,7 @@ def drawLegendEntry(context, sourceImg, label, color, strip_colors, hold, button
     }
     drawKey(context, sourceImg, buttonSpec, '', fakeCapBands)
 
-# Draw the keyboard following keyLayout and colour by group(s)
+# Draw the keyboard using keyboardLayout
 def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling):
     capBandSet = prepareCapList(physicalKeys, modifiers, styling)
 
