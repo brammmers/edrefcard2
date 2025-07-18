@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-__version__ = '1.4.20250712'
+__version__ = '1.4.20250716'
 
 from lxml import etree
 
 from collections import OrderedDict
+from itertools import combinations
 
 from wand.drawing import Drawing
 from wand.image import Image
@@ -22,6 +23,7 @@ import codecs
 import os
 import pickle
 import re
+import math
 from enum import Enum
 from pathlib import Path
 from urllib.parse import urljoin
@@ -211,16 +213,24 @@ def writeUrlToDrawing(config, drawing, public):
     drawing.text(x=23, y=252, body=url)
     drawing.pop()
 
-# Allocate controls and modifiers to bound keycaps
-def prepareCapList(physicalKeys, modifiers, styling):
-    # Prepare a reverse button map
-    buttonReverseMap = {}
-    for buttonIndex, buttonKeys in buttonMap.items():
-        lcaseKey = buttonKeys[0].casefold()
-        if lcaseKey not in buttonReverseMap:
-            buttonReverseMap[lcaseKey] = buttonIndex
+# Allocate controls and modifiers to caps
+def prepareCapList(physicalKeys, modifiers, styling, keyboardLayout):
+    unmapped = []
+    # Prepare a reverse map from cap to e.g. Key_Enter
+    capReverseMap = {}
+    for keyboardRow in keyboardLayout:
+        for keyboardItem in keyboardRow:
+            if type(keyboardItem).__name__ == 'dict':
+                continue
+            if type(keyboardItem).__name__ == 'list':
+                lcaseKey = keyboardItem[1].casefold()
+                capReverseMap[lcaseKey] = keyboardItem[0]
+            else:
+                lcaseKey = f'Key_{keyboardItem}'.casefold()
+                capReverseMap[lcaseKey] = keyboardItem
 
-    capBandSet = {}
+    # Scan bound control keys and add them to corresponding keycaps
+    faceBandset = {}
     for physicalKeySpec, physicalKey in physicalKeys.items():
         itemDevice = physicalKey.get('Device')
         if itemDevice != 'Keyboard':
@@ -230,12 +240,16 @@ def prepareCapList(physicalKeys, modifiers, styling):
         if itemKey is None:
             continue
 
-        # itemKey is e.g. "Key_5", keyCap is e.g. "%\n5"
-        keyCap = buttonReverseMap.get(itemKey.casefold())
+        # itemKey is e.g. "Key_5", cap is e.g. "%\n5"
+        cap = capReverseMap.get(itemKey.casefold())
+        if cap is None and itemKey not in unmapped:
+            unmapped.append(itemKey)
+
         binds = physicalKey.get('Binds',{}).items()
         if len(binds) > 0:
-            capBandSet[keyCap] = {}
+            faceBandset[cap] = {}
 
+        # Each of the controls bound to this key
         for bindKey, controlList in binds:
             for controlTag, control in controlList.get('Controls').items():
                 entry = None
@@ -244,32 +258,32 @@ def prepareCapList(physicalKeys, modifiers, styling):
                 elif styling == 'Category':
                     entry = control.get('Category')
                 bandIndex = f'{entry}::{controlTag}::{bindKey}'
-                # skip if any of the sameAs are already in the capBands, e.g. ToggleReverseThrottleInputFreeCam
+                # skip if any of the sameAs are already in the faceBands, e.g. ToggleReverseThrottleInputFreeCam
                 skip = False
                 for sameAs in control['HideIfSameAs']:
                     sameCheck = f'{entry}::{sameAs}::{bindKey}' 
-                    if sameCheck in capBandSet[keyCap]:
+                    if sameCheck in faceBandset[cap]:
                         skip = True
                         continue
 
-                # Collect the label and color
-                if not skip and bandIndex not in capBandSet[keyCap]:
+                # Collect the control label and color
+                if not skip and bandIndex not in faceBandset[cap]:
                     color = "White"
                     if styling == 'Group':
                         color = groupStyles.get(entry).get('Color')
                     elif styling == 'Category':
                         color = categoryStyles.get(entry).get('Color')
                     if bindKey == 'Unmodified':
-                        capBandSet[keyCap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[], 'Hold': False}
+                        faceBandset[cap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[], 'Hold': False}
                     elif bindKey == 'Keyboard::0::HOLD':
-                        capBandSet[keyCap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[], 'Hold': True}
+                        faceBandset[cap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':[], 'Hold': True}
                     else:
                         # May have multiple modifiers
                         stripColors = []
                         for modifier in modifiers[bindKey]:
                             modColor = ModifierStyles.index(modifier.get('Number')-101).get('Color')
                             stripColors.append(modColor)
-                        capBandSet[keyCap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':stripColors, 'Hold': False}
+                        faceBandset[cap][bandIndex] = {'Label':control['Name'], 'Color':color, 'StripColors':stripColors, 'Hold': False}
 
     # scan modifiers for matching keys and add to caplist
     for modifierKey, modifierControls in modifiers.items():
@@ -284,17 +298,62 @@ def prepareCapList(physicalKeys, modifiers, styling):
             if itemKey is None:
                 continue
 
-            # itemKey is e.g. "Key_5", keyCap is e.g. "%\n5"
-            keyCap = buttonReverseMap.get(itemKey.casefold())
-            if capBandSet.get(keyCap) is None:
-                capBandSet[keyCap] = {}
+            # itemKey is e.g. "Key_5", cap is e.g. "%\n5"
+            cap = capReverseMap.get(itemKey.casefold())
+            if cap is None and itemKey != 'HOLD' and itemKey not in unmapped:
+                unmapped.append(itemKey)
+            if faceBandset.get(cap) is None:
+                faceBandset[cap] = {}
 
             bandIndex = f'Modifier::{modifier.get('Number')}::Modifier'
             color = ModifierStyles.index(modifier.get('Number')-101).get('Color')
-            capBandSet[keyCap][bandIndex] = {'Label':f"Modifier-{str(modifier.get('Number')-100)}", 'Color':color, 'StripColors':[], 'Hold': False}
+            faceBandset[cap][bandIndex] = {'Label':f"Modifier-{str(modifier.get('Number')-100)}", 'Color':color, 'StripColors':[], 'Hold': False}
 
-    return capBandSet
+    return faceBandset, unmapped
 
+# Wraps text by replacing selected spaces with \n with the aim of balancing length of lines
+def balance_wrap(text, num_lines):
+    words = text.split()
+    if num_lines <= 1 or len(words) <= 1:
+        return text
+
+    n = len(words)
+    # Precompute lengths
+    word_lengths = [len(w) for w in words]
+    total_chars = sum(word_lengths)
+    ideal_length = total_chars / num_lines
+
+    # Generate all combinations of break points (space positions to split at)
+    best_score = float('inf')
+    best_breaks = None
+
+    for breaks in combinations(range(1, n), num_lines - 1):
+        segments = []
+        start = 0
+        for b in breaks:
+            segments.append(word_lengths[start:b])
+            start = b
+        segments.append(word_lengths[start:])
+
+        # Compute line lengths (account for spaces between words)
+        line_lengths = [sum(seg) + len(seg) - 1 for seg in segments]
+        score = max(abs(l - ideal_length) for l in line_lengths)
+
+        if score < best_score:
+            best_score = score
+            best_breaks = breaks
+
+    # Build lines from best breaks
+    result = []
+    start = 0
+    for b in best_breaks:
+        result.append(' '.join(words[start:b]))
+        start = b
+    result.append(' '.join(words[start:]))
+
+    return '\n'.join(result)
+
+# Wrap text into the colored band on keyboard keycaps
 def writeCenteredWrapableText(context, sourceImg, x, y, w, h, text):
 
     def writeCenteredText(context, sourceImg, x, y, w, h, text):
@@ -309,7 +368,14 @@ def writeCenteredWrapableText(context, sourceImg, x, y, w, h, text):
     standardTextHeight = metrics.text_height
     # Split text at space(s) if multiple lines will fit vertically
     maxLines = max(int(h / standardTextHeight), 1)
-    text = text.replace(" ", "\n", maxLines - 1)
+    spaces = text.count(' ')    
+    if spaces < maxLines:
+        # Can wrap at every space
+        text = text.replace(" ", "\n", maxLines - 1)
+    else:
+        # More complex balanced wrap
+        text = balance_wrap(text, maxLines)
+
     textLines = text.split('\n')
 
     # Adjust initial y to cater for multiple lines
@@ -318,83 +384,195 @@ def writeCenteredWrapableText(context, sourceImg, x, y, w, h, text):
         writeCenteredText(context, sourceImg, x, y2, w, h, oneLine)
         y2 += standardTextHeight
 
-def drawKey(context, sourceImg, buttonSpec, keyCap, capBands):
-    # Draw the outline of the button with the cap to be filled in later
+def drawFaceBands(context, sourceImg, faceBands, faceX, faceWidth, faceTop, faceBottom):
+    # Draw the key cap using a separate horizontal band for each bind
+    bandTop = faceTop
+    bandHeight = int((faceBottom - faceTop) / len(faceBands))
+    bandWidth = 30
+    for bandIndex, controlSet in faceBands.items():
+
+        context.stroke_color = Color('DarkGrey')
+        context.stroke_width = 1
+        bandInset = 0 # Default inset from left if no modifiers and this key is not itself a modifier
+        # bandIndex = f'{entry}::{controlTag}::{bindKey}' where bindKey might be 'Keyboard::0::HOLD'
+        bindKey = '::'.join(bandIndex.split('::')[2:])
+        match bindKey:
+            case 'Unmodified':
+                None
+            case 'Modifier':
+                # This key is a modifier
+                None
+            case 'Keyboard::0::HOLD':
+                # Draw a thick border around the cap
+                context.stroke_color = Color('Black')
+                context.stroke_width = 6
+            case _:
+                # Stripe to the left, indicating this is modified
+                bandInset = 0
+                for bandColor in controlSet['StripColors']:
+                    context.fill_color = bandColor # Modifier color
+                    context.rectangle(int(faceX+bandInset), top=bandTop, width=bandWidth, height=bandHeight-2, radius=5)
+                    bandInset += bandWidth
+
+        # Remainder of band for the control
+        context.fill_color = controlSet['Color']
+        context.rectangle(int(faceX+bandInset), top=bandTop, width=faceWidth-bandInset, height=bandHeight-2, radius=5)
+
+        # Add the label to the band
+        context.stroke_width = 1
+        context.stroke_color = Color('Black')
+        context.fill_color = Color('Black')
+        writeCenteredWrapableText(context, sourceImg, faceX, bandTop, faceWidth, bandHeight, controlSet['Label'])
+        bandTop += bandHeight
+
+def drawKeyLabel(context, sourceImg, x, y, width, height, bottom, label):
+    # Add the label to the bottom edge of key
+    if (label!=''):
+        # trim off any trailing '__L', '__R' or '__N' etc to get the printable cap label
+        context.push()
+        context.stroke_color = Color('Black')
+        context.stroke_width = 1
+        context.fill_color = Color('Black')
+        label = label.replace('\n', ' .. ')
+        metrics = context.get_font_metrics(sourceImg, label, multiline=False)
+        text_width = metrics.text_width
+        context.text(x=int(x+(width-text_width)/2), y=int(y+height-bottom)+24 , body=label)
+        context.pop()
+
+# Rounds the corners of a notched clockwise polygon with the points ordered starting at the notch. Will have 5 right angles to round
+def roundCorners(points, radius):
+    steps = 3
+    angle_radians = math.pi / 2
+    step_radians = angle_radians / steps
+    roundedCorners = [points[0]]
+    for i in range(1, 6):
+        prev = points[i-1]
+        curr = points[i]
+        # Default direction and offset
+        direction = 0
+        offsetX, offsetY = 0, 0
+
+        # Determine direction and offset based on movement
+        if curr[0] > prev[0] and curr[1] == prev[1]:  # East turning south
+            direction = angle_radians
+            offsetX, offsetY = -1, 1
+        elif curr[0] == prev[0] and curr[1] > prev[1]:  # South turning west
+            direction = angle_radians * 4
+            offsetX, offsetY = -1, -1
+        elif curr[0] < prev[0] and curr[1] == prev[1]:  # West turning north
+            direction = angle_radians * 3
+            offsetX, offsetY = 1, -1
+        elif curr[0] == prev[0] and curr[1] < prev[1]:  # North turning east
+            direction = angle_radians * 2
+            offsetX, offsetY = 1, 1
+        xCentre = curr[0] + radius * offsetX
+        yCentre = curr[1] + radius * offsetY
+        for j in range(steps+1):
+            angle = direction - (j * step_radians)
+            x = xCentre + radius * math.cos(angle)
+            y = yCentre - radius * math.sin(angle)
+            roundedCorners.append((x,y))
+
+    return roundedCorners
+
+def drawKey(context, sourceImg, capConfig, capSpecial, cap, faceBands):
+
+    # Handle any special drawing instructions supplied
+    # Offset start of keycap
+    offsetX = int(capConfig['capWidth'] * capSpecial.get('x',0))
+    offsetY = int(capConfig['capHeight'] * capSpecial.get('y',0))
+    capConfig['x'] += offsetX
+    capConfig['y'] += offsetY
+    # Vary the size of the keycap
+    capWidth = int(capConfig['capWidth'] * capSpecial.get('w',1))
+    capHeight = int(capConfig['capHeight'] * capSpecial.get('h',1))
+    capRadius = capConfig['capRadius']
+    capAdjustX = 0
+    # The inset face where the colored bands go
+    faceX = capConfig['x']+capConfig['capSideInset']
+    faceWidth = capWidth-(capConfig['capSideInset']*2)
+    faceTop = int(capConfig['y']+capConfig['capTopInset'])
+    faceBottom = int(capConfig['y']+capHeight-capConfig['capBottomInset'])
+
     context.stroke_color = Color('Black')
     context.stroke_width = 3
     context.fill_color = Color('Silver')
     context.fill_opacity = 1
-    context.rectangle(int(buttonSpec['x']), top=int(buttonSpec['y']), width=buttonSpec['buttonWidth'], height=buttonSpec['buttonHeight'], radius=buttonSpec['buttonRadius'])
 
-    # Prepare and draw the keycap
-    if capBands is None:
-        # No bound controls or modifiers for this physicalKey so print it white
-        context.stroke_color = Color('DarkGrey')
-        context.stroke_width = 1
-        context.fill_color = Color('White')
-        context.rectangle(
-            int(buttonSpec['x']+buttonSpec['buttonSideInset']),
-            top=int(buttonSpec['y']+buttonSpec['buttonTopInset']),
-            width=buttonSpec['buttonWidth']-(buttonSpec['buttonSideInset']*2),
-            height=buttonSpec['buttonHeight']-(buttonSpec['buttonTopInset']+buttonSpec['buttonBottomInset']),
-            radius=5)
+    if 'x2' in capSpecial or 'y2' in capSpecial or 'w2' in capSpecial or 'h2' in capSpecial:
+        # ISO 105 Enter key has two overlapping rectangles so use a polygon instead
+        # Prepare clockwise polygon starting at the notch. It will have 5 clockwise right angles
+        # Cater for all 4 permutations with notch at either south-west, south-east, north-west, or north-east
+        offsetX2 = int(capConfig['capWidth'] * capSpecial.get('x2',0))
+        offsetY2 = int(capConfig['capHeight'] * capSpecial.get('y2',0))
+        capWidth2 = int(capConfig['capWidth'] * capSpecial.get('w2',1))
+        capHeight2 = int(capConfig['capHeight'] * capSpecial.get('h2',1))
+        points = []
+        if capSpecial.get('y2',0) == 0:
+            # South notch
+            if capSpecial.get('x2',0) < 0:
+                # SW notch polygon, e.g. {'x':0.25,'w':1.25,'h':2,'w2':1.5,'h2':1,'x2':-0.25}
+                points.append((capConfig['x'],          capConfig['y']+capHeight2))
+                points.append((capConfig['x']+offsetX2, capConfig['y']+capHeight2))
+                points.append((capConfig['x']+offsetX2, capConfig['y']))
+                points.append((capConfig['x']+capWidth, capConfig['y']))
+                points.append((capConfig['x']+capWidth, capConfig['y']+capHeight))
+                points.append((capConfig['x'],          capConfig['y']+capHeight))
+                capAdjustX = -int(capConfig['capWidth'] * capSpecial.get('x',0))
+            elif capSpecial.get('x2',0) == 0:
+                # SE notch polygon, e.g. {'x':0,'w':1.25,'h':2,'x2':0,'w2':1.5,'h2':1}
+                points.append((capConfig['x']+capWidth,  capConfig['y']+capHeight2))
+                points.append((capConfig['x']+capWidth,  capConfig['y']+capHeight))
+                points.append((capConfig['x'],           capConfig['y']+capHeight))
+                points.append((capConfig['x'],           capConfig['y']))
+                points.append((capConfig['x']+capWidth2, capConfig['y']))
+                points.append((capConfig['x']+capWidth2, capConfig['y']+capHeight2))
+            capWidth = capWidth2
+        elif capSpecial.get('y2',0) > 0:
+            # North notch
+            if capSpecial.get('x2',0) < 0:
+                # NW notch polygon, e.g. {'w':1.25,'h':2,'w2':1.5,'h2':1,'x2':-0.25,'y2':1}
+                points.append((capConfig['x'],           capConfig['y']+offsetY2))
+                points.append((capConfig['x'],           capConfig['y']))
+                points.append((capConfig['x']+capWidth,  capConfig['y']))
+                points.append((capConfig['x']+capWidth,  capConfig['y']+capHeight))
+                points.append((capConfig['x']+offsetX2,  capConfig['y']+capHeight))
+                points.append((capConfig['x']+offsetX2,  capConfig['y']+offsetY2))
+            elif capSpecial.get('x2',0) == 0:
+                # NE notch polygon, e.g. {'w':1.25,'h':2,'w2':1.5,'h2':1,'y2':1}
+                points.append((capConfig['x']+capWidth,  capConfig['y']+offsetY2))
+                points.append((capConfig['x']+capWidth2, capConfig['y']+offsetY2))
+                points.append((capConfig['x']+capWidth2, capConfig['y']+capHeight))
+                points.append((capConfig['x'],           capConfig['y']+capHeight))
+                points.append((capConfig['x'],           capConfig['y']))
+                points.append((capConfig['x']+capWidth,  capConfig['y']))
+    
+        roundedPoints = roundCorners(points, capRadius)
+        context.polygon(roundedPoints)
+
     else:
-        # Draw the key cap using a separate horizontal band for each bind
-        bandTop = int(buttonSpec['y']+buttonSpec['buttonTopInset'])
-        bandHeight = int((buttonSpec['buttonHeight']-(buttonSpec['buttonTopInset']+buttonSpec['buttonBottomInset'])) / len(capBands))
-        for bandIndex, controlSet in capBands.items():
-            context.stroke_color = Color('DarkGrey')
-            context.stroke_width = 1
-            bandInset = 0 # Default inset from left if no modifiers and this key is not itself a modifier
-            # bandIndex = f'{entry}::{controlTag}::{bindKey}' where bindKey might be 'Keyboard::0::HOLD'
-            bindKey = '::'.join(bandIndex.split('::')[2:])
-            match bindKey:
-                case 'Unmodified':
-                    None
-                case 'Modifier':
-                    # This key is a modifier
-                    None
-                case 'Keyboard::0::HOLD':
-                    # Draw a thick border around the keycap
-                    context.stroke_color = Color('Black')
-                    context.stroke_width = 6
-                case _:
-                    # Stripe to the left, indicating this is modified
-                    bandInset = 0
-                    bandWidth = 30
-                    for bandColor in controlSet['StripColors']:
-                        context.fill_color = bandColor # Modifier color
-                        context.rectangle(
-                            int(buttonSpec['x']+buttonSpec['buttonSideInset']+bandInset),
-                            top=bandTop, width=bandWidth, height=bandHeight-2, radius=5)
-                        bandInset += bandWidth
+        # normal rectangular cap
+        context.rectangle(capConfig['x'], top=capConfig['y'], width=capWidth, height=capHeight, radius=capRadius)
 
-            # Remainder of band for the control
-            context.fill_color = controlSet['Color']
-            context.rectangle(
-                int(buttonSpec['x']+buttonSpec['buttonSideInset']+bandInset),
-                top=bandTop, width=buttonSpec['buttonWidth']-(buttonSpec['buttonSideInset']*2)-bandInset, height=bandHeight-2, radius=5)
+    label = cap.split('__')[0]
+    context.font_size = capConfig['capFontSize']
+    drawKeyLabel(context, sourceImg, faceX, capConfig['y'], width=faceWidth, height=capHeight, bottom=capConfig['capBottomInset'], label=label)
 
-            # Add the label to the band
-            context.stroke_width = 1
-            context.stroke_color = Color('Black')
-            context.fill_color = Color('Black')
-            writeCenteredWrapableText(context, sourceImg, buttonSpec['x'], bandTop, buttonSpec['buttonWidth'], bandHeight, controlSet['Label'])
-            bandTop += bandHeight
+    # Draw the cap bands
+    context.stroke_color = Color('Silver')
+    context.stroke_width = 1
+    context.fill_color = Color('White')
+    if faceBands is None:
+        context.rectangle(faceX, top=faceTop, width=faceWidth,
+                        height=capHeight - (capConfig['capTopInset'] + capConfig['capBottomInset']), radius = 5)
+    else:
+        drawFaceBands(context, sourceImg, faceBands, faceX, faceWidth, faceTop, faceBottom)
 
-    # Add the label to the keytop
-    if (keyCap!=''):
-        # trim off any trailing '__L' or '__R' etc to get the printable keycap label
-        keyLabel = keyCap.split('__')[0]
-        context.stroke_color = Color('Black')
-        context.fill_color = Color('Black')
-        keyLabel = keyLabel.replace('\n', ' .. ')
-        metrics = context.get_font_metrics(sourceImg, keyLabel, multiline=False)
-        text_width = metrics.text_width
-        context.text(x=int(buttonSpec['x']+(buttonSpec['buttonWidth']-text_width)/2), y=int(buttonSpec['y']+buttonSpec['buttonHeight']-buttonSpec['buttonBottomInset'])+24 , body=keyLabel)
+    # Adjust and move X ready for next keycap
+    capConfig['x'] += capAdjustX + capWidth
 
-def drawLegendEntry(context, sourceImg, label, color, strip_colors, hold, buttonSpec):
-    fakeCapBands = {
+def drawLegendEntry(context, sourceImg, label, color, strip_colors, hold, capConfig):
+    fakefaceBands = {
         f'Legend::Legend::{"Keyboard::0::HOLD" if hold else "Modified" if strip_colors else "Unmodified"}': {
             'Label': label,
             'Color': color,
@@ -402,29 +580,31 @@ def drawLegendEntry(context, sourceImg, label, color, strip_colors, hold, button
             'Hold': hold
         }
     }
-    drawKey(context, sourceImg, buttonSpec, '', fakeCapBands)
+    drawKey(context, sourceImg, capConfig, {}, '', fakefaceBands)
 
 # Draw the keyboard using keyboardLayout
-def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling):
-    capBandSet = prepareCapList(physicalKeys, modifiers, styling)
+def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling, layout):
 
-    stdButtonWidth = 165
-    stdButtonHeight = 220
-    buttonSpec = {
+    keyboardLayout = keyboardLayouts.get(layout)
+    
+    faceBandset, unmapped = prepareCapList(physicalKeys, modifiers, styling, keyboardLayout)
+
+    stdcapWidth = 165
+    stdcapHeight = 220
+    capConfig = {
         'x': 0,
         'y': 0,
-        'buttonWidth': stdButtonWidth,
-        'buttonHeight': stdButtonHeight,
-        'buttonTopInset': 10,
-        'buttonBottomInset': 35,
-        'buttonSideInset': 15,
-        'buttonRadius': 25,
-        'buttonFontSize': 22}
+        'capWidth': stdcapWidth,
+        'capHeight': stdcapHeight,
+        'capTopInset': 10,
+        'capBottomInset': 35,
+        'capSideInset': 15,
+        'capRadius': 25,
+        'capFontSize': 18}
     keyboardX = 60
     keyboardY = 320
 
     context.font = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf' # Need a font that has Unicode arrows
-    context.font_size = 28
     context.text_antialias = True
     context.stroke_color=Color('Black')
     context.fill_color=Color('Black')
@@ -432,16 +612,15 @@ def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling):
 
     # Legend
     legendX = 60
-    legendXStep = stdButtonWidth * 1.5
+    legendXStep = stdcapWidth * 1.5
     legendY = 1850
     legendYStep = 150
-    context.push()
-    context.font_size = 36
+    context.font_size = 32
     context.text(x = legendX, y = legendY + 60, body = 'Legend')
-    context.pop()
     legendX += legendXStep
 
-    # Buttons for the legend
+    # caps for the legend
+    capConfig['capFontSize'] = 24
     if styling == 'Group':
         legendEntries = groupStyles.items()
     elif styling == 'Category':
@@ -449,64 +628,62 @@ def writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling):
     else:
         legendEntries = []
 
-    buttonSpec['x'] = legendX
-    buttonSpec['y'] = legendY
-    buttonSpec['buttonWidth'] = stdButtonWidth * 1.2
-    buttonSpec['buttonHeight'] = stdButtonHeight / 2
+    capConfig['x'] = legendX
+    capConfig['y'] = legendY
+    capConfig['capWidth'] = stdcapWidth * 1.2
+    capConfig['capHeight'] = stdcapHeight / 2
     for label, style in legendEntries:
-        drawLegendEntry(context, sourceImg, label, style['Color'], [], False, buttonSpec)
-        buttonSpec['x'] += legendXStep
-        if (buttonSpec['x'] + buttonSpec['buttonWidth']) > 3800:
-            buttonSpec['x'] = 60 + legendXStep
-            buttonSpec['y'] += legendYStep
+        drawLegendEntry(context, sourceImg, label, style['Color'], [], False, capConfig)
+        if (capConfig['x'] + capConfig['capWidth']) > 3800:
+            capConfig['x'] = 60 + legendXStep
+            capConfig['y'] += legendYStep
 
     # Modified legend
     modColor = ModifierStyles.index(0).get('Color')
-    drawLegendEntry(context, sourceImg, 'Modified', 'White', [f'{modColor}'], False, buttonSpec)
-    buttonSpec['x'] += legendXStep
-    if (buttonSpec['x'] + buttonSpec['buttonWidth']) > 3800:
-        buttonSpec['x'] = 60 + legendXStep
-        buttonSpec['y'] += legendYStep
+    drawLegendEntry(context, sourceImg, 'Modified', 'White', [f'{modColor}'], False, capConfig)
+    if (capConfig['x'] + capConfig['capWidth']) > 3800:
+        capConfig['x'] = 60 + legendXStep
+        capConfig['y'] += legendYStep
 
     # Hold legend
-    drawLegendEntry(context, sourceImg, 'Hold', 'White', [], True, buttonSpec)
+    drawLegendEntry(context, sourceImg, 'Hold', 'White', [], True, capConfig)
 
     # Now layout the actual keys by iterating through the keyboard rows and keys
-    context.font_size = buttonSpec['buttonFontSize']
-    keyPositionSet = {}
-    buttonSpec['buttonWidth'] = stdButtonWidth
-    buttonSpec['buttonHeight'] = stdButtonHeight
-    buttonSpec['y'] = keyboardY
+    capConfig['capWidth'] = stdcapWidth
+    capConfig['capHeight'] = stdcapHeight
+    capConfig['y'] = keyboardY
+    capConfig['capFontSize'] = 18
+
     for keyboardRow in keyboardLayout:
-        buttonSpec['x'] = keyboardX
-        for keyCap in keyboardRow:
-            if type(keyCap).__name__ == 'dict':
-                # leave space
-                if 'x' in keyCap:
-                    buttonSpec['x'] += buttonSpec['buttonWidth'] * keyCap.get('x')
-                if 'y' in keyCap:
-                    buttonSpec['y'] += buttonSpec['buttonHeight'] * keyCap.get('y')
-                # sizing directions for following button
-                if 'w' in keyCap:
-                    buttonSpec['buttonWidth'] = buttonSpec['buttonWidth'] * keyCap.get('w')
-                if 'h' in keyCap:
-                    buttonSpec['buttonHeight'] = buttonSpec['buttonHeight'] * keyCap.get('h')
+        capConfig['x'] = keyboardX
+        capSpecial = {}
+        for keyboardItem in keyboardRow:
+            if type(keyboardItem).__name__ == 'dict':
+                # Special instructions for the next cap so save them and skip to next
+                capSpecial = keyboardItem
                 continue
 
-            keyPositionSet[keyCap] = buttonSpec
+            cap = ''
+            if type(keyboardItem).__name__ == 'list':
+                cap = keyboardItem[0]
+            else:
+                cap = keyboardItem
 
-            capBands = capBandSet.get(keyCap)
-            drawKey(context, sourceImg, buttonSpec, keyCap, capBands)
-            buttonSpec['x'] += buttonSpec['buttonWidth']
+            faceBands = faceBandset.get(cap)
+            drawKey(context, sourceImg, capConfig, capSpecial, cap, faceBands)
 
-            # Reset button sizing to the default
-            buttonSpec['buttonWidth'] = stdButtonWidth
-            buttonSpec['buttonHeight'] = stdButtonHeight
+            capSpecial = {}
 
-        buttonSpec['y'] += stdButtonHeight
+        capConfig['y'] += stdcapHeight
+
+    if len(unmapped) > 0:
+        context.stroke_color = Color('Black')
+        context.fill_color = Color('Black')
+        context.font_size = 24
+        context.text(x = 50, y = 2050, body = 'No keycaps for: ' + str(unmapped).replace('Key_','')[1:-1])
 
 # Create a keyboard image from the template plus bindings
-def appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling):
+def appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling, layout):
 
     source = 'keyboard-layout'
     config = Config(runId)
@@ -529,7 +706,7 @@ def appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGro
             # Add the ID to the title
             writeUrlToDrawing(config, context, public)
 
-            writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling)
+            writeKeyboardLayout(context, sourceImg, physicalKeys, modifiers, styling, layout)
 
             context.draw(sourceImg)
             sourceImg.save(filename=str(filePath))
@@ -1457,10 +1634,19 @@ def parseForm(form):
         styling = 'Category'
     if form.getvalue('styling') == 'modifier':
         styling = 'Modifier'
+
+    layout = 'None'  # Yes we do mean a string 'None'
+    if form.getvalue('layout') == 'ANSI 104':
+        layout = 'ANSI 104'
+    if form.getvalue('layout') == 'ISO 105':
+        layout = 'ISO 105'
+    if form.getvalue('layout') == 'ЙЦУКЕН':
+        layout = 'ЙЦУКЕН'
+
     description = form.getvalue('description')
     if description is None:
         description = ''
-    return (displayGroups, styling, description)
+    return (displayGroups, styling, layout, description)
     
 def determineMode(form):
     deviceForBlockImage = form.getvalue('blocks')
@@ -1502,6 +1688,7 @@ def saveReplayInfo(config, description, styling, displayGroups, devices, errors)
 def parseLocalFile(filePath):
     displayGroups = groupStyles.keys()
     styling = 'None'  # Yes we do mean a string 'None'
+    layout = 'None'
     config = Config('000000')
     errors = Errors()
     with filePath.open() as f:
@@ -1514,6 +1701,7 @@ def parseLocalFile(filePath):
 def processForm(form):
     config = Config.newRandom()
     styling = 'None'
+    layout = 'None'
     description = ''
     options = {}
     public = False
@@ -1568,7 +1756,8 @@ def processForm(form):
         config.makeDir()
         runId = config.name
         displayGroups = []
-        (displayGroups, styling, description) = parseForm(form)
+        (displayGroups, styling, layout, description) = parseForm(form)
+
         xml = form.getvalue('bindings')
         if xml is None or xml == b'':
             errors.errors = '<h1>No bindings file supplied; please go back and select your binds file as per the instructions.</h1>'
@@ -1625,7 +1814,7 @@ def processForm(form):
                             alreadyHandledDevices.append('%s::%s' % (handledDevice, deviceIndex))
         
         if devices.get('Keyboard::0') is not None:
-            appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling)
+            appendKeyboardLayoutImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public, styling, layout)
             appendKeyboardListImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public)
         
         for deviceKey, device in devices.items():
