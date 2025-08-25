@@ -73,7 +73,8 @@ supportedDevices = OrderedDict([
     ('Winwing-Orion-Throttle-2-F18-Handle', {'Template': 'winwing-orion-throttle2-f18-handle', 'HandledDevices': ['4098BE62']}),
     ('Winwing-Ursa-Minor-Fighter-Right', {'Template': 'winwing-ursa-minor-fighter-right', 'HandledDevices': ['4098BC2A']}),
     ('Winwing-Ursa-Minor-Fighter-Left', {'Template': 'winwing-ursa-minor-fighter-left', 'HandledDevices': ['4098BC29']}),
-    ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']})
+    ('Keyboard', {'Template': 'keyboard', 'HandledDevices': ['Keyboard']}),
+    ('Keyboard-layout', {'Template': 'keyboard-layout', 'HandledDevices': ['Keyboard']})
 ])
 
 #controls went in here!
@@ -4545,6 +4546,7 @@ keymap = {
     'Key_LeftBracket': '[',
     'Key_LeftControl': 'Left Ctrl',
     'Key_LeftShift': 'Left Shift',
+    'Key_LeftWin': 'Left Win',
     'Key_Minus': '-',
     'Key_Plus': '+',
     'Key_Equals': '=',
@@ -4554,6 +4556,7 @@ keymap = {
     'Key_RightControl': 'Right Ctrl',
     'Key_RightShift': 'Right Shift',
     'Key_RightArrow': 'Right',
+    'Key_RightWin': 'Right Win',
     'Key_UpArrow': 'Up',
     'Key_LeftArrow': 'Left',
     'Key_DownArrow': 'Down',
@@ -4587,4 +4590,50 @@ keymap = {
     'Key_Slash': '/',
     'Key_Apostrophe': '\'',
     'Key_Hash': '#',
+}
+
+# Based on data from https://www.keyboard-layout-editor.com/
+# Entries are either a dictionary which gives override instructions to following keycap.
+# or a list where the first entry is the keycap and the second entry is the Key reference as per XML bind file
+# or a string for simple keycaps where the key reference can be derived by prefixing 'Key_'
+keyboardLayouts = {
+    'ANSI 104':[
+    ['Esc',{'x':1},'F1','F2','F3','F4',{'x':0.5},'F5','F6','F7','F8',{'x':0.5},'F9','F10','F11','F12',{'x':0.25},'PrtSc',['ScrLk','Key_ScrollLock'],['Pause\nBreak','Key_Pause']],
+    [{'y':0.5},['~\n`','Key_Grave'],['!\n1','Key_1'],['@\n2','Key_2'],['#\n3','Key_3'],['$\n4','Key_4'],['%\n5','Key_5'],['^\n6','Key_6'],['&\n7','Key_7'],['*\n8','Key_8'],['(\n9','Key_9'],[')\n0','Key_0'],['_\n-','Key_Minus'],['+\n=','Key_Equals'],{'w':2},'Backspace',
+        {'x':0.25},'Insert','Home',['PgUp','Key_PageUp'],{'x':0.25},['Num\nLock','Key_NumLock'],['/__N','Key_Numpad_Divide'],['*__N','Key_Numpad_Multiply'],['-__N','Key_Numpad_Subtract']],
+    [{'w':1.5},'Tab','Q','W','E','R','T','Y','U','I','O','P',['{\n[','Key_LeftBracket'],['}\n]','Key_RightBracket'],{'w':1.5},['|\n\\','Key_BackSlash'],{'x':0.25},
+        'Delete','End',['PgDn','Key_PageDown'],{'x':0.25},['7__N\nHome__N','Key_Numpad_7'],['8__N\n↑','Key_Numpad_8'],['9__N\nPgUp__N','Key_Numpad_9'],{'h':2},['+__N','Key_Numpad_Add']],
+    [{'w':1.75},['Caps Lock','Key_CapsLock'],'A','S','D','F','G','H','J','K','L',[':\n;','Key_SemiColon'],['"\n\'','Key_Apostrophe'],{'w':2.25},'Enter',
+        {'x':3.5},['4__N\n←','Key_Numpad_4'],['5__N','Key_Numpad_5'],['6__N\n→','Key_Numpad_6']],
+    [{'w':2.25},['Shift__L','Key_LeftShift'],'Z','X','C','V','B','N','M',['<\n,','Key_Comma'],['>\n.','Key_Period'],['?\n/','Key_Slash'],{'w':2.75},['Shift__R','Key_RightShift'],
+        {'x':1.25},['↑','Key_UpArrow'],{'x':1.25},['1__N\nEnd__N','Key_Numpad_1'],['2__N\n↓','Key_Numpad_2'],['3__N\nPgDn__N','Key_Numpad_3'],{'h':2},['Enter__N','Key_Numpad_Enter']],
+    [{'w':1.25},['Ctrl__L','Key_LeftControl'],{'w':1.25},['Win__L','Key_LeftWin'],{'w':1.25},['Alt__L','Key_LeftAlt'],{'a':7,'w':6.25},[' ','Key_Space'],{'a':4,'w':1.25},['Alt__R','Key_RightAlt'],{'w':1.25},['Win__R','Key_RightWin'],{'w':1.25},'Menu',{'w':1.25},['Ctrl__R','Key_RightControl'],
+        {'x':0.25},['←','Key_LeftArrow'],['↓','Key_DownArrow'],['→','Key_RightArrow'],{'x':0.25,'w':2},['0__N\nIns__N','Key_Numpad_0'],['.__N\nDel__N','Key_Numpad_Decimal']]
+    ],
+    'ISO 105':[
+    ['Esc',{'x':1},'F1','F2','F3','F4',{'x':0.5},'F5','F6','F7','F8',{'x':0.5},'F9','F10','F11','F12',{'x':0.25},'PrtSc',['ScrLk','Key_ScrollLock'],['Pause\nBreak','Key_Pause']],
+    [{'y':0.5},['¬\n`','Key_Grave'],['!\n1','Key_1'],['\"\n2','Key_2'],['£\n3','Key_3'],['$\n4','Key_4'],['%\n5','Key_5'],['^\n6','Key_6'],['&\n7','Key_7'],['*\n8','Key_8'],['(\n9','Key_9'],[')\n0','Key_0'],['_\n-','Key_Minus'],['+\n=','Key_Equals'],{'w':2},'Backspace',
+        {'x':0.25},'Insert','Home',['PgUp','Key_PageUp'],{'x':0.25},['Num Lock','Key_NumLock'],['/__N','Key_Numpad_Divide'],['*__N','Key_Numpad_Multiply'],['-__N','Key_Numpad_Subtract']],
+    [{'w':1.5},'Tab','Q','W','E','R','T','Y','U','I','O','P',['{\n[','Key_LeftBracket'],['}\n]','Key_RightBracket'],{'x':0.25,'w':1.25,'h':2,'w2':1.5,'h2':1,'x2':-0.25},'Enter',
+        {'x':0.25},'Delete','End',['PgDn','Key_PageDown'],{'x':0.25},['7__N\nHome__N','Key_Numpad_7'],['8__N\n↑','Key_Numpad_8'],['9__N\nPgUp__N','Key_Numpad_9'],{'h':2},['+__N','Key_Numpad_Add']],
+    [{'w':1.75},['Caps Lock','Key_CapsLock'],'A','S','D','F','G','H','J','K','L',[':\n;','Key_SemiColon'],['@\n\'','Key_Apostrophe'],['~\n#','Key_Hash'],
+        {'x':4.75},['4__N\n←','Key_Numpad_4'],['5__N','Key_Numpad_5'],['6__N\n→','Key_Numpad_6']],
+    [{'w':1.25},['Shift__L','Key_LeftShift'],['|\n\\','Key_BackSlash'],'Z','X','C','V','B','N','M',['<\n,','Key_Comma'],['>\n.','Key_Period'],['?\n/','Key_Slash'],{'w':2.75},['Shift__R','Key_RightShift'],
+        {'x':1.25},['↑','Key_UpArrow'],{'x':1.25},['1__N\nEnd__N','Key_Numpad_1'],['2__N\n↓','Key_Numpad_2'],['3__N\nPgDn__N','Key_Numpad_3'],{'h':2},['Enter__N','Key_Numpad_Enter']],
+    [{'w':1.25},['Ctrl__L','Key_LeftControl'],{'w':1.25},['Win__L','Key_LeftWin'],{'w':1.25},['Alt__L','Key_LeftAlt'],{'a':7,'w':6.25},[' ','Key_Space'],{'a':4,'w':1.25},'AltGr',{'w':1.25},['Win__R','Key_RightWin'],{'w':1.25},'Menu',{'w':1.25},['Ctrl__R','Key_RightControl'],
+        {'x':0.25},['←','Key_LeftArrow'],['↓','Key_DownArrow'],['→','Key_RightArrow'],{'x':0.25,'w':2},['0__N\nIns__N','Key_Numpad_0'],['.__N\nDel__N','Key_Numpad_Decimal']]
+    ],
+    'ЙЦУКЕН':[
+    ['Esc',{'x':1},'F1','F2','F3','F4',{'x':0.5},'F5','F6','F7','F8',{'x':0.5},'F9','F10','F11','F12',{'x':0.25},'PrtSc',['ScrLk','Key_ScrollLock'],['Pause\nBreak','Key_Pause']],
+    [{'y':0.5},['Ё\n`','Key_Grave'],['!\n1','Key_1'],['\"\n2','Key_2'],['№\n3','Key_3'],['4','Key_4'],['%\n5','Key_5'],[':\n6','Key_6'],['?\n7','Key_7'],['*\n8','Key_8'],['(\n9','Key_9'],[')\n0','Key_0'],['_\n-','Key_Minus'],['+\n=','Key_Equals'],{'w':2},'Backspace',
+        {'x':0.25},'Insert','Home',['PgUp','Key_PageUp'],{'x':0.25},['Num Lock','Key_NumLock'],['/__N','Key_Numpad_Divide'],['*__N','Key_Numpad_Multiply'],['-__N','Key_Numpad_Subtract']],
+    [{'w':1.5},'Tab','Й','Ц','У','К','Е','Н','Г','Ш','Щ','З',['Х\n[','Key_Х'],['Ъ\n]','Key_Ъ'],{'x':0.25,'w':1.25,'h':2,'w2':1.5,'h2':1,'x2':-0.25},'Enter',
+        {'x':0.25},'Delete','End',['PgDn','Key_PageDown'],{'x':0.25},['7__N\nHome__N','Key_Numpad_7'],['8__N\n↑','Key_Numpad_8'],['9__N\nPgUp__N','Key_Numpad_9'],{'h':2},['+__N','Key_Numpad_Add']],
+    [{'w':1.75},['Caps Lock','Key_CapsLock'],'Ф','Ы','В','А','П','Р','О','Л','Д',['Ж\n;','Key_Ж'],['Э\n\'','Key_Э'],['\\\n|','Key_Slash'],
+        {'x':4.75},['4__N\n←','Key_Numpad_4'],['5__N','Key_Numpad_5'],['6__N\n→','Key_Numpad_6']],
+    [{'w':1.25},['Shift__L','Key_LeftShift'],['\\\n/','Key_BackSlash'],'Я','Ч','С','М','И','Т','Ь',['Б\n,','Key_Б'],['Ю\n.','Key_Ю'],['.\n/','Key_Period'],{'w':2.75},['Shift__R','Key_RightShift'],
+        {'x':1.25},['↑','Key_UpArrow'],{'x':1.25},['1__N\nEnd__N','Key_Numpad_1'],['2__N\n↓','Key_Numpad_2'],['3__N\nPgDn__N','Key_Numpad_3'],{'h':2},['Enter__N','Key_Numpad_Enter']],
+    [{'w':1.25},['Ctrl__L','Key_LeftControl'],{'w':1.25},['Win__L','Key_LeftWin'],{'w':1.25},['Alt__L','Key_LeftAlt'],{'a':7,'w':6.25},[' ','Key_Space'],{'a':4,'w':1.25},'AltGr',{'w':1.25},['Win__R','Key_RightWin'],{'w':1.25},'Menu',{'w':1.25},['Ctrl__R','Key_RightControl'],
+        {'x':0.25},['←','Key_LeftArrow'],['↓','Key_DownArrow'],['→','Key_RightArrow'],{'x':0.25,'w':2},['0__N\nIns__N','Key_Numpad_0'],['.__N\nDel__N','Key_Numpad_Decimal']]
+    ],
 }
