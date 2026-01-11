@@ -6,7 +6,7 @@
 <div id="container">
     <div id="banner">
         <h1>EDRefCard</h1>
-        <a href="{{ url_for('index') }}" class="banner-home-link" title="Return to homepage">✕</a>
+        <a href="{{ url_for('web.index') }}" class="banner-home-link" title="Return to homepage">✕</a>
     </div>
 
     <div id="content">
@@ -47,44 +47,125 @@
 
         {% if device_index == 0 %}
         <img class="refcard-image lightbox-trigger"
-            src="{{ url_for('serve_config', path=run_id[:2] + '/' + run_id + '-' + supported_devices[device]['Template'] + '.jpg') }}"
+            src="{{ url_for('web.serve_config', path=run_id[:2] + '/' + run_id + '-' + supported_devices[device]['Template'] + '.jpg') }}"
             alt="{{ device }} Reference Card" />
         {% else %}
         <img class="refcard-image lightbox-trigger"
-            src="{{ url_for('serve_config', path=run_id[:2] + '/' + run_id + '-' + supported_devices[device]['Template'] + '-' + device_index|string + '.jpg') }}"
+            src="{{ url_for('web.serve_config', path=run_id[:2] + '/' + run_id + '-' + supported_devices[device]['Template'] + '-' + device_index|string + '.jpg') }}"
             alt="{{ device }} Reference Card ({{ device_index }})" />
         {% endif %}
         {% endfor %}
 
         {% if device_for_block_image %}
         <img class="refcard-image lightbox-trigger"
-            src="{{ url_for('serve_config', path=supported_devices[device_for_block_image]['Template'][:2] + '/' + supported_devices[device_for_block_image]['Template'] + '.jpg') }}"
+            src="{{ url_for('web.serve_config', path=supported_devices[device_for_block_image]['Template'][:2] + '/' + supported_devices[device_for_block_image]['Template'] + '.jpg') }}"
             alt="{{ device_for_block_image }} Block Diagram" />
         {% endif %}
 
-        {% if not device_for_block_image and public and run_id %}
-        <div class="form-section" style="margin-top: 2rem;">
-            <h3>🔗 Share Your Reference Card</h3>
-            <p>
-                <strong>Direct link:</strong><br>
-                <a href="{{ refcard_url }}">{{ refcard_url }}</a>
-            </p>
-            <p>
-                <strong>Download binds file:</strong><br>
-                <a href="{{ binds_url }}">{{ binds_url }}</a>
-            </p>
-            <p>
-                <strong>Download PDF (Archived):</strong><br>
-                <a href="{{ url_for('download_pdf', run_id=run_id, format='A4') }}"
-                    class="btn btn-sm btn-outline-secondary">📄 A4 Format</a>
-                <a href="{{ url_for('download_pdf', run_id=run_id, format='Letter') }}"
-                    class="btn btn-sm btn-outline-secondary" style="margin-left: 10px;">📄 Letter Format</a>
-            </p>
-            <p class="text-muted">
-                You can replace your existing custom binds file with this file to use these controls.
+        {% endif %}
+        {# End of created_images/device_for_block_image section #}
+
+        {# Share section - shown for all configs with a run_id, regardless of images #}
+        {% if run_id and not device_for_block_image %}
+        <div class="form-section tools-section" style="margin-top: 2rem;">
+            <h3>🔗 Export & Tools</h3>
+
+            <div class="tools-grid">
+                <!-- Direct Link -->
+                <div class="tools-item">
+                    <label>Direct Link</label>
+                    <div class="input-group">
+                        <input type="text" value="{{ refcard_url }}" readonly id="refcardUrl">
+                        <button onclick="copyToClipboard('refcardUrl')" class="btn-icon" title="Copy to Clipboard">
+                            📋
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Download Buttons -->
+                <div class="tools-actions">
+                    <a href="{{ binds_url }}" class="btn-secondary" download>
+                        💾 Download .binds
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn-secondary">📄 Download PDF ▼</button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('web.download_pdf', run_id=run_id, format='A4') }}">A4 Format</a>
+                            <a href="{{ url_for('web.download_pdf', run_id=run_id, format='Letter') }}">Letter
+                                Format</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-links">
+                    <a href="https://www.reddit.com/submit?url={{ refcard_url }}&title=My Elite Dangerous Bindings (EDRefCard)"
+                        target="_blank" rel="noopener noreferrer" class="btn-export btn-red" title="Post to Forum">
+                        <span style="font-size: 1.2em;">🔴</span> Reddit
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?text=Check out my Elite Dangerous bindings!&url={{ refcard_url }}"
+                        target="_blank" rel="noopener noreferrer" class="btn-export btn-dark" title="Post">
+                        <span style="font-size: 1.2em;">✖️</span> X
+                    </a>
+                    <button onclick="copyToClipboard('refcardUrl')" class="btn-export btn-blue"
+                        style="background-color: #5865F2; color: white; border: none; cursor: pointer;"
+                        title="Copy Link">
+                        <span style="font-size: 1.2em;">💬</span> Discord
+                    </button>
+                    <button onclick="toggleQRCode()" class="btn-export btn-light"
+                        style="background-color: #fff; color: #333; border: 1px solid #ccc; cursor: pointer;"
+                        title="Show QR Code">
+                        <span style="font-size: 1.2em;">📱</span> QR Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- QR Code Container (Hidden by default) -->
+            <div id="qrcode-container" style="display: none; margin-top: 1rem; text-align: center;">
+                <div id="qrcode" style="display: inline-block; padding: 10px; background: white;"></div>
+                <p><small>Scan to open on mobile</small></p>
+            </div>
+
+            <p class="text-muted mt-2">
+                <small>You can replace your existing custom binds file with the downloaded .binds file to use these
+                    controls.</small>
             </p>
         </div>
-        {% endif %}
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script>
+            function copyToClipboard(elementId) {
+                var copyText = document.getElementById(elementId);
+                copyText.select();
+                copyText.setSelectionRange(0, 99999); /* For mobile devices */
+                navigator.clipboard.writeText(copyText.value).then(() => {
+                    // Find the button that was clicked
+                    const activeElement = document.activeElement;
+                    if (activeElement && activeElement.tagName === 'BUTTON') {
+                        const original = activeElement.innerHTML;
+                        activeElement.innerHTML = '✅ Copied!';
+                        setTimeout(() => activeElement.innerHTML = original, 2000);
+                    }
+                });
+            }
+
+            var qrCodeGenerated = false;
+            function toggleQRCode() {
+                var container = document.getElementById('qrcode-container');
+                if (container.style.display === 'none') {
+                    container.style.display = 'block';
+                    if (!qrCodeGenerated) {
+                        new QRCode(document.getElementById("qrcode"), {
+                            text: "{{ refcard_url }}",
+                            width: 128,
+                            height: 128
+                        });
+                        qrCodeGenerated = true;
+                    }
+                } else {
+                    container.style.display = 'none';
+                }
+            }
+        </script>
         {% endif %}
     </div>
 
@@ -98,5 +179,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('serve_scripts', filename='lightbox.js') }}"></script>
+<script src="{{ url_for('web.serve_scripts', filename='lightbox.js') }}"></script>
 {% endblock %}

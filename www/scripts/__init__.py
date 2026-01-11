@@ -16,7 +16,7 @@ For backwards compatibility, all public symbols are also available directly
 from this package or from the bindings module.
 """
 
-__version__ = '2.0.0'
+__version__ = '2.1.0'
 
 # Re-export from submodules for backwards compatibility
 from .models import Config, Mode, Errors

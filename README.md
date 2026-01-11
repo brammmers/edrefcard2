@@ -113,6 +113,28 @@ Comprehensive admin panel for configuration management:
 ### Auto-Migration
 Legacy pickle-based configurations are automatically migrated to SQLite on first startup.
 
+### 📊 Global Analytics
+New in v2.1: A public dashboard (`/stats`) showing:
+- Daily upload activity charts.
+- Most popular controller types rankings.
+
+### 🔌 Public API
+New in v2.1: A JSON API is available for third-party integrations.
+- `POST /api/v1/generate`: Programmatic upload of bindings.
+- `GET /api/v1/binds/<id>`: Retrieve configuration metadata.
+
+## Changelog
+
+### v2.1 (2025-01-08)
+*   **Frontend**:
+    *   Added **Drag & Drop** support with immediate file validation and preview.
+    *   Added **Sharing Tools**: Copy link button, social sharing (Reddit/X), and visual feedback.
+    *   Added **Global Analytics Dashboard** (`/stats`) with Chart.js visualization.
+*   **Backend**:
+    *   Implemented **Public JSON API** (`/api/v1/generate`).
+    *   Refactored `app.py` into modular **Blueprints** (`web`, `api`, `admin`) for better maintainability.
+    *   Standardized route namespaces in templates.
+
 ## Configuration
 
 The application can be configured via environment variables or by modifying the Flask app configuration in `www/app.py`:

@@ -12,11 +12,11 @@
     <div id="content">
         <!-- Navigation Links -->
         <div class="nav-links">
-            <a href="{{ url_for('list_configs') }}" class="nav-link">View published bindings</a>
-            <a href="{{ url_for('list_devices') }}" class="nav-link">Supported devices</a>
+            <a href="{{ url_for('web.list_configs') }}" class="nav-link">View published bindings</a>
+            <a href="{{ url_for('web.list_devices') }}" class="nav-link">Supported devices</a>
         </div>
 
-        <form id="uploadbindings" enctype="multipart/form-data" method="post" action="{{ url_for('generate') }}"
+        <form id="uploadbindings" enctype="multipart/form-data" method="post" action="{{ url_for('web.generate') }}"
             accept-charset="utf-8">
 
             <!-- File Upload Section -->
@@ -139,5 +139,5 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('serve_static', filename='file-upload.js') }}"></script>
+<script src="{{ url_for('web.serve_static', filename='file-upload.js') }}"></script>
 {% endblock %}

@@ -12,7 +12,6 @@ services:
       - FLASK_SECRET_KEY
       - APP_URL
       - EDREFCARD_CONFIGS_DIR=/app/www/configs
-    user: root
     restart: unless-stopped
 
 volumes:

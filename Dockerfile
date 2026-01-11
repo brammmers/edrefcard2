@@ -1,14 +1,13 @@
 FROM python:3.13-slim
 
-# Install ImageMagick for wand library
+# Install ImageMagick for wand library and gosu for privilege dropping
 RUN apt-get update -y \
-    && apt-get install -y libmagickwand-dev \
+    && apt-get install -y libmagickwand-dev gosu \
     && apt-get clean -y \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set work directory
-# Set work directory for build
 WORKDIR /app
 
 # Copy requirements first for better caching
@@ -23,6 +22,10 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 # Copy application code
 COPY ./www/ /app/www/
 COPY ./bindings/ /app/bindings/
+
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set work directory to where app.py is
 WORKDIR /app/www
@@ -40,11 +43,12 @@ ENV EDREFCARD_ADMIN_USER=admin
 ENV EDREFCARD_ADMIN_PASS=changeme
 ENV FLASK_SECRET_KEY=change-this-in-production
 
-# Switch to non-root user
-USER appuser
+# Container starts as root, entrypoint will fix permissions and drop to appuser
+# This is necessary because Docker volumes are mounted as root
 
 # Expose port
 EXPOSE 8000
 
-# Run with Gunicorn
+# Use entrypoint to fix permissions then drop privileges
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "app:app"]

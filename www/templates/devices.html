@@ -14,10 +14,10 @@
         <ul>
             {% for device in devices %}
             <li>
-                <a href="{{ url_for('show_device', device_name=device.name) }}">
+                <a href="{{ url_for('web.show_device', device_name=device.name) }}">
                     <strong>{{ device.name }}</strong>
                 </a>
-                <a href="{{ url_for('list_configs', deviceFilter=device.name) }}"
+                <a href="{{ url_for('web.list_configs', deviceFilter=device.name) }}"
                     title="Search configurations using this device" style="margin-left: 0.5rem; text-decoration: none;">
                     🔍 <span class="badge"
                         style="background-color: #eee; color: #333; padding: 2px 6px; border-radius: 4px; font-size: 0.8em;">{{

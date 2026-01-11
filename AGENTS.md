@@ -25,6 +25,14 @@ Configuration files are stored in `www/configs/` using a **hashed directory stru
     *   The `/admin/migrate` endpoint scans `www/configs` for all `.replay` files and populates the SQLite DB.
     *   This is an idempotent operation (safe to run multiple times).
 
+### 🧩 Application Structure (Refactoring v2.1)
+*   **Blueprints**: The application has been refactored to use Flask Blueprints:
+    *   `www/web.py`: Main user-facing routes (index, list, view, generate).
+    *   `www/api.py`: Public JSON API (`/api/v1`).
+    *   `www/admin/__init__.py`: Admin interface.
+*   **Entry Point**: `www/app.py` initializes the app, registers blueprints, and handles configuration.
+*   **Extensions**: Shared extensions (like `Limiter`) are in `www/extensions.py`.
+
 ## ⚠️ Known Quirks & Issues
 
 ### 1. "Configuration not found" vs "Source missing"

@@ -33,11 +33,27 @@ log_file = log_dir / 'admin_access.log'
 
 admin_logger = logging.getLogger('admin_access')
 admin_logger.setLevel(logging.INFO)
-handler = logging.FileHandler(log_file)
-handler.setFormatter(logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-))
+
+try:
+    # Try to log to file
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    ))
+except PermissionError:
+    # Fallback to stderr if file is not writable
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter(
+        '[ADMIN-AUTH] %(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    ))
+    print(f"Warning: Could not write to {log_file}. Logging to stderr instead.")
+except Exception as e:
+    # Fallback for other errors
+    handler = logging.StreamHandler()
+    print(f"Warning: Failed to setup admin log file: {e}. Logging to stderr instead.")
+
 admin_logger.addHandler(handler)
 
 

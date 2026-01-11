@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}EDRefCard - Global Statistics{% endblock %}
+
+{% block content %}
+<div id="container">
+    <div id="banner">
+        <h1>Global Analytics</h1>
+        <a href="{{ url_for('web.index') }}" class="banner-home-link" title="Return to homepage">✕</a>
+    </div>
+
+    <div id="content">
+        <!-- Key Metrics -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.total_configurations }}</div>
+                <div class="stat-label">Total Configurations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.public_configurations }}</div>
+                <div class="stat-label">Public Configs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.daily_stats|sum(attribute='count') if stats.daily_stats else 0 }}</div>
+                <div class="stat-label">Last 30 Days</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>📈 Activity (Last 30 Days)</h3>
+                <canvas id="dailyChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>🎮 Most Popular Controllers</h3>
+                <canvas id="deviceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Data Table (Alternative View) -->
+        <div class="form-section mt-2">
+            <h3>Recent Popular Controllers</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Device Name</th>
+                        <th>Usage Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in stats.popular_devices %}
+                    <tr>
+                        <td>{{ device.device_display_name }}</td>
+                        <td>{{ device.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartData = {{ chart_data| tojson
+    }};
+
+    // Activity Chart
+    const ctxDaily = document.getElementById('dailyChart').getContext('2d');
+    new Chart(ctxDaily, {
+        type: 'line',
+        data: {
+            labels: chartData.daily.labels,
+            datasets: [{
+                label: 'New Configurations',
+                data: chartData.daily.values,
+                borderColor: '#ff8c00', // ed-orange
+                backgroundColor: 'rgba(255, 140, 0, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // Device Chart
+    const ctxDevice = document.getElementById('deviceChart').getContext('2d');
+    new Chart(ctxDevice, {
+        type: 'bar',
+        data: {
+            labels: chartData.devices.labels,
+            datasets: [{
+                label: 'Usage Count',
+                data: chartData.devices.values,
+                backgroundColor: '#00d4ff', // ed-cyan
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y', // Horizontal bar
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+
+    // Global Chart.js defaults for Dark Theme
+    Chart.defaults.color = '#9aa0a6';
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    });
+</script>
+{% endblock %}

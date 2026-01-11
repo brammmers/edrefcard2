@@ -9,6 +9,7 @@ services:
       - edrefcard_data:/app/www/configs
     environment:
       - PYTHONUNBUFFERED=1
+    user: root
     restart: unless-stopped
 
 volumes:
