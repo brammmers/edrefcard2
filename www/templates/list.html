@@ -11,31 +11,53 @@
     <div id="content">
         <!-- Search Form -->
         <form action="{{ url_for('web.list_configs') }}" id="searchForm">
-            <div style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
+            <div style="display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <label for="search" style="display: block; margin-bottom: 0.5rem; color: var(--ed-orange);">
+                        🔍 Search
+                    </label>
+                    <input type="text" name="search" id="search" value="{{ request.args.get('search', '') }}"
+                        placeholder="Search by description or controller..."
+                        style="width: 100%; padding: 0.5rem; border: 1px solid var(--ed-orange); background: #1a1a2e; color: var(--ed-text); border-radius: 4px;"
+                        maxlength="100">
+                    <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                        e.g. "VKB", "warthog", "my config"
+                    </p>
+                </div>
                 <div>
                     <label for="deviceFilter" style="display: block; margin-bottom: 0.5rem; color: var(--ed-orange);">
                         Filter by Controller
                     </label>
-                    <select name="deviceFilter" id="deviceFilter" multiple size="6">
+                    <select name="deviceFilter" id="deviceFilter" multiple size="5">
                         {% for controller in controllers %}
                         <option value="{{ controller }}" {% if controller in selected_controllers %}selected{% endif %}>
                             {{ controller }}
                         </option>
                         {% endfor %}
                     </select>
+                    <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">
+                        Ctrl/Cmd + click for multiple
+                    </p>
                 </div>
                 <div style="padding-top: 1.75rem;">
                     <input type="submit" value="🔍 Search">
+                    {% if request.args.get('search') or request.args.getlist('deviceFilter') %}
+                    <a href="{{ url_for('web.list_configs') }}"
+                        style="margin-left: 0.5rem; padding: 0.5rem 1rem; background: #444; color: var(--ed-text); text-decoration: none; border-radius: 4px;">
+                        ✕ Clear
+                    </a>
+                    {% endif %}
                 </div>
             </div>
-            <p class="text-muted mt-1" style="font-size: 0.85rem;">
-                Hold Ctrl/Cmd to select multiple controllers
-            </p>
         </form>
     </div>
 
     {% if items %}
     <div id="content" style="margin-top: 1.5rem;">
+        <p style="margin-bottom: 1rem; color: var(--ed-orange);">
+            Showing {{ items|length }} of {{ total }} configurations
+            {% if total > per_page %} (Page {{ page }}){% endif %}
+        </p>
         <table>
             <thead>
                 <tr>
@@ -60,6 +82,28 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if total > per_page %}
+        <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; align-items: center;">
+            {% if page > 1 %}
+            <a href="{{ url_for('web.list_configs', page=page-1, deviceFilter=request.args.getlist('deviceFilter'), search=request.args.get('search')) }}"
+                style="padding: 0.5rem 1rem; background: var(--ed-orange); color: #000; text-decoration: none; border-radius: 4px;">
+                ← Previous
+            </a>
+            {% endif %}
+
+            <span style="color: var(--ed-text);">
+                Page {{ page }} of {{ ((total - 1) // per_page) + 1 }}
+            </span>
+
+            {% if page * per_page < total %} <a
+                href="{{ url_for('web.list_configs', page=page+1, deviceFilter=request.args.getlist('deviceFilter'), search=request.args.get('search')) }}"
+                style="padding: 0.5rem 1rem; background: var(--ed-orange); color: #000; text-decoration: none; border-radius: 4px;">
+                Next →
+                </a>
+                {% endif %}
+        </div>
+        {% endif %}
     </div>
     {% else %}
     <div id="content" style="margin-top: 1.5rem; text-align: center;">

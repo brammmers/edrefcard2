@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maintenance - EDRefCard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --ed-orange: #ff8c00;
+            --ed-orange-glow: rgba(255, 140, 0, 0.4);
+            --bg-primary: #0a0e14;
+            --bg-secondary: #151c27;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Animated starfield background */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, rgba(21, 28, 39, 0.8) 0%, var(--bg-primary) 100%),
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--ed-orange);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px var(--ed-orange-glow);
+        }
+
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(0.95);
+            }
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .message {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--ed-orange);
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .status-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Scan line effect */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--ed-orange), transparent);
+            opacity: 0.3;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="starfield"></div>
+    <div class="scanline"></div>
+
+    <div class="container">
+        <div class="logo">EDRefCard</div>
+        <div class="icon">🔧</div>
+        <h1>System Maintenance</h1>
+        <p class="message">
+            {{ message|default("We're performing scheduled maintenance to improve your experience. The service will be
+            back online shortly.") }}
+        </p>
+
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span class="status-text">Maintenance in progress...</span>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -23,9 +23,11 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 COPY ./www/ /app/www/
 COPY ./bindings/ /app/bindings/
 
-# Copy entrypoint script
+# Copy entrypoint script and strip any Windows CR characters (CRLF -> LF)
+# This is required because Docker Desktop on Windows can re-introduce \r during COPY
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r//' /usr/local/bin/docker-entrypoint.sh \
+    && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Set work directory to where app.py is
 WORKDIR /app/www

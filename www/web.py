@@ -13,6 +13,7 @@ from scripts import (
     parseFormData,
     createHOTASImage,
     appendKeyboardImage,
+    createKeyboardLayoutImage,
     createBlockImage,
     logError,
     slugify
@@ -29,6 +30,11 @@ web_bp = Blueprint('web', __name__)
 def index():
     """Render the home page."""
     return render_template('index.html')
+
+@web_bp.route('/privacy')
+def privacy():
+    """Render the Privacy Policy and Legal Notice page."""
+    return render_template('privacy.html')
 
 @web_bp.route('/generate', methods=['POST'])
 @limiter.limit("10 per hour")
@@ -78,6 +84,7 @@ def generate():
     
     # Parse form options
     display_groups = parseFormData(request.form)
+    keyboard_display = request.form.get('keyboard_display', 'text')
     styling = 'None'
     if request.form.get('styling') == 'group':
         styling = 'Group'
@@ -131,6 +138,7 @@ def generate():
         
         already_handled_devices = []
         created_images = []
+        keyboard_layout_image = False
         
         for supported_device_key, supported_device in supportedDevices.items():
             if supported_device_key == 'Keyboard':
@@ -171,7 +179,17 @@ def generate():
                             already_handled_devices.append(f'{handled_device}::{device_index}')
         
         if devices.get('Keyboard::0') is not None:
-            appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, public)
+            if keyboard_display == 'visual-ansi':
+                result = createKeyboardLayoutImage(
+                    physical_keys, modifiers, 'ANSI 104', config, styling
+                )
+                if result is True:
+                    keyboard_layout_image = True
+                else:
+                    # Fallback to text list if visual not available
+                    appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, public)
+            else:
+                appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, public)
             
     except RuntimeError as e:
         logError(f'Runtime error in generation for {run_id}: {e}\n')
@@ -203,6 +221,7 @@ def generate():
             styling=styling,
             display_groups=display_groups,
             devices=devices,
+            keyboard_display=keyboard_display,
             unhandled_warnings=errors.unhandledDevicesWarnings,
             device_warnings=errors.deviceWarnings,
             misc_warnings=errors.misconfigurationWarnings
@@ -222,6 +241,7 @@ def generate():
                                'errors': errors.errors,
                            },
                            created_images=created_images,
+                           keyboard_layout_image=keyboard_layout_image,
                            device_for_block_image=None,
                            public=public,
                            refcard_url=refcard_url_dynamic,
@@ -259,65 +279,80 @@ def stats():
 @web_bp.route('/list')
 def list_configs():
     """List all public configurations."""
+    import re
+    
+    # Get device filters from query params
     device_filters = request.args.getlist('deviceFilter')
-    selected_controllers = set(device_filters) if device_filters else set()
+    search_query = request.args.get('search', '').strip()
     
-    search_opts = {'controllers': selected_controllers} if selected_controllers else {}
+    # Sanitize search query: limit length and remove potentially dangerous characters
+    if search_query:
+        search_query = search_query[:100]  # Max 100 characters
+        # Allow only alphanumeric, spaces, hyphens, underscores, and common punctuation
+        search_query = re.sub(r'[^\w\s\-_.\'"]', '', search_query)
+        if not search_query:  # If nothing left after sanitization
+            search_query = None
+    else:
+        search_query = None
     
-    # Use SQLite database instead of pickle files
-    db_configs, total = database.list_configurations(
-        page=1, 
-        per_page=1000,  # Get all for client-side filtering
-        public_only=True
+    # Sanitize page number
+    try:
+        page = max(1, int(request.args.get('page', 1)))
+    except (ValueError, TypeError):
+        page = 1
+    
+    per_page = 20  # Number of items per page
+
+    # Resolve names to templates for database filtering
+    selected_templates = []
+    if device_filters:
+        for controller in device_filters:
+            device_info = supportedDevices.get(controller, {})
+            selected_templates.append(device_info.get('Template', controller))
+
+    # Retrieve configurations from database
+    db_configs, total_configs = database.list_configurations(
+        page=page, 
+        per_page=per_page, 
+        public_only=True,
+        search=search_query if search_query else None,
+        device_filters=selected_templates if selected_templates else None
     )
     
-    items = []
+    configs = []
     for db_config in db_configs:
-        try:
-            name = str(db_config.get('description', ''))
-            if name == '':
-                continue
-            
-            # Get devices from database format
-            device_names = db_config.get('device_names', '') or ''
-            controllers_list = [d.strip() for d in device_names.split(',') if d.strip()]
-            
-            # Filter by selected controllers if any
-            if selected_controllers:
-                requested_devices = []
-                for controller in selected_controllers:
-                    device_info = supportedDevices.get(controller, {})
-                    requested_devices.extend(device_info.get('HandledDevices', []))
-                requested_devices_set = set(requested_devices)
-                
-                if not any(rd in controllers_list for rd in requested_devices_set):
-                    continue
-            
-            # Format timestamp (US date format, no time)
-            created_at = db_config.get('created_at', '')
-            if hasattr(created_at, 'strftime'):
-                date_str = created_at.strftime('%Y-%m-%d')
-            else:
-                date_str = str(created_at)[:10] if created_at else ''
+        config = dict(db_config)
+        
+        # Parse device names for display
+        device_names = config.get('device_names', '') or ''
+        controllers_list = [d.strip() for d in device_names.split(',') if d.strip()]
+        
+        # Format timestamp (US date format, no time)
+        created_at = config.get('created_at', '')
+        if hasattr(created_at, 'strftime'):
+            date_str = created_at.strftime('%Y-%m-%d')
+        elif isinstance(created_at, str):
+            date_str = created_at[:10]
+        else:
+            date_str = ''
 
-            
-            items.append({
-                'url': url_for('web.show_binds', run_id=db_config['id'], _external=True),
-                'description': name,
-                'controllers': ', '.join(sorted(controllers_list)) if controllers_list else 'Unknown',
-                'date': date_str,
-            })
-        except Exception as e:
-            logError(f'Error processing item {db_config.get("id", "unknown")}: {e}\n')
-            continue
+        configs.append({
+            'url': url_for('web.show_binds', run_id=config['id'], _external=True),
+            'description': config.get('description', 'Untitled'),
+            'controllers': ', '.join(sorted(controllers_list)) if controllers_list else 'Unknown',
+            'date': date_str,
+        })
     
     controllers = sorted(supportedDevices.keys())
+    selected_controllers = set(device_filters)
     
     return render_template('list.html',
                            controllers=controllers,
                            selected_controllers=selected_controllers,
-                           search_opts=search_opts,
-                           items=items)
+                           items=configs,
+                           total=total_configs,
+                           page=page,
+                           per_page=per_page)
 
 
 @web_bp.route('/binds/<run_id>')
@@ -367,6 +402,7 @@ def show_binds(run_id):
                                error_message=f'<h1>Configuration "{run_id}" invalid</h1>')
     
     created_images = []
+    keyboard_layout_image = False
     
     try:
         if not source_missing:
@@ -421,7 +457,17 @@ def show_binds(run_id):
 
             
             if devices.get('Keyboard::0') is not None:
-                appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, True)
+                keyboard_display = db_config.get('keyboard_display', 'text') if db_config else 'text'
+                if keyboard_display == 'visual-ansi':
+                    result = createKeyboardLayoutImage(
+                        physical_keys, modifiers, 'ANSI 104', config, styling
+                    )
+                    if result is True:
+                        keyboard_layout_image = True
+                    else:
+                        appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, True)
+                else:
+                    appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, True)
 
         else:
             logError(f"Source missing for {run_id}, checking existing images...")
@@ -457,6 +503,7 @@ def show_binds(run_id):
                                'errors': errors.errors,
                            },
                            created_images=created_images,
+                           keyboard_layout_image=keyboard_layout_image,
                            device_for_block_image=None,
                            public=True,
                            refcard_url=refcard_url_dynamic,
@@ -470,7 +517,7 @@ def list_devices():
     """List all supported devices."""
     from scripts.database import get_device_counts
     try:
-        counts = get_device_counts()
+        counts = get_device_counts(public_only=True)
     except Exception:
         counts = {}
 

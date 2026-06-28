@@ -73,6 +73,12 @@
         {% endif %}
         {% endfor %}
 
+        {% if keyboard_layout_image %}
+        <img class="refcard-image lightbox-trigger"
+            src="{{ url_for('web.serve_config', path=run_id[:2] + '/' + run_id + '-keyboard-layout.jpg') }}"
+            alt="Keyboard Visual Layout" />
+        {% endif %}
+
         {% if device_for_block_image %}
         <img class="refcard-image lightbox-trigger"
             src="{{ url_for('web.serve_config', path=supported_devices[device_for_block_image]['Template'][:2] + '/' + supported_devices[device_for_block_image]['Template'] + '.jpg') }}"

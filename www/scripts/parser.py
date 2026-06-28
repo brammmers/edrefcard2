@@ -40,6 +40,7 @@ DISPLAY_GROUP_FIELDS = {
     'showonfoot': 'OnFoot',
     'showmulticrew': 'Multicrew',
     'showcamera': 'Camera',
+    'showsettlement': 'Settlement',
     'showcommandercreator': 'Holo-Me',
     'showmisc': 'Misc',
 }

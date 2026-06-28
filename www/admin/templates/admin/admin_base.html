@@ -402,16 +402,24 @@
                 class="nav-item {% if request.endpoint == 'admin.list_devices' %}active{% endif %}">
                 <span>🎮</span> Devices
             </a>
-<<<<<<< HEAD
-            <a href="{{ url_for('admin.migrate_data') }}"
-                class="nav-item {% if request.endpoint == 'admin.migrate_data' %}active{% endif %}">
-                <span>🔄</span> Migration
-            </a>
-=======
->>>>>>> dev
             <a href="{{ url_for('admin.batch_import') }}"
                 class="nav-item {% if request.endpoint == 'admin.batch_import' %}active{% endif %}">
                 <span>📤</span> Batch Import
+            </a>
+
+            <hr style="border-color: var(--border-color); margin: 1rem 0;">
+
+            <a href="{{ url_for('admin.backup_dashboard') }}"
+                class="nav-item {% if request.endpoint in ['admin.backup_dashboard', 'admin.backup_create'] %}active{% endif %}">
+                <span>💾</span> Backup
+            </a>
+            <a href="{{ url_for('admin.restore_dashboard') }}"
+                class="nav-item {% if request.endpoint in ['admin.restore_dashboard', 'admin.restore_from_upload', 'admin.restore_from_sftp'] %}active{% endif %}">
+                <span>🔄</span> Restore
+            </a>
+            <a href="{{ url_for('admin.backup_settings') }}"
+                class="nav-item {% if request.endpoint == 'admin.backup_settings' %}active{% endif %}">
+                <span>⚙️</span> Backup Settings
             </a>
 
             <hr style="border-color: var(--border-color); margin: 1rem 0;">

@@ -1,0 +1,182 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Backup Settings{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚙️ Backup Settings</h1>
+    <p>Configure SFTP, automatic backups, and notifications</p>
+</div>
+
+<form action="{{ url_for('admin.backup_settings') }}" method="post" id="settings-form">
+
+    <!-- SFTP Configuration -->
+    <div class="card">
+        <div class="card-header">
+            <h2>☁️ SFTP Configuration</h2>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="sftp_enabled" {% if settings.sftp_enabled %}checked{% endif %}
+                    style="width: 18px; height: 18px;">
+                <span>Enable SFTP Backup</span>
+            </label>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Host</label>
+                <input type="text" name="sftp_host" value="{{ settings.sftp_host or '' }}"
+                    placeholder="e.g., u123456.your-storagebox.de">
+            </div>
+            <div class="form-group">
+                <label>Port</label>
+                <input type="number" name="sftp_port" value="{{ settings.sftp_port or 22 }}" min="1" max="65535"
+                    style="width: 100%;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="sftp_user" value="{{ settings.sftp_user or '' }}" placeholder="SFTP username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="sftp_password" value=""
+                    placeholder="{% if settings.sftp_password %}(unchanged){% else %}Enter password{% endif %}">
+                <small style="color: var(--text-muted);">Leave empty to keep current password</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Remote Directory</label>
+            <input type="text" name="sftp_remote_dir" value="{{ settings.sftp_remote_dir or '/backups/edrefcard' }}"
+                placeholder="/backups/edrefcard">
+        </div>
+
+        <button type="button" class="btn btn-outline" id="test-sftp-btn" onclick="testSFTP()">
+            🔌 Test Connection
+        </button>
+        <span id="sftp-test-result" style="margin-left: 1rem;"></span>
+    </div>
+
+    <!-- Auto Backup -->
+    <div class="card">
+        <div class="card-header">
+            <h2>⏰ Automatic Backup</h2>
+        </div>
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="auto_backup_enabled" {% if settings.auto_backup_enabled %}checked{% endif
+                    %} style="width: 18px; height: 18px;">
+                <span>Enable Automatic Nightly Backup</span>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>Backup Time (UTC)</label>
+            <select name="backup_schedule_hour"
+                style="width: auto; min-width: 150px; background: rgba(0,0,0,0.3); color: var(--text-primary);">
+                {% for hour in range(24) %}
+                <option value="{{ hour }}" {% if settings.backup_schedule_hour==hour %}selected{% endif %}>
+                    {{ '%02d:00'|format(hour) }} UTC
+                </option>
+                {% endfor %}
+            </select>
+            <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+                Tip: 04:00 UTC = 23:00 EST = 05:00 CET
+            </small>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            When enabled, backups are created automatically and uploaded to SFTP (if configured).
+            Old backups are automatically removed after 7 days.
+        </p>
+    </div>
+
+    <!-- Discord Notifications -->
+    <div class="card">
+        <div class="card-header">
+            <h2>🔔 Discord Notifications</h2>
+        </div>
+
+        <div class="form-group">
+            <label>Webhook URL</label>
+            <input type="text" name="discord_webhook_url" value="{{ settings.discord_webhook_url or '' }}"
+                placeholder="https://discord.com/api/webhooks/...">
+        </div>
+
+        <button type="button" class="btn btn-outline" id="test-discord-btn" onclick="testDiscord()">
+            🔔 Test Webhook
+        </button>
+        <span id="discord-test-result" style="margin-left: 1rem;"></span>
+    </div>
+
+    <!-- Save Button -->
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <button type="submit" class="btn btn-primary">💾 Save Settings</button>
+        <a href="{{ url_for('admin.backup_dashboard') }}" class="btn btn-outline">Cancel</a>
+    </div>
+</form>
+
+<script>
+    async function testSFTP() {
+        const btn = document.getElementById('test-sftp-btn');
+        const result = document.getElementById('sftp-test-result');
+
+        btn.disabled = true;
+        result.innerHTML = '<span style="color: var(--text-muted);">Testing...</span>';
+
+        const formData = new FormData(document.getElementById('settings-form'));
+
+        try {
+            const response = await fetch('{{ url_for("admin.backup_sftp_test") }}', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                result.innerHTML = '<span style="color: var(--success);">✓ ' + data.message + '</span>';
+            } else {
+                result.innerHTML = '<span style="color: var(--danger);">✗ ' + data.message + '</span>';
+            }
+        } catch (e) {
+            result.innerHTML = '<span style="color: var(--danger);">✗ Error: ' + e.message + '</span>';
+        }
+
+        btn.disabled = false;
+    }
+
+    async function testDiscord() {
+        const btn = document.getElementById('test-discord-btn');
+        const result = document.getElementById('discord-test-result');
+
+        btn.disabled = true;
+        result.innerHTML = '<span style="color: var(--text-muted);">Sending test...</span>';
+
+        const formData = new FormData(document.getElementById('settings-form'));
+
+        try {
+            const response = await fetch('{{ url_for("admin.backup_discord_test") }}', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                result.innerHTML = '<span style="color: var(--success);">✓ ' + data.message + '</span>';
+            } else {
+                result.innerHTML = '<span style="color: var(--danger);">✗ ' + data.message + '</span>';
+            }
+        } catch (e) {
+            result.innerHTML = '<span style="color: var(--danger);">✗ Error: ' + e.message + '</span>';
+        }
+
+        btn.disabled = false;
+    }
+</script>
+{% endblock %}

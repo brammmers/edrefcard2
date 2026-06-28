@@ -148,3 +148,103 @@ def import_defaults_command(limit):
             errors_count += 1
 
     click.echo(f"Import complete: {count} imported, {errors_count} errors.")
+
+
+@click.command('rebuild-db')
+@with_appcontext
+def rebuild_db_command():
+    """Rebuild database from existing .binds files in configs directory."""
+    from flask import current_app
+    from scripts import database, parser, utils
+    from scripts.models import Errors
+    
+    configs_dir = current_app.config['CONFIGS_FOLDER']
+    click.echo(f"Scanning {configs_dir} for .binds files...")
+    
+    # Standard display groups
+    display_groups = ['Ship', 'SRV', 'OnFoot', 'UI', 'Galaxy map', 'Head look', 'Scanners', 'Fighter', 'Multicrew', 'Camera', 'Holo-Me', 'Misc']
+    
+    bind_files = list(configs_dir.rglob('*.binds'))
+    total_files = len(bind_files)
+    
+    bind_files = list(configs_dir.rglob('*.binds'))
+    total_files = len(bind_files)
+    
+    click.echo(f"Found {total_files} .binds files. Starting rebuild (silencing warnings)...")
+    
+    count = 0
+    errors_count = 0
+    
+    # Silence logError to prevent console spam
+    original_log_error = utils.logError
+    utils.logError = lambda msg: None
+    
+    try:
+        for bind_file in bind_files:
+            try:
+                # Extract config_id from path
+                # Structure is usually configs/xx/config_id.binds
+                config_id = bind_file.stem
+                
+                # Read file
+                try:
+                    with bind_file.open('r', encoding='utf-8') as f:
+                        xml = f.read()
+                except Exception as e:
+                    click.echo(f"Error reading {bind_file}: {e}")
+                    errors_count += 1
+                    continue
+                
+                # Parse bindings
+                parse_errors = Errors()
+                (physicalKeys, modifiers, devices) = parser.parseBindings(
+                    config_id, xml, display_groups, parse_errors
+                )
+                
+                if parse_errors.hasErrors():
+                    errors_count += 1
+                    continue
+                
+                # Create description
+                # Try to get PresetName from XML, fallback to filename
+                description = config_id
+                try:
+                    # Simple regex to avoid full XML parsing overhead just for one attribute
+                    # <Root PresetName="Keyboard" ...>
+                    import re
+                    match = re.search(r'PresetName="([^"]+)"', xml)
+                    if match:
+                        preset_name = match.group(1)
+                        if preset_name and preset_name != "Custom":
+                            description = preset_name
+                except Exception:
+                    pass  # Fallback to filename on any error
+                
+                # Save to database
+                # Note: We can't easily restore the original creation time without modifying the DB schema
+                # or SQL directly, so new entries will have current timestamp.
+                
+                database.create_configuration(
+                    config_id=config_id,
+                    description=description,
+                    styling='None',
+                    display_groups=display_groups,
+                    devices=devices,
+                    unhandled_warnings=parse_errors.unhandledDevicesWarnings,
+                    device_warnings=parse_errors.deviceWarnings,
+                    misc_warnings=parse_errors.misconfigurationWarnings
+                )
+                
+                count += 1
+                if count % 100 == 0:
+                    click.echo(f"Processed {count}/{total_files}...")
+                    
+            except Exception as e:
+                click.echo(f"Error processing {bind_file.name}: {e}")
+                errors_count += 1
+                
+    finally:
+        # Restore original logError
+        utils.logError = original_log_error
+            
+    click.echo(f"Rebuild complete: {count} recovered, {errors_count} errors.")

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy & Legal Notice - EDRefCard{% endblock %}
+
+{% block content %}
+<div id="container">
+    <div id="banner">
+        <h1>Privacy Policy & Legal Notice</h1>
+        <p class="text-muted">Information about data processing and hosting</p>
+    </div>
+
+    <div id="content" class="text-left" style="max-width: 800px; margin: 0 auto; line-height: 1.6;">
+        <div class="form-section">
+            <h2>⚖️ Legal Notice (Mentions Légales)</h2>
+            <p>
+                In accordance with the French law "Loi pour la Confiance dans l'Économie Numérique" (LCEN) for private, non-commercial individuals, the publisher of this website has chosen to remain anonymous. The contact details of the publisher have been securely communicated to the hosting provider.
+            </p>
+            <p>
+                <strong>Website Hosting Provider:</strong><br>
+                Hetzner Online GmbH<br>
+                Industriestr. 25<br>
+                91710 Gunzenhausen<br>
+                Germany<br>
+                <a href="https://www.hetzner.com">https://www.hetzner.com</a>
+            </p>
+        </div>
+
+        <div class="form-section">
+            <h2>🔒 Privacy Policy (GDPR Compliance)</h2>
+            <p>
+                This website is a free, community-driven tool provided without any commercial interest. We are committed to minimizing data collection to respect your privacy.
+            </p>
+
+            <h3>1. What data do we collect?</h3>
+            <p><strong>Absolutely no personal identifying information is collected, stored, or processed</strong> beyond what is strictly necessary for the technical operation of the service and security.</p>
+            <ul>
+                <li><strong>No tracking:</strong> We do not use Google Analytics, tracking pixels, or any third-party marketing tools.</li>
+                <li><strong>No cookies:</strong> We do not set any tracking cookies on your device.</li>
+                <li><strong>Uploaded files:</strong> The <code>.binds</code> files you upload are parsed to generate reference cards and do not intrinsically contain personal data. By uploading them, you agree to make the configurations publicly accessible on this site and its API. <em>Please ensure you do not manually write personal data into your bindings descriptions.</em></li>
+            </ul>
+
+            <h3>2. Server Logs and IP Addresses</h3>
+            <p>
+                Like all web servers, our infrastructure temporarily logs connection data (including IP addresses, browser User-Agent, and requested URLs) in server access logs.
+            </p>
+            <p>
+                This processing is based on <strong>Legitimate Interest (Article 6(1)(f) GDPR)</strong> for the sole purposes of:
+            </p>
+            <ul>
+                <li>Ensuring the security and availability of the infrastructure.</li>
+                <li>Preventing abuse through rate limiting (e.g., preventing automated spamming or brute-force attacks).</li>
+                <li>Troubleshooting technical errors.</li>
+            </ul>
+            <p>These temporary logs are not shared with any third party and are automatically rotated and deleted after a short period.</p>
+
+            <h3>3. Your Rights</h3>
+            <p>
+                Under the General Data Protection Regulation (GDPR), you have the right to access, rectify, or erase any personal data concerning you. However, since we do not require account creation and do not associate uploaded configurations with identifiable individuals (we do not collect names or emails), we generally cannot identify which data belongs to you.
+            </p>
+            <p>
+                If you wish to have a configuration you uploaded removed, please contact the administrators via the community forums linked in the footer, providing the unique 6-character ID of the configuration to prove it is the one you wish to delete.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/" class="btn-primary" style="display: inline-block; padding: 0.5rem 1.5rem; text-decoration: none;">← Return to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

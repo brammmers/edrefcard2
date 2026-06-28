@@ -1,4 +1,5 @@
 ignored
+AGENTS.md
 *.pyc
 www/configs
 configs/
@@ -25,3 +26,8 @@ www/data/admin_access.log
 
 # Local documentation (not translated yet)
 ADDING_NEW_CONTROLLER.md
+
+WORKFLOW.md
+
+scrape_binds.py
+downloaded_binds/

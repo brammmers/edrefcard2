@@ -1,0 +1,149 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Restore{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🔄 Restore</h1>
+    <p>Restore your EDRefCard data from a backup</p>
+</div>
+
+{% if maintenance_mode %}
+<div class="alert alert-warning">
+    🔧 <strong>Maintenance mode is active.</strong> Regular users cannot access the site during restore.
+</div>
+{% endif %}
+
+<div class="alert alert-danger" style="margin-bottom: 2rem;">
+    <strong>⚠️ Warning:</strong> Restoring will overwrite existing data. A safety backup will be created automatically
+    before restore.
+</div>
+
+<!-- Upload Restore -->
+<div class="card">
+    <div class="card-header">
+        <h2>📤 Restore from Upload</h2>
+    </div>
+
+    <form action="{{ url_for('admin.restore_from_upload') }}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Backup File (.tar.gz)</label>
+            <input type="file" name="backup_file" accept=".tar.gz,.gz"
+                style="padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 4px; width: 100%;">
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin: 1rem 0;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_db" checked style="width: 18px; height: 18px;">
+                <span>Restore Database</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_binds" checked style="width: 18px; height: 18px;">
+                <span>Restore Binds Files</span>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary"
+            onclick="return confirm('Are you sure? This will overwrite existing data.');">
+            🔄 Restore from File
+        </button>
+    </form>
+</div>
+
+<!-- Local Backup Restore -->
+<div class="card">
+    <div class="card-header">
+        <h2>📁 Restore from Local Backup</h2>
+    </div>
+
+    {% if local_backups %}
+    <form action="{{ url_for('admin.restore_from_local') }}" method="post">
+        <div class="form-group">
+            <label>Select Local Backup</label>
+            <select name="filename" style="background: rgba(0,0,0,0.3); color: var(--text-primary);">
+                {% for backup in local_backups %}
+                <option value="{{ backup.filename }}">
+                    {{ backup.filename }} ({{ (backup.size_bytes / 1024 / 1024)|round(2) }} MB) - {{
+                    backup.created_at[:19] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin: 1rem 0;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_db" checked style="width: 18px; height: 18px;">
+                <span>Restore Database</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_binds" checked style="width: 18px; height: 18px;">
+                <span>Restore Binds Files</span>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary"
+            onclick="return confirm('Are you sure? This will overwrite existing data.');">
+            🔄 Restore from Local
+        </button>
+    </form>
+    {% else %}
+    <p style="color: var(--text-secondary);">No local backups available. Create a backup first from the <a
+            href="{{ url_for('admin.backup_dashboard') }}">Backup page</a>.</p>
+    {% endif %}
+</div>
+
+<!-- SFTP Restore -->
+<div class="card">
+    <div class="card-header">
+        <h2>☁️ Restore from SFTP</h2>
+    </div>
+
+    {% if settings.sftp_enabled and settings.sftp_host %}
+    {% if sftp_error %}
+    <div class="alert alert-danger">
+        Failed to connect to SFTP: {{ sftp_error }}
+    </div>
+    {% elif remote_backups %}
+    <form action="{{ url_for('admin.restore_from_sftp') }}" method="post">
+        <div class="form-group">
+            <label>Select Backup</label>
+            <select name="filename" style="background: rgba(0,0,0,0.3); color: var(--text-primary);">
+                {% for backup in remote_backups %}
+                <option value="{{ backup.filename }}">
+                    {{ backup.filename }} ({{ (backup.size_bytes / 1024 / 1024)|round(2) }} MB)
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 2rem; margin: 1rem 0;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_db" checked style="width: 18px; height: 18px;">
+                <span>Restore Database</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="restore_binds" checked style="width: 18px; height: 18px;">
+                <span>Restore Binds Files</span>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary"
+            onclick="return confirm('Are you sure? This will download and restore the selected backup.');">
+            🔄 Restore from SFTP
+        </button>
+    </form>
+    {% else %}
+    <p style="color: var(--text-secondary);">No backups found on SFTP server.</p>
+    {% endif %}
+    {% else %}
+    <p style="color: var(--text-muted);">
+        SFTP is not configured. <a href="{{ url_for('admin.backup_settings') }}">Configure SFTP settings</a> to enable
+        restore from remote backups.
+    </p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="{{ url_for('admin.backup_dashboard') }}" class="btn btn-outline">← Back to Backup</a>
+</div>
+{% endblock %}

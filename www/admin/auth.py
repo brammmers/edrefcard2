@@ -8,11 +8,6 @@ Credentials are read from environment variables.
 
 import os
 import logging
-<<<<<<< HEAD
-from datetime import datetime
-from pathlib import Path
-=======
->>>>>>> dev
 from functools import wraps
 from flask import request, Response
 from scripts.models import Config
@@ -36,13 +31,6 @@ log_file = log_dir / 'admin_access.log'
 
 admin_logger = logging.getLogger('admin_access')
 admin_logger.setLevel(logging.INFO)
-<<<<<<< HEAD
-handler = logging.FileHandler(log_file)
-handler.setFormatter(logging.Formatter(
-    '%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-))
-=======
 
 try:
     # Try to log to file
@@ -64,7 +52,6 @@ except Exception as e:
     handler = logging.StreamHandler()
     print(f"Warning: Failed to setup admin log file: {e}. Logging to stderr instead.")
 
->>>>>>> dev
 admin_logger.addHandler(handler)
 
 

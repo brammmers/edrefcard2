@@ -12,3 +12,9 @@ mypy
 types-Flask
 types-requests
 fpdf2
+
+# Backup system dependencies
+paramiko>=3.4.0
+APScheduler>=3.10.0
+requests>=2.31.0
+cryptography>=41.0.0

@@ -34,6 +34,7 @@ from .parser import (
 from .renderer import (
     createKeyboardImage,
     appendKeyboardImage,
+    createKeyboardLayoutImage,
     createHOTASImage,
     createBlockImage,
     writeText,
@@ -72,6 +73,7 @@ __all__ = [
     # Renderer
     'createKeyboardImage',
     'appendKeyboardImage',
+    'createKeyboardLayoutImage',
     'createHOTASImage',
     'createBlockImage',
     'writeText',

@@ -11,9 +11,12 @@ services:
       - EDREFCARD_ADMIN_PASS
       - FLASK_SECRET_KEY
       - APP_URL
+      - APP_ENV
       - EDREFCARD_CONFIGS_DIR=/app/www/configs
-    user: root
     restart: unless-stopped
+    # NO PORT MAPPING - Dokploy/Traefik handles routing automatically
+    # The container listens on port 8000 internally (defined in Dockerfile)
+    # Traefik routes traffic from configured domains
 
 volumes:
   edrefcard_data:
