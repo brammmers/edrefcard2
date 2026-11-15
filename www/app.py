@@ -29,7 +29,7 @@ from scripts import database  # noqa: E402
 
 
 from extensions import limiter  # noqa: E402
-from commands import clean_cache_command, find_unsupported_command, import_defaults_command, rebuild_db_command, seed_aeromax_command  # noqa: E402
+from commands import clean_cache_command, find_unsupported_command, import_defaults_command, import_live_command, rebuild_db_command, seed_aeromax_command  # noqa: E402
 from flask_limiter.errors import RateLimitExceeded  # noqa: E402
 
 
@@ -141,6 +141,7 @@ app.cli.add_command(clean_cache_command)
 app.cli.add_command(find_unsupported_command)
 app.cli.add_command(import_defaults_command)
 app.cli.add_command(rebuild_db_command)
+app.cli.add_command(import_live_command)
 app.cli.add_command(seed_aeromax_command)
 
 
