@@ -132,7 +132,11 @@ limiter.init_app(app)
 # Staging access gate (ACCESS_TOKEN): registered before every other
 # before_request hook so nothing renders for an unauthenticated visitor.
 import staging_gate  # noqa: E402
+import canonical_host  # noqa: E402
 
+# Former names (beta, www, edrefcard2.l0l.fr) redirect first, inactive until
+# CANONICAL_URL and REDIRECT_HOSTS are set.
+canonical_host.register(app)
 staging_gate.register(app)
 
 
