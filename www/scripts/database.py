@@ -383,6 +383,28 @@ def update_configuration(config_id, **kwargs):
         )
 
 
+def replace_configuration(config_id, **kwargs):
+    """Recreate a configuration with new metadata, keeping its counters.
+
+    Used when an original replaces a degraded earlier import of the same
+    card: display groups and devices are rebuilt from scratch, view_count
+    and is_featured survive.
+    """
+    with get_db() as conn:
+        old = conn.execute(
+            "SELECT view_count, is_featured FROM configurations WHERE id = ?",
+            (config_id,)).fetchone()
+        conn.execute("DELETE FROM config_display_groups WHERE config_id = ?", (config_id,))
+        conn.execute("DELETE FROM config_devices WHERE config_id = ?", (config_id,))
+        conn.execute("DELETE FROM configurations WHERE id = ?", (config_id,))
+    create_configuration(config_id, **kwargs)
+    if old is not None:
+        with get_db() as conn:
+            conn.execute(
+                "UPDATE configurations SET view_count = ?, is_featured = ? WHERE id = ?",
+                (old['view_count'], old['is_featured'], config_id))
+
+
 def delete_configuration(config_id):
     """Delete a configuration and its associated files.
     

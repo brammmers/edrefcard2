@@ -88,24 +88,60 @@ class LiveImportTests(unittest.TestCase):
         self.assertIsNone(database.get_configuration('abcdef'))
         self.assertFalse(Config('abcdef').pathWithSuffix('.binds').exists())
 
-    def test_existing_ids_are_never_overwritten(self):
-        database.create_configuration('samesm', description='beta card')
-        target = Config('samesm').pathWithSuffix('.binds')
-        target.parent.mkdir(parents=True)
-        target.write_bytes(SAMPLE)
+    def test_a_different_card_under_the_same_id_is_never_overwritten(self):
         database.create_configuration('clashx', description='beta card')
         clash = Config('clashx').pathWithSuffix('.binds')
         clash.parent.mkdir(parents=True)
         clash.write_bytes(OTHER)
-        self.add_card('samesm', live_replay())
         self.add_card('clashx', live_replay())
 
         report = self.run_import()
-        self.assertEqual(report.duplicates, ['samesm'])
         self.assertEqual(report.clashes, ['clashx'])
         self.assertEqual(report.imported, [])
         self.assertEqual(clash.read_bytes(), OTHER)
         self.assertEqual(database.get_configuration('clashx')['description'], 'beta card')
+
+    def test_degraded_earlier_import_is_replaced_by_the_original(self):
+        # January 2026: title = id, import date, public, a blank line after each line.
+        database.create_configuration('januar', description='januar', display_groups=['Misc'],
+                                      devices={'Old::0': None})
+        with database.get_db() as conn:
+            conn.execute("UPDATE configurations SET view_count = 42 WHERE id = 'januar'")
+        degraded = SAMPLE.replace(b'\n', b'\r\r\n')
+        target = Config('januar').pathWithSuffix('.binds')
+        target.parent.mkdir(parents=True)
+        target.write_bytes(degraded)
+        self.add_card('januar')  # untitled on the live site: no .replay
+
+        report = self.run_import()
+        self.assertEqual(report.refreshed, ['januar'])
+        self.assertEqual(target.read_bytes(), SAMPLE)
+        row = database.get_configuration('januar')
+        self.assertEqual(row['description'], '')
+        self.assertEqual(row['is_public'], 0)
+        self.assertEqual(row['view_count'], 42)
+        self.assertEqual(sorted(row['display_groups']), sorted(live_import.LIVE_DEFAULT_GROUPS))
+        self.assertNotIn('Old::0', row['devices'])
+        self.assertIn('SaitekX52::0', row['devices'])
+
+        again = self.run_import()
+        self.assertEqual(again.duplicates, ['januar'])
+        self.assertEqual(again.refreshed, [])
+
+    def test_dry_run_does_not_refresh(self):
+        database.create_configuration('januar', description='januar')
+        target = Config('januar').pathWithSuffix('.binds')
+        target.parent.mkdir(parents=True)
+        target.write_bytes(SAMPLE.replace(b'\n', b'\r\r\n'))
+        self.add_card('januar', live_replay())
+        report = self.run_import(dry_run=True)
+        self.assertEqual(report.refreshed, ['januar'])
+        self.assertEqual(database.get_configuration('januar')['description'], 'januar')
+
+    def test_same_card_ignores_line_endings_and_blank_lines_only(self):
+        self.assertTrue(live_import.same_card(
+            SAMPLE, live_import.BOM + SAMPLE.replace(b'\n', b'\r\n\r\n')))
+        self.assertFalse(live_import.same_card(SAMPLE, OTHER))
 
     def test_malicious_replay_is_rejected_without_running(self):
         self.add_card('evilxx', {'description': Exploit()})

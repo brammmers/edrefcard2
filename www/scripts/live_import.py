@@ -11,9 +11,11 @@ that never got a .replay (no title given) are imported unlisted. Devices
 and warnings are recomputed from the .binds with the current parser, which
 knows more controllers than the live one did.
 
-Nothing already present is overwritten: an id that exists here (database row
-or .binds file) is skipped and reported, as "duplicate" when the source is
-byte-identical and "clash" otherwise.
+An id that already exists here is only touched when it is the same card
+(same_card): an earlier, degraded import of the old backup is then replaced
+by the original (file, title, date, visibility; view count kept) and
+reported as "refreshed", or skipped as "duplicate" when already up to date.
+A different card under the same id is never overwritten ("clash").
 """
 import datetime
 import os
@@ -31,6 +33,7 @@ STYLINGS = {'None', 'Group', 'Category', 'Modifier'}
 LIVE_DEFAULT_GROUPS = ['Galaxy map', 'General', 'Head look', 'SRV', 'Ship', 'UI']
 
 MAX_BINDS_BYTES = 5 * 1024 * 1024
+BOM = b'\xef\xbb\xbf'
 
 # The only globals a live .replay needs: the timestamp is a timezone-aware
 # datetime, everything else is built from dicts, lists and strings.
@@ -108,6 +111,7 @@ class ImportReport:
     dry_run: bool = False
     imported: list = field(default_factory=list)
     imported_unlisted: list = field(default_factory=list)
+    refreshed: list = field(default_factory=list)
     duplicates: list = field(default_factory=list)
     clashes: list = field(default_factory=list)
     missing_binds: list = field(default_factory=list)
@@ -125,6 +129,18 @@ class ImportReport:
         result.update({name: value for name, value in self.__dict__.items()
                        if isinstance(value, list)})
         return result
+
+
+def same_card(a, b):
+    """True when two .binds hold the same card, line endings and blank lines aside.
+
+    The January 2026 import of the old backup doubled every line ending
+    (a blank line after each line); its cards are the same as the originals.
+    """
+    def lines(raw):
+        raw = raw.removeprefix(BOM).replace(b'\r', b'\n')
+        return [line.strip() for line in raw.split(b'\n') if line.strip()]
+    return lines(a) == lines(b)
 
 
 def _index(source_dir, suffix, report):
@@ -211,10 +227,19 @@ def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
             report.parse_errors.append({'id': config_id, 'error': 'file too large'})
             continue
         target = Config(config_id).pathWithSuffix('.binds')
-        if config_id in known_ids or target.exists():
-            same = target.exists() and target.read_bytes() == raw
-            (report.duplicates if same else report.clashes).append(config_id)
-            continue
+        refresh = config_id in known_ids or target.exists()
+        if refresh:
+            existing = target.read_bytes() if target.exists() else None
+            if existing is not None and not same_card(existing, raw):
+                report.clashes.append(config_id)
+                continue
+            row = database.get_configuration(config_id)
+            if (existing == raw and row is not None
+                    and row['description'] == meta['description']
+                    and str(row['created_at']) == str(meta['created_at'])
+                    and bool(row['is_public']) == listed):
+                report.duplicates.append(config_id)  # already imported
+                continue
 
         try:
             xml = raw.decode('utf-8-sig')
@@ -237,7 +262,8 @@ def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
             target.write_bytes(raw)
             _chown_like(target, configs_root)
             _chown_like(target.parent, configs_root)
-            database.create_configuration(
+            save = database.replace_configuration if refresh else database.create_configuration
+            save(
                 config_id=config_id,
                 devices=devices,
                 unhandled_warnings=errors.unhandledDevicesWarnings,
@@ -247,5 +273,8 @@ def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
                 **meta,
             )
         known_ids.add(config_id)
-        (report.imported if listed else report.imported_unlisted).append(config_id)
+        if refresh:
+            report.refreshed.append(config_id)
+        else:
+            (report.imported if listed else report.imported_unlisted).append(config_id)
     return report
