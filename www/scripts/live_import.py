@@ -6,7 +6,8 @@ title, styling, display groups, timestamp, devices and warnings.
 
 This module copies the .binds sources into our configs folder and recreates
 the database rows with the original id, title, styling, display groups and
-date, so every /binds/<id> link shared on the forums keeps working. Devices
+date, so every /binds/<id> link shared on the forums keeps working. Cards
+that never got a .replay (no title given) are imported unlisted. Devices
 and warnings are recomputed from the .binds with the current parser, which
 knows more controllers than the live one did.
 
@@ -106,10 +107,10 @@ class ImportReport:
     """Outcome of one run; every id lands in exactly one list."""
     dry_run: bool = False
     imported: list = field(default_factory=list)
+    imported_unlisted: list = field(default_factory=list)
     duplicates: list = field(default_factory=list)
     clashes: list = field(default_factory=list)
     missing_binds: list = field(default_factory=list)
-    orphan_binds: list = field(default_factory=list)
     invalid_ids: list = field(default_factory=list)
     bad_replays: list = field(default_factory=list)
     parse_errors: list = field(default_factory=list)
@@ -148,26 +149,45 @@ def _chown_like(path, reference):
     os.chown(path, stat.st_uid, stat.st_gid)
 
 
-def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
-    """Import every <id>.replay + <id>.binds pair found under source_dir.
+def _unlisted_metadata(source):
+    """Defaults the live replay mode used for a .binds without .replay.
 
+    The live site only wrote a .replay for published cards (a title was
+    given), yet served /binds/<id> for every .binds: its replay check was
+    `replayPath.exists` without parentheses, always true. Those cards keep
+    working here as unlisted cards, drawn with the same default groups.
+    """
+    mtime = datetime.datetime.fromtimestamp(source.stat().st_mtime, datetime.UTC)
+    return {
+        'description': '',
+        'styling': 'None',
+        'display_groups': list(LIVE_DEFAULT_GROUPS),
+        'created_at': mtime.isoformat(' '),
+    }
+
+
+def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
+    """Import every card found under source_dir.
+
+    <id>.binds + <id>.replay is a published card (listed, original metadata);
+    a lone <id>.binds is an unlisted card (live defaults, file date).
     Returns an ImportReport. With dry_run, nothing is written but every
     check (replay, parser, collisions) still runs.
     """
     report = ImportReport(dry_run=dry_run)
     replays = _index(source_dir, '.replay', report)
     binds = _index(source_dir, '.binds', report)
-    report.orphan_binds = sorted(set(binds) - set(replays))
     known_ids = set(database.get_all_config_ids())
     configs_root = Config.configsPath()
+    all_ids = sorted(set(replays) | set(binds))
 
     processed = 0
-    for config_id in sorted(replays):
+    for config_id in all_ids:
         if limit is not None and processed >= limit:
             break
         processed += 1
-        if log and processed % 250 == 0:
-            log(f'{processed}/{len(replays)}...')
+        if log and processed % 1000 == 0:
+            log(f'{processed}/{len(all_ids)}...')
 
         if not Config.isValidName(config_id):
             report.invalid_ids.append(config_id)
@@ -176,11 +196,15 @@ def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
         if source is None:
             report.missing_binds.append(config_id)
             continue
-        try:
-            meta = replay_metadata(load_replay(replays[config_id]))
-        except ReplayError as exc:
-            report.bad_replays.append({'id': config_id, 'error': str(exc)})
-            continue
+        listed = config_id in replays
+        if listed:
+            try:
+                meta = replay_metadata(load_replay(replays[config_id]))
+            except ReplayError as exc:
+                report.bad_replays.append({'id': config_id, 'error': str(exc)})
+                continue
+        else:
+            meta = _unlisted_metadata(source)
 
         raw = source.read_bytes()
         if len(raw) > MAX_BINDS_BYTES:
@@ -219,9 +243,9 @@ def import_live_configs(source_dir, dry_run=False, limit=None, log=None):
                 unhandled_warnings=errors.unhandledDevicesWarnings,
                 device_warnings=errors.deviceWarnings,
                 misc_warnings=errors.misconfigurationWarnings,
-                is_public=True,
+                is_public=listed,
                 **meta,
             )
         known_ids.add(config_id)
-        report.imported.append(config_id)
+        (report.imported if listed else report.imported_unlisted).append(config_id)
     return report

@@ -120,13 +120,27 @@ class LiveImportTests(unittest.TestCase):
         report = self.run_import()
         self.assertEqual([item['id'] for item in report.bad_replays], ['brokex'])
 
-    def test_unpaired_files_are_reported(self):
+    def test_replay_without_binds_is_reported(self):
         self.add_card('nobind', live_replay(), binds=None)
-        self.add_card('noreplay')
         report = self.run_import()
         self.assertEqual(report.missing_binds, ['nobind'])
-        self.assertEqual(report.orphan_binds, ['noreplay'])
         self.assertEqual(report.imported, [])
+
+    def test_lone_binds_becomes_an_unlisted_card_with_live_defaults(self):
+        # The live site served /binds/<id> for cards without a .replay.
+        self.add_card('noreply')
+        source = self.source / 'no' / 'noreply.binds'
+        stamp = datetime.datetime(2024, 7, 19, 17, 3, tzinfo=datetime.timezone.utc).timestamp()
+        os.utime(source, (stamp, stamp))
+        report = self.run_import()
+        self.assertEqual(report.imported_unlisted, ['noreply'])
+        self.assertEqual(report.imported, [])
+        row = database.get_configuration('noreply')
+        self.assertEqual(row['is_public'], 0)
+        self.assertEqual(row['description'], '')
+        self.assertEqual(sorted(row['display_groups']), sorted(live_import.LIVE_DEFAULT_GROUPS))
+        self.assertTrue(str(row['created_at']).startswith('2024-07-19 17:03:00'))
+        self.assertEqual(Config('noreply').pathWithSuffix('.binds').read_bytes(), SAMPLE)
 
     def test_ids_that_could_escape_the_configs_folder_are_refused(self):
         folder = self.source / 'xx'
