@@ -2,17 +2,20 @@
 
 Elite: Dangerous has a great many command bindings to learn. To help with that, EDRefCard generates a printable reference card from your Elite: Dangerous bindings file.
 
-Currently hosted at [https://edrefcard2.l0l.fr/](https://edrefcard2.l0l.fr/).
+Hosted at [https://edrefcard.info/](https://edrefcard.info/).
 
 ## Dependencies
 
-* Python 3.12 or later (Python 3.13+ recommended)
-* Python modules (see `requirements.txt`):
-  * `flask` - Web framework
+* Python 3.12 or later (the Docker image uses Python 3.13)
+* Python modules (pinned in `requirements.txt`, full tree frozen in `constraints.txt`):
+  * `flask`, `Flask-Limiter` - Web framework and rate limiting
   * `gunicorn` - WSGI HTTP server
   * `lxml` - XML parsing
-  * `wand` - ImageMagick bindings
-  * `pytest`, `pytest-cov` - Testing (in `requirements-dev.txt`, with the lint tools)
+  * `wand` - ImageMagick bindings (card rendering)
+  * `Pillow`, `fpdf2` - Image handling and PDF export
+  * `PyMuPDF` - Import of manufacturer button sheets (admin)
+  * `paramiko`, `APScheduler`, `requests`, `cryptography` - Backup system
+  * Test and lint tools are in `requirements-dev.txt`
 
 * ImageMagick 6 or 7
   * You may need to configure the `MAGICK_HOME` env var to get `wand` to see the ImageMagick libraries.
@@ -29,7 +32,7 @@ pip install -r requirements.txt
 cd www
 python app.py
 
-# Access at http://localhost:5000
+# Access at http://localhost:8080
 ```
 
 ### Docker (Recommended for Local Development)
@@ -42,47 +45,47 @@ docker run -d --rm --name edrefcard -p 8080:8000 edrefcard
 # Access at http://localhost:8080
 ```
 
-Or with docker-compose (add port mapping for local access):
+Or with docker compose:
 
 ```bash
-# For local development, add ports to docker-compose.yaml:
-# ports:
-#   - "8080:8000"
-docker-compose up -d
+docker compose up -d
 # Access at http://localhost:8080
 ```
 
 > [!NOTE]
-> For production deployment with Traefik/Dokploy, remove the `ports` section from docker-compose.yaml. Traefik connects directly to the container via Docker network on port 8000.
+> `docker-compose.prod.yml` is the production variant: no port mapping (a Traefik reverse proxy reaches the container on port 8000) and a persistent volume for `configs/`. It only passes the environment variables listed in its `environment:` section, so a new variable must be added there too.
 
 ## Project Structure
 
 ```
-edrefcard/
+edrefcard2/
 ├── www/
 │   ├── app.py              # Flask application entry point
+│   ├── web.py              # Public pages (upload, cards, list, devices, stats)
+│   ├── api.py              # JSON API
+│   ├── commands.py         # flask CLI commands (maintenance, imports)
+│   ├── admin/              # Admin panel and backup system
 │   ├── templates/          # Jinja2 HTML templates
-│   │   ├── base.html
-│   │   ├── index.html
-│   │   ├── refcard.html
-│   │   ├── list.html
-│   │   ├── devices.html
-│   │   └── error.html
 │   ├── scripts/
-│   │   ├── bindings.py     # Core binding parsing logic
+│   │   ├── parser.py       # Bindings file parsing
+│   │   ├── renderer.py     # Reference card rendering
+│   │   ├── database.py     # SQLite storage
+│   │   ├── models.py       # Configurations and their files
 │   │   ├── bindingsData.py # Device definitions
-│   │   └── controlsData.py # Control mappings
-│   ├── configs/            # Generated configurations (created at runtime)
+│   │   ├── controlsData.py # Control mappings
+│   │   └── live_import.py  # Import of the original site's cards
+│   ├── configs/            # Bindings, database and generated images (created at runtime)
 │   ├── res/                # Image templates for devices
-│   ├── fonts/              # Font files
-│   └── ed.css              # Stylesheet
-├── bindings/               # Test binding files
+│   └── fonts/              # Font files
+├── bindings/               # Sample and test binding files
+├── tests/
 ├── Dockerfile
-├── docker-compose.yaml
+├── docker-compose.yml
+├── docker-compose.prod.yml
 └── requirements.txt
 ```
 
-## API Routes
+## Routes
 
 | Route | Method | Description |
 |-------|--------|-------------|
@@ -90,9 +93,14 @@ edrefcard/
 | `/generate` | POST | Upload .binds file and generate reference card |
 | `/list` | GET | List all public configurations |
 | `/binds/<id>` | GET | View a saved configuration |
+| `/download/<id>/pdf` | GET | Download the reference card as PDF |
 | `/devices` | GET | List all supported controllers |
 | `/device/<name>` | GET | View a device's button layout |
+| `/stats` | GET | Public usage statistics |
 | `/configs/<path>` | GET | Static files (generated images) |
+| `/api/v1/generate` | POST | Programmatic upload of bindings |
+| `/api/v1/binds/<id>` | GET | Configuration metadata as JSON |
+| `/admin/` | GET | Admin panel (HTTP Basic Auth) |
 
 ## Features
 
@@ -103,52 +111,45 @@ Reference card images can be viewed in full-screen mode:
 - **Keyboard support** for accessibility
 - **Responsive** design works on all screen sizes
 
-### Admin Dashboard
-Comprehensive admin panel for configuration management:
-- View usage statistics and popular devices
-- Search and filter configurations
-- Toggle public/private visibility
-- Batch import .binds files
-
-
 ### Friendly URLs
-Configurations now use the bindings filename as their unique ID in the URL (e.g., `/binds/my-setup`).
+Configurations use the bindings filename as their unique ID in the URL (e.g., `/binds/my-setup`).
 If a name is already taken, a random suffix is added to ensure uniqueness.
+Cards from the original site keep their six-letter IDs, so old links keep working.
 
-
-### 📊 Global Analytics
-New in v2.1: A public dashboard (`/stats`) showing:
+### Global Analytics
+A public dashboard (`/stats`) showing:
 - Daily upload activity charts.
 - Most popular controller types rankings.
 
-### 🔌 Public API
-New in v2.1: A JSON API is available for third-party integrations.
+### Public API
+A JSON API is available for third-party integrations:
 - `POST /api/v1/generate`: Programmatic upload of bindings.
 - `GET /api/v1/binds/<id>`: Retrieve configuration metadata.
 
 ## Changelog
 
-### v2.1 (2025-01-08)
-*   **Frontend**:
-    *   Added **Drag & Drop** support with immediate file validation and preview.
-    *   Added **Sharing Tools**: Copy link button, social sharing (Reddit/X), and visual feedback.
-    *   Added **Global Analytics Dashboard** (`/stats`) with Chart.js visualization.
-*   **Backend**:
-    *   Implemented **Public JSON API** (`/api/v1/generate`).
-    *   Refactored `app.py` into modular **Blueprints** (`web`, `api`, `admin`) for better maintainability.
-    *   Standardized route namespaces in templates.
+See [ChangeLog.md](ChangeLog.md).
 
 ## Configuration
 
-The application can be configured via environment variables or by modifying the Flask app configuration in `www/app.py`:
+The application is configured with environment variables (see `.env.example`):
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `PYTHONIOENCODING` | Character encoding | `utf-8` |
+| `APP_URL` | Public URL of the site, printed on the cards and PDFs | `http://localhost:8080/` |
+| `APP_ENV` | `development`, `staging` or `production` (production enables scheduled backups) | `development` |
+| `EDREFCARD_CONFIGS_DIR` | Where bindings, the database and generated images are stored | `www/configs` |
+| `TRUSTED_PROXY_HOPS` | Number of reverse proxies whose forwarded headers are trusted | `1` |
+| `CANONICAL_URL` | With `REDIRECT_HOSTS`: the address other host names redirect to | (unset) |
+| `REDIRECT_HOSTS` | Comma-separated host names answered with a 301 to `CANONICAL_URL`, path kept | (unset) |
+| `ACCESS_TOKEN` | Puts the whole site behind an access code (staging only) | (unset) |
+| `EDREFCARD_ADMIN_USER` | Admin username | `admin` |
+| `EDREFCARD_ADMIN_PASS` | Admin password | `changeme` |
+| `FLASK_SECRET_KEY` | Secret key for sessions | `dev-secret-key...` |
 
 ## Supported Controllers
 
-EDRefCard supports 88+ controllers including:
+EDRefCard supports over 60 controllers including:
 - Thrustmaster (T16000M, HOTAS Warthog, T-Flight, etc.)
 - Logitech (Extreme 3D Pro, X52, X56, etc.)
 - VKB (Gladiator, Kosmosima, STECS, etc.)
@@ -158,40 +159,25 @@ EDRefCard supports 88+ controllers including:
 - Xbox 360 / PlayStation / Gamepads
 - Standard keyboard
 
-
 See the full list at `/devices` on the running application.
 
 ## Admin Panel
 
-EDRefCard v2.0 includes a built-in admin panel for managing configurations and devices.
+EDRefCard includes a built-in admin panel at `/admin/`, protected by HTTP Basic Auth (`EDREFCARD_ADMIN_USER` / `EDREFCARD_ADMIN_PASS`).
 
-### Access
-- URL: `/admin/`
-- Authentication: HTTP Basic Auth
-
-### Configuration
-Set the following environment variables to configure admin access:
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `EDREFCARD_ADMIN_USER` | Admin username | `admin` |
-| `EDREFCARD_ADMIN_PASS` | Admin password | `changeme` |
-| `FLASK_SECRET_KEY` | Secret key for sessions | `dev-secret-key...` |
-
-### Features
 - **Dashboard**: View statistics on configuration usage and popular devices
 - **Configurations**: List, search, delete, and toggle visibility of user configurations
-- **Devices**: View list of supported devices and their template mappings
+- **Devices**: View supported devices and their template mappings
+- **Backups**: Scheduled SFTP backups, configured from the panel
 
 ## Data Storage
 
-EDRefCard v2.2 uses a hybrid storage approach:
-- **SQLite Database (`edrefcard.db`)**: Stores configuration metadata (id, description, status, devices used).
+EDRefCard uses a hybrid storage approach:
+- **SQLite Database (`configs/edrefcard.db`)**: Stores configuration metadata (id, description, status, devices used).
 - **Filesystem**: Stores generated images (`.jpg`) and original bindings files (`.binds`) in the `configs/` directory.
 
 > [!NOTE]
-> All legacy `.replay` and pickle-based metadata systems have been fully replaced by the SQLite database.
-
+> The `.replay` pickle files of the original site are no longer used. `flask import-live` reads them once, safely, to bring the original site's cards over with their title and date.
 
 ## Maintenance
 
@@ -203,6 +189,12 @@ flask --app www/app.py clean-cache --days 1
 
 # Find unsupported controls in a log file
 flask --app www/app.py find-unsupported error.log
+
+# Rebuild the database from the .binds files on disk
+flask --app www/app.py rebuild-db
+
+# Import the cards of the original site from an extracted configs folder
+flask --app www/app.py import-live /path/to/configs --dry-run
 ```
 
 ## Development
@@ -210,6 +202,7 @@ flask --app www/app.py find-unsupported error.log
 ### Running Tests
 
 ```bash
+pip install -r requirements-dev.txt
 pytest --cov=. --cov-report term-missing
 ```
 
