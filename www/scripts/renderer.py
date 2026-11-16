@@ -150,43 +150,84 @@ def createKeyboardImage(physicalKeys, modifiers, source, imageDevices,
 
                         outputs[control['Group']][control['Name']] = bindInfo
 
-            # Set up screen state for layout
-            screenState = {
-                'baseX': 60,
-                'baseY': 320,
-                'maxWidth': 0,
-                'thisWidth': 0,
-                'currentX': 60,
-                'currentY': 320,
-            }
-
-            font = Font(getFontPath('Regular', 'Normal'), antialias=True, size=biggestFontSize)
-            groupTitleFont = Font(getFontPath('Regular', 'Normal'), antialias=True, size=biggestFontSize * 2)
-            context.stroke_width = 1
-            context.stroke_color = Color('Black')
-            context.fill_opacity = 0
-
-            # Render each display group
+            # Everything to write, in order: (text, is_title, surround, newLine)
+            entries = []
             for displayGroup in displayGroups:
                 if not outputs[displayGroup]:
                     continue
 
-                writeText(context, sourceImg, displayGroup, screenState, groupTitleFont, False, True)
+                entries.append((displayGroup, True, False, True))
 
                 orderedOutputs = OrderedDict(
-                    sorted(outputs[displayGroup].items(), 
+                    sorted(outputs[displayGroup].items(),
                            key=lambda x: x[1].get('Control').get('Order'))
                 )
                 for _bindKey, bind in orderedOutputs.items():
                     for modifier in bind.get('Modifiers', []):
-                        writeText(context, sourceImg, transKey(modifier), screenState, font, True, False)
-                    writeText(context, sourceImg, transKey(bind.get('Key')), screenState, font, True, False)
-                    writeText(context, sourceImg, bind.get('Control').get('Name'), screenState, font, False, True)
+                        entries.append((transKey(modifier), False, True, False))
+                    entries.append((transKey(bind.get('Key')), False, True, False))
+                    entries.append((bind.get('Control').get('Name'), False, False, True))
+
+            with Drawing() as measure:
+                fontSize = _fitKeyboardFontSize(measure, sourceImg, entries, biggestFontSize)
+            (font, groupTitleFont) = _keyboardFonts(fontSize)
+            context.stroke_width = 1
+            context.stroke_color = Color('Black')
+            context.fill_opacity = 0
+
+            screenState = _keyboardScreenState()
+            for text, isTitle, surround, newLine in entries:
+                writeText(context, sourceImg, text, screenState,
+                          groupTitleFont if isTitle else font, surround, newLine)
 
             context.draw(sourceImg)
             sourceImg.save(filename=str(filePath))
     
     return True
+
+
+CARD_WIDTH = 3840
+KEYBOARD_RIGHT_MARGIN = 40
+KEYBOARD_MIN_FONT_SIZE = 16
+
+
+def _keyboardScreenState():
+    return {
+        'baseX': 60,
+        'baseY': 320,
+        'maxWidth': 0,
+        'thisWidth': 0,
+        'currentX': 60,
+        'currentY': 320,
+        'rightEdge': 0,
+    }
+
+
+def _keyboardFonts(size):
+    path = getFontPath('Regular', 'Normal')
+    return (Font(path, antialias=True, size=size),
+            Font(path, antialias=True, size=size * 2))
+
+
+def _fitKeyboardFontSize(context, img, entries, biggestFontSize):
+    """Largest font size, from biggestFontSize down, whose columns fit the card.
+
+    The text keyboard card fills columns from left to right. With many keys
+    bound (third-party tools bind almost every key) the last columns used to
+    run past the right edge and were cut off (brammmers/edrefcard2#42), so
+    the layout is measured first and the font shrinks until it fits.
+    """
+    size = biggestFontSize
+    while size > KEYBOARD_MIN_FONT_SIZE:
+        (font, groupTitleFont) = _keyboardFonts(size)
+        state = _keyboardScreenState()
+        for text, isTitle, surround, newLine in entries:
+            writeText(context, img, text, state, groupTitleFont if isTitle else font,
+                      surround, newLine, draw=False)
+        if state['rightEdge'] <= CARD_WIDTH - KEYBOARD_RIGHT_MARGIN:
+            break
+        size -= 1
+    return size
 
 
 def appendKeyboardImage(createdImages, physicalKeys, modifiers, displayGroups, runId, public):
@@ -730,9 +771,9 @@ def createKeyboardLayoutImage(physicalKeys, modifiers, layout, config, styling):
     return True
 
 
-def writeText(context, img, text, screenState, font, surround, newLine):
+def writeText(context, img, text, screenState, font, surround, newLine, draw=True):
     """Write text to an image with wrapping support.
-    
+
     Args:
         context: Wand Drawing context
         img: Wand Image
@@ -741,6 +782,8 @@ def writeText(context, img, text, screenState, font, surround, newLine):
         font: Font to use
         surround: Whether to draw a box around the text
         newLine: Whether to move to next line after writing
+        draw: False only measures: the position advances and
+            screenState['rightEdge'] records the right-most pixel used
     """
     border = 4
 
@@ -770,18 +813,23 @@ def writeText(context, img, text, screenState, font, surround, newLine):
     
     x = screenState['currentX']
     y = screenState['currentY'] + int(metrics.ascender)
-    context.text(x=x, y=y, body=text)
+    if draw:
+        context.text(x=x, y=y, body=text)
     context.pop()
+
+    right = x + int(metrics.text_width) + (border * 4 if surround else 0)
+    screenState['rightEdge'] = max(screenState.get('rightEdge', 0), right)
 
     if surround:
         y = screenState['currentY'] - border
-        context.rectangle(
-            left=x - (border * 4), 
-            top=y - (border * 2), 
-            width=int(metrics.text_width) + (border * 8), 
-            height=int(metrics.text_height) + (border * 4), 
-            radius=30
-        )
+        if draw:
+            context.rectangle(
+                left=x - (border * 4),
+                top=y - (border * 2),
+                width=int(metrics.text_width) + (border * 8),
+                height=int(metrics.text_height) + (border * 4),
+                radius=30
+            )
         width = int(metrics.text_width + 48)
     else:
         width = int((metrics.text_width + 72) / 48) * 48
