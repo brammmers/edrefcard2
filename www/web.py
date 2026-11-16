@@ -181,6 +181,17 @@ def _load_render_cache(config, signature):
         return None
 
 
+def _drop_rendered_images(config):
+    """Delete this card's generated images and PDFs before drawing it again.
+    Never raises: a file that cannot be removed is only logged."""
+    for path in config.ownedFiles():
+        if path.suffix.lower() in ('.jpg', '.pdf'):
+            try:
+                path.unlink(missing_ok=True)
+            except OSError as e:
+                logError(f'stale image not removed for {config.name}: {e}\n')
+
+
 def _store_render_cache(config, signature, result):
     """Remember a successful render. Never raises."""
     import json
@@ -667,6 +678,10 @@ def show_binds(run_id):
         elif not source_missing:
             # Ensure directory exists for image regeneration
             config.makeDir()
+            # The drawing functions keep any image already on disk, so the
+            # images of a stale render (new release, settings or controller
+            # mappings changed) must go first, or they would be served again.
+            _drop_rendered_images(config)
             (physical_keys, modifiers, devices) = parseBindings(run_id, xml, display_groups, errors)
 
             created_images, unsupported_devices = generate_legacy_images(

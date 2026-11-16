@@ -263,8 +263,9 @@ APP_PROBE = textwrap.dedent('''
     draws = []
 
     def fake_legacy(physical_keys, modifiers, devices, config, public, styling, warnings):
-        draws.append(config.name)
-        config.pathWithNameAndSuffix('fake', '.jpg').write_text('x')
+        image = config.pathWithNameAndSuffix('fake', '.jpg')
+        draws.append(image.exists())  # an old image left on disk would be kept
+        image.write_text('x')
         return [legacy_key + '::0'], []
     web.generate_legacy_images = fake_legacy
     web.render_data_driven = lambda *args, **kwargs: ([], set())
@@ -287,6 +288,7 @@ APP_PROBE = textwrap.dedent('''
     card.pathWithSuffix('.binds').write_text(binds % '<!-- edited -->', encoding='utf-8')
     cache_steps.append(view())                       # the source changed
     out['cache'] = cache_steps
+    out['stale_images_left'] = draws
 
     # --- scheduler tick follows the settings without a restart
     import datetime as dt
@@ -447,6 +449,11 @@ class AppRegressionTests(unittest.TestCase):
             [200, 3, True],   # an image was removed from disk
             [200, 4, True],   # the .binds source changed
         ])
+
+    def test_a_stale_render_drops_its_old_images_first(self):
+        # The drawing functions keep any image already on disk: without the
+        # cleanup, a new release never reached cards drawn by the previous one.
+        self.assertEqual(self.out['stale_images_left'], [False, False, False, False])
 
     def test_scheduler_tick_follows_the_settings(self):
         # wrong hour, due, hour changed (old hour), new hour, disabled, already ran this hour
