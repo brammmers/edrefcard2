@@ -257,6 +257,46 @@ def rebuild_db_command():
     click.echo(f"Rebuild complete: {count} recovered, {errors_count} errors.")
 
 
+@click.command('import-live')
+@click.argument('source_dir', type=click.Path(exists=True, file_okay=False))
+@click.option('--dry-run', is_flag=True, help='Check everything, write nothing.')
+@click.option('--limit', type=int, default=None, help='Stop after N cards.')
+@click.option('--report', 'report_path', type=click.Path(dir_okay=False), default=None,
+              help='Write the full per-id report as JSON.')
+@with_appcontext
+def import_live_command(source_dir, dry_run, limit, report_path):
+    """Import the cards of the old live site from an extracted tarball.
+
+    SOURCE_DIR holds the live configs folder (<id>.binds + <id>.replay pairs,
+    any layout). Ids, titles, styling, display groups and dates are kept;
+    existing ids are never overwritten.
+    """
+    import json
+
+    from scripts import utils
+    from scripts.live_import import import_live_configs
+
+    original_log_error = utils.logError
+    utils.logError = lambda msg: None  # the parser is chatty on old files
+    try:
+        report = import_live_configs(source_dir, dry_run=dry_run, limit=limit,
+                                     log=click.echo)
+    finally:
+        utils.logError = original_log_error
+
+    click.echo('DRY RUN, nothing written.' if dry_run else 'Import done.')
+    for name, value in report.counts().items():
+        click.echo(f'  {name}: {value}')
+    for name in ('clashes', 'bad_replays', 'parse_errors', 'invalid_ids'):
+        items = getattr(report, name)
+        if items:
+            click.echo(f'{name} (first 20): {items[:20]}')
+    if report_path:
+        with open(report_path, 'w', encoding='utf-8') as handle:
+            json.dump(report.as_dict(), handle, indent=2, ensure_ascii=False)
+        click.echo(f'Report written to {report_path}')
+
+
 @click.command('seed-aeromax')
 @with_appcontext
 def seed_aeromax_command():
