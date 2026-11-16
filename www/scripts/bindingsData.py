@@ -129,9 +129,9 @@ hotasDetails = {
         'Joy_17': {'Type': 'Digital', 'x': 2004, 'y': 808, 'width': 667}, # Thumb hat down
         'Joy_18': {'Type': 'Digital', 'x': 2004, 'y': 862, 'width': 667}, # Thumb hat left
         'Joy_19': {'Type': 'Digital', 'x': 372, 'y': 1640, 'width': 683}, # Rdr Cursor button
-        'Joy_20': {'Type': 'Digital', 'x': 1495, 'y': 1679, 'width': 772}, #Radio select down
-        'Joy_21': {'Type': 'Digital', 'x': 1495, 'y': 1733, 'width': 772}, #Radio select up
-        'Joy_22': {'Type': 'Digital', 'x': 1495, 'y': 1787, 'width': 772}, #Radio select right
+        'Joy_20': {'Type': 'Digital', 'x': 1495, 'y': 1787, 'width': 772}, #Radio select down
+        'Joy_21': {'Type': 'Digital', 'x': 1495, 'y': 1679, 'width': 772}, #Radio select up
+        'Joy_22': {'Type': 'Digital', 'x': 1495, 'y': 1733, 'width': 772}, #Radio select right
         'Joy_23': {'Type': 'Digital', 'x': 1495, 'y': 1841, 'width': 772}, #Radio select left
         'Joy_24': {'Type': 'Digital', 'x': 1220, 'y': 649, 'width': 633}, #Man RNG/Uncage button
         'Joy_25': {'Type': 'Digital', 'x': 1310, 'y': 1022, 'width': 690}, #Dog fight up
