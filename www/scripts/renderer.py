@@ -175,7 +175,7 @@ def createKeyboardImage(physicalKeys, modifiers, source, imageDevices,
             context.stroke_color = Color('Black')
             context.fill_opacity = 0
 
-            screenState = _keyboardScreenState()
+            screenState = _keyboardScreenState(fontSize / biggestFontSize)
             for text, isTitle, surround, newLine in entries:
                 writeText(context, sourceImg, text, screenState,
                           groupTitleFont if isTitle else font, surround, newLine)
@@ -191,7 +191,7 @@ KEYBOARD_RIGHT_MARGIN = 40
 KEYBOARD_MIN_FONT_SIZE = 16
 
 
-def _keyboardScreenState():
+def _keyboardScreenState(scale=1.0):
     return {
         'baseX': 60,
         'baseY': 320,
@@ -200,6 +200,7 @@ def _keyboardScreenState():
         'currentX': 60,
         'currentY': 320,
         'rightEdge': 0,
+        'scale': scale,  # spacing between keys, lines and columns
     }
 
 
@@ -215,12 +216,15 @@ def _fitKeyboardFontSize(context, img, entries, biggestFontSize):
     The text keyboard card fills columns from left to right. With many keys
     bound (third-party tools bind almost every key) the last columns used to
     run past the right edge and were cut off (brammmers/edrefcard2#42), so
-    the layout is measured first and the font shrinks until it fits.
+    the layout is measured first and shrinks until it fits. The spacing
+    shrinks with the font (a uniform zoom out), otherwise the fixed gaps
+    take most of the room at small sizes. A card that already fits is
+    drawn exactly as before.
     """
     size = biggestFontSize
     while size > KEYBOARD_MIN_FONT_SIZE:
         (font, groupTitleFont) = _keyboardFonts(size)
-        state = _keyboardScreenState()
+        state = _keyboardScreenState(size / biggestFontSize)
         for text, isTitle, surround, newLine in entries:
             writeText(context, img, text, state, groupTitleFont if isTitle else font,
                       surround, newLine, draw=False)
@@ -785,12 +789,18 @@ def writeText(context, img, text, screenState, font, surround, newLine, draw=Tru
         draw: False only measures: the position advances and
             screenState['rightEdge'] records the right-most pixel used
     """
-    border = 4
+    # Spacing in pixels at scale 1, shrunk with the font by _fitKeyboardFontSize
+    scale = screenState.get('scale', 1.0)
+    border = max(1, round(4 * scale))
+    lineGap = round(32 * scale)
+    columnGap = round(49 * scale)
+    keyGap = round(48 * scale)
+    grid = 48 * scale
 
     context.font = font.path
     context.font_style = 'normal'
     context.font_size = font.size
-    
+
     context.push()
     
     context.stroke_width = 0
@@ -804,9 +814,9 @@ def writeText(context, img, text, screenState, font, surround, newLine, draw=Tru
     metrics = context.get_font_metrics(img, text, multiline=False)
     
     # Check if we need to wrap to next column
-    if screenState['currentY'] + int(metrics.text_height + 32) > 2160:
+    if screenState['currentY'] + int(metrics.text_height + lineGap) > 2160:
         screenState['currentY'] = screenState['baseY']
-        screenState['baseX'] = screenState['baseX'] + screenState['maxWidth'] + 49
+        screenState['baseX'] = screenState['baseX'] + screenState['maxWidth'] + columnGap
         screenState['currentX'] = screenState['baseX']
         screenState['maxWidth'] = 0
         screenState['thisWidth'] = 0
@@ -828,18 +838,18 @@ def writeText(context, img, text, screenState, font, surround, newLine, draw=Tru
                 top=y - (border * 2),
                 width=int(metrics.text_width) + (border * 8),
                 height=int(metrics.text_height) + (border * 4),
-                radius=30
+                radius=round(30 * scale)
             )
-        width = int(metrics.text_width + 48)
+        width = int(metrics.text_width + keyGap)
     else:
-        width = int((metrics.text_width + 72) / 48) * 48
-    
+        width = int(int((metrics.text_width + 1.5 * grid) / grid) * grid)
+
     screenState['thisWidth'] += width
 
     if newLine:
         if screenState['thisWidth'] > screenState['maxWidth']:
             screenState['maxWidth'] = screenState['thisWidth']
-        screenState['currentY'] += int(metrics.text_height + 32)
+        screenState['currentY'] += int(metrics.text_height + lineGap)
         screenState['currentX'] = screenState['baseX']
         screenState['thisWidth'] = 0
     else:

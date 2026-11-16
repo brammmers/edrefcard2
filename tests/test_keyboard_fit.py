@@ -46,8 +46,8 @@ def entries(count):
 @mock.patch.object(renderer, 'Font', fake_font)
 @mock.patch.object(renderer, 'Color', lambda name: name)
 class KeyboardFitTests(unittest.TestCase):
-    def measure(self, items, size):
-        state = renderer._keyboardScreenState()
+    def measure(self, items, size, scale=1.0):
+        state = renderer._keyboardScreenState(scale)
         (font, title) = renderer._keyboardFonts(size)
         context = FakeContext()
         for text, is_title, surround, new_line in items:
@@ -64,8 +64,25 @@ class KeyboardFitTests(unittest.TestCase):
         size = renderer._fitKeyboardFontSize(FakeContext(), None, items, 24)
         self.assertLess(size, 24)
         self.assertGreaterEqual(size, renderer.KEYBOARD_MIN_FONT_SIZE)
-        edge = self.measure(items, size)[0]
+        edge = self.measure(items, size, size / 24)[0]
         self.assertLessEqual(edge, renderer.CARD_WIDTH - renderer.KEYBOARD_RIGHT_MARGIN)
+
+    def test_spacing_shrinks_with_the_font(self):
+        # Without shrinking the gaps, 300 lines would not fit even at the
+        # minimum size; with them, they fit above it.
+        items = entries(300)
+        self.assertGreater(self.measure(items, renderer.KEYBOARD_MIN_FONT_SIZE)[0],
+                           renderer.CARD_WIDTH)
+        size = renderer._fitKeyboardFontSize(FakeContext(), None, items, 24)
+        self.assertGreater(size, renderer.KEYBOARD_MIN_FONT_SIZE)
+
+    def test_a_card_that_fits_keeps_the_original_spacing(self):
+        state = renderer._keyboardScreenState()
+        font = SimpleNamespace(path='f', size=40)
+        renderer.writeText(FakeContext(), None, 'Boost', state, font, False, True, draw=False)
+        # 5 chars x 24 px = 120, rounded up as before: int((120 + 72) / 48) * 48
+        self.assertEqual(state['maxWidth'], 192)
+        self.assertEqual(state['currentY'], 320 + int(40 * 1.2 + 32))
 
     def test_never_below_the_minimum_size(self):
         size = renderer._fitKeyboardFontSize(FakeContext(), None, entries(5000), 24)
