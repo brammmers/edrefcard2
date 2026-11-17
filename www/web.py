@@ -1,7 +1,7 @@
 import os
 import tempfile
 from pathlib import Path
-from flask import Blueprint, render_template, request, url_for, send_from_directory, current_app, abort
+from flask import Blueprint, render_template, request, url_for, send_from_directory, current_app, abort, redirect
 from markupsafe import escape
 from extensions import limiter
 from scripts import (
@@ -1043,6 +1043,17 @@ def serve_config(path):
         abort(404)
     configs_folder = current_app.config['CONFIGS_FOLDER']
     return send_from_directory(configs_folder, path)
+
+@web_bp.route('/scripts/bindings.py', methods=['GET', 'POST'])
+def legacy_bindings_form():
+    """The original EDRefCard form posted to scripts/bindings.py (same field
+    names). Pages cached from the old host still send uploads there: a 307
+    makes the browser repost the file to /generate, which keeps its rate limit.
+    """
+    if request.method == 'POST':
+        return redirect(url_for('web.generate'), code=307)
+    return redirect(url_for('web.index'), code=301)
+
 
 @web_bp.route('/scripts/<path:filename>')
 def serve_scripts(filename):

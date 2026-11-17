@@ -327,6 +327,13 @@ APP_PROBE = textwrap.dedent('''
     utils.logError('after rotation')
     out['log'] = [log_path.with_name('error.log.1').exists(), log_path.stat().st_size < 1000]
 
+    # --- the original site's form action still works, other .py files stay hidden
+    legacy_post = client.post('/scripts/bindings.py', data={'description': 'x'})
+    legacy_get = client.get('/scripts/bindings.py')
+    out['legacy_form'] = [legacy_post.status_code, legacy_post.headers.get('Location'),
+                          legacy_get.status_code, legacy_get.headers.get('Location'),
+                          client.get('/scripts/parser.py').status_code]
+
     print('PROBE=' + json.dumps(out))
 ''')
 
@@ -465,6 +472,14 @@ class AppRegressionTests(unittest.TestCase):
 
     def test_error_log_is_rotated(self):
         self.assertEqual(self.out['log'], [True, True])
+
+    def test_original_form_action_reposts_to_generate(self):
+        post_status, post_to, get_status, get_to, python_source = self.out['legacy_form']
+        self.assertEqual(post_status, 307)
+        self.assertTrue(post_to.endswith('/generate'), post_to)
+        self.assertEqual(get_status, 301)
+        self.assertTrue(get_to.endswith('/'), get_to)
+        self.assertEqual(python_source, 404)
 
 
 @unittest.skipUnless(all(importlib.util.find_spec(name) for name in APP_DEPENDENCIES),
