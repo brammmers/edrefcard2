@@ -54,8 +54,12 @@ def _csrf_protect_admin():
 @require_admin
 def dashboard():
     """Admin dashboard with statistics."""
+    from .activity_chart import RANGES, build_chart
     stats = database.get_configuration_stats()
-    return render_template('admin/dashboard.html', stats=stats)
+    days = request.args.get('days', type=int)
+    days = days if days in RANGES else 90
+    chart = build_chart(database.get_daily_creations(days))
+    return render_template('admin/dashboard.html', stats=stats, chart=chart, days=days, ranges=RANGES)
 
 
 
