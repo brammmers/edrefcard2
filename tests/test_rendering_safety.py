@@ -318,5 +318,78 @@ class RenderingSafetyTests(unittest.TestCase):
         self.assertNotIn('InputKey',controls['Left'])
 
 
+class FlowLayoutAndPrecedenceTests(unittest.TestCase):
+    """Photo-less mappings (S-TECS) and mappings replacing a legacy template."""
+
+    def setUp(self):
+        self.env = functions('www/scripts/renderer.py',
+                             ['_flowColumnWidth', '_flowPositions', '_symbolColumnWidth'], {
+            'math': math, '_FLOW_MARGIN': 40, '_FLOW_GAP': 24, '_FLOW_TOP': 160,
+            '_FLOW_HEADING_H': 64, '_FLOW_ZONE_GAP': 40,
+            '_SYMBOL_GLYPHS': {'press': '0', 'push': 'push', 'stage1': 'stage 1',
+                               'ccw': 'ccw', 'cw': 'cw', 'mid': 'mid'},
+        })
+
+    def test_flow_packs_zones_in_columns_without_holes(self):
+        boxes = [{'label': 'A', 'zone': 'BASE'}, {'label': 'B', 'zone': 'BASE'},
+                 {'label': 'C', 'zone': 'GRIP'}, {'label': 'D', 'zone': 'BASE'}]
+        before = copy.deepcopy(boxes)
+        placed, headings, height = self.env['_flowPositions'](boxes, [100, 50, 80, 30], 1000, 2)
+        self.assertEqual(boxes, before)
+        # Zones keep their first-appearance order, D joins BASE under B (shortest column)
+        self.assertEqual([b['label'] for b in placed], ['A', 'B', 'D', 'C'])
+        self.assertEqual([h[0] for h in headings], ['BASE', 'GRIP'])
+        a, b, d, c = (p['box_xy'] for p in placed)
+        self.assertEqual(a, [40, 224])
+        self.assertEqual(b, [512, 224])
+        self.assertEqual(d, [512, 224 + 50 + 24])
+        colw = self.env['_flowColumnWidth'](1000, 2)
+        self.assertEqual(placed[0]['box_wh'], [math.floor(colw), 100])
+        # Next zone starts below the tallest column of the previous one (B + D)
+        tallest = 224 + 50 + 24 + 30
+        self.assertEqual(headings[1][2], tallest + 40 + 44)
+        self.assertEqual(c, [40, tallest + 40 + 64])
+        self.assertEqual(height, c[1] + 80 + 40)
+        for p in placed:
+            self.assertLessEqual(p['box_xy'][0] + p['box_wh'][0], 1000 - 40)
+
+    def test_flow_without_zones_and_empty_card(self):
+        placed, headings, height = self.env['_flowPositions']([{'label': 'A'}], [94], 2400)
+        self.assertEqual(headings, [])
+        self.assertEqual(placed[0]['box_xy'], [40, 160])
+        self.assertEqual(self.env['_flowPositions']([], [], 2400), ([], [], 160))
+
+    def test_new_word_glyphs_keep_existing_gutters(self):
+        width = self.env['_symbolColumnWidth']
+        self.assertEqual([width('press'), width('push'), width('stage1')], [44, 150, 150])
+        self.assertEqual([width('cw'), width('ccw'), width('mid'), width(None)], [44, 70, 70, 0])
+
+    def test_published_mapping_replaces_legacy_template_except_virtual_controllers(self):
+        drawn = []
+        legacy = functions('www/web.py', ['generate_legacy_images'], {
+            'supportedDevices': {'Keyboard': {}, 'VC1': {'Template': 'vc1', 'HandledDevices': ['STECS::0']},
+                                 'VC2': {'Template': 'vc2', 'HandledDevices': ['STECS::1']}},
+            'createHOTASImage': lambda *args: drawn.append(args[2]), 'logError': lambda *a: None})
+        devices = {'STECS::0': {}, 'STECS::1': {}}
+        created, _ = legacy['generate_legacy_images']({}, {}, devices, None, False, 'Group', '',
+                                                     {'STECS::0'})
+        self.assertEqual((created, drawn), (['VC2::1'], ['vc2']))
+
+        mapping = {'image': 'stecs', 'device_ids': ['STECS'], 'boxes': [],
+                   'legacy_when_index_present': [1]}
+        rendered = []
+        import json
+        web = functions('www/web.py', ['render_data_driven'], {
+            'database': SimpleNamespace(get_published_controller_mappings=lambda: [
+                {'status': 'published', 'device_id': 'STECS', 'mapping_json': json.dumps(mapping)}]),
+            'createDataDrivenImage': lambda m, *a, **kw: rendered.append(kw['deviceIndex']),
+            'logError': lambda *a: None})
+        self.assertEqual(web['render_data_driven']({}, {}, {'STECS::0': {}}, None, False, 'Group'),
+                         (['stecs'], {'STECS::0'}))
+        self.assertEqual(web['render_data_driven']({}, {}, devices, None, False, 'Group'),
+                         ([], set()))
+        self.assertEqual(rendered, [0])
+
+
 if __name__ == '__main__':
     unittest.main()

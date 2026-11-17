@@ -262,7 +262,8 @@ APP_PROBE = textwrap.dedent('''
     legacy_key = next(key for key in supportedDevices if key != 'Keyboard')
     draws = []
 
-    def fake_legacy(physical_keys, modifiers, devices, config, public, styling, warnings):
+    def fake_legacy(physical_keys, modifiers, devices, config, public, styling, warnings,
+                    skip_device_keys=()):
         image = config.pathWithNameAndSuffix('fake', '.jpg')
         draws.append(image.exists())  # an old image left on disk would be kept
         image.write_text('x')

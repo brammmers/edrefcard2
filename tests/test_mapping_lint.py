@@ -60,6 +60,10 @@ class LintTests(unittest.TestCase):
     def test_imported_artwork_boxes_do_not_need_an_anchor(self):
         self.assertEqual(lint_mapping(mapping(box(anchor=None, no_chrome=True))), [])
 
+    def test_photo_less_flow_boxes_do_not_need_an_anchor(self):
+        flow = {**mapping(box(anchor=None)), 'layout': 'flow'}
+        self.assertEqual(lint_mapping(flow), [])
+
     def test_mapping_without_any_usable_code_is_an_error(self):
         errors = messages(lint_mapping(mapping(box(rows=[{'joy': ''}]))), 'error')
         self.assertTrue(any('every card would be empty' in message for message in errors))

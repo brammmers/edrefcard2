@@ -122,6 +122,23 @@ def run(root, installed_www):
                                         40,config,False,'Group',0,'')
         assert config.pathWithNameAndSuffix(entry['Template'],'.jpg').stat().st_size > 1000
         assert legacy_errors.deviceWarnings == ''
+    # Photo-less flow mapping: blank canvas sized to the bound boxes only, no
+    # clean image needed, unbound boxes dropped, new word glyphs drawn.
+    flow = {'image':'flow-probe-missing','title':'Flow render check','layout':'flow',
+            'width':1200,'height':900,'device_ids':['TEST'],'boxes':[
+        {'label':'ENCODER','zone':'BASE','box_xy':[0,0],'box_wh':[500,202],
+         'rows':[{'joy':'Joy_1','symbol':'ccw','number':'1'},
+                 {'joy':'Joy_2','symbol':'cw','number':'2'},
+                 {'joy':'Joy_9','symbol':'mid','number':'9'}]},
+        {'label':'UNBOUND','zone':'GRIP','box_xy':[0,0],'box_wh':[500,94],
+         'rows':[{'joy':'Joy_99','number':'99'}]},
+        {'label':'MINI-STICK','zone':'BASE','box_xy':[0,0],'box_wh':[500,94],
+         'rows':[{'joy':'Joy_RYAxis'}]}]}
+    config = models.Config('flow-probe'); config.makeDir()
+    assert renderer.createDataDrivenImage(flow, config, False, physical, modifiers, 'Group')
+    flow_image = str(config.pathWithNameAndSuffix('flow-probe-missing','.jpg'))
+    with Image(filename=flow_image) as drawn:
+        assert drawn.width == 1200 and 300 < drawn.height < 600, (drawn.width, drawn.height)
     # Exercise the shared web/API generation helper and visible coverage notice.
     web_tree = ast.parse((root / 'www/web.py').read_text())
     helper = next(n for n in web_tree.body if isinstance(n,ast.FunctionDef) and n.name=='render_data_driven')
@@ -186,7 +203,8 @@ def run(root, installed_www):
     assert logs == [], logs
     return {'checks':'real preview, coverage, directions, dense modifiers, long-command fitting, four styles, three legacy templates, A4/Letter PDF, concurrent outputs and input errors passed',
             'review_image':str(sandbox / 'st/style-group-probe.jpg'),
-            'pdf_review_images':[str(sandbox / 'pdf-A4.png'),str(sandbox / 'pdf-Letter.png')]}
+            'pdf_review_images':[str(sandbox / 'pdf-A4.png'),str(sandbox / 'pdf-Letter.png'),
+                                 flow_image]}
 
 
 if __name__ == '__main__':

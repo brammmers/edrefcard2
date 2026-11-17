@@ -63,7 +63,8 @@ def lint_mapping(mapping):
         chrome = not box.get('no_chrome')
         anchor = box.get('button_xy')
         if anchor is None:
-            if chrome:
+            # A photo-less "flow" card has no controller image to point at
+            if chrome and mapping.get('layout') != 'flow':
                 add('warning', f'"{name}" has no anchor point, so no leader line shows '
                                'which control it describes.', index)
         elif _pair(anchor) and sized and not (0 <= anchor[0] <= width and 0 <= anchor[1] <= height):

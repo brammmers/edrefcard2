@@ -1358,6 +1358,7 @@ _LEADER_COLOR = '#962320'
 _SYMBOL_GLYPHS = {
     'press': '0', 'up': '^', 'right': '>', 'down': 'v', 'left': '<',
     'stage1': 'stage 1', 'stage2': 'stage 2', 'push': 'push', 'pull': 'pull',
+    'ccw': 'ccw', 'cw': 'cw', 'mid': 'mid',  # encoder turns, switch centre
 }
 
 
@@ -1366,7 +1367,9 @@ def _symbolColumnWidth(symbol):
     g = _SYMBOL_GLYPHS.get(symbol or '', '')
     if not g:
         return 0
-    return 150 if len(g) > 2 else 44
+    if len(g) > 3:
+        return 150
+    return 70 if len(g) == 3 else 44
 
 
 def _drawControlSymbol(context, x, y_center, symbol, scale=1):
@@ -1445,7 +1448,8 @@ def _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling='Gro
         raise ValueError('Controller box must have positive width and height.')
     rows = box.get('rows', [])
     chrome = not box.get('no_chrome')
-    header_h = min(40, h / 4) if (box.get('label') and chrome) else 0
+    # A flow layout reserves a full header even for a one-row box
+    header_h = box.get('_header_h', min(40, h / 4)) if (box.get('label') and chrome) else 0
     row_heights = [(h - header_h) / max(len(rows), 1)] * max(len(rows), 1)
     if compact and chrome:
         row_heights, biggestFontSize = _dataDrivenRowHeights(
@@ -1559,6 +1563,56 @@ def _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling='Gro
         context.pop()
 
 
+# Photo-less ("flow") mappings: no controller image to point at, so the boxes
+# are grouped by zone (base, grips, module...) and packed in columns on a
+# blank canvas, AFTER the unbound boxes are dropped: no holes, and the card is
+# only as tall as what this player actually binds.
+_FLOW_MARGIN = 40
+_FLOW_GAP = 24
+_FLOW_TOP = 160          # below the title and the URL
+_FLOW_HEADING_H = 64
+_FLOW_ZONE_GAP = 40
+
+
+def _flowColumnWidth(width, columns):
+    return (width - 2 * _FLOW_MARGIN - (columns - 1) * _FLOW_GAP) / columns
+
+
+def _flowPositions(boxes, heights, width, columns=3):
+    """Place the boxes of a flow mapping.
+
+    Zones (box['zone']) follow each other top to bottom in order of first
+    appearance; inside a zone each box goes to the currently shortest column,
+    in mapping order. Returns (placed, headings, height): copies of the boxes
+    with box_xy/box_wh set, (text, x, baseline_y) zone headings, and the
+    canvas height needed. The input boxes are not modified.
+    """
+    colw = _flowColumnWidth(width, columns)
+    zones = []
+    for box, height in zip(boxes, heights):
+        zone = box.get('zone') or ''
+        for name, items in zones:
+            if name == zone:
+                items.append((box, height))
+                break
+        else:
+            zones.append((zone, [(box, height)]))
+    placed, headings, y = [], [], _FLOW_TOP
+    for zone, items in zones:
+        if zone:
+            headings.append((zone, _FLOW_MARGIN, y + 44))
+            y += _FLOW_HEADING_H
+        bottoms = [y] * columns
+        for box, height in items:
+            col = bottoms.index(min(bottoms))
+            h = math.ceil(height)
+            placed.append({**box, 'box_xy': [round(_FLOW_MARGIN + col * (colw + _FLOW_GAP)), bottoms[col]],
+                           'box_wh': [math.floor(colw), h]})
+            bottoms[col] += h + _FLOW_GAP
+        y = max(bottoms) - _FLOW_GAP + _FLOW_ZONE_GAP
+    return placed, headings, y - _FLOW_ZONE_GAP + _FLOW_MARGIN
+
+
 def _buildJoyTexts(deviceIds, joyKey, deviceIndex, physicalKeys, modifiers, styling):
     """Build the coloured texts list for one Joy_* key from the uploaded bindings.
 
@@ -1655,19 +1709,71 @@ def createDataDrivenImage(mapping, config, public, physicalKeys=None, modifiers=
     source = mapping['image']
     name = source if deviceIndex == 0 else '%s-%s' % (source, deviceIndex)
     filePath = config.pathWithNameAndSuffix(name, '.jpg')
+    flow = mapping.get('layout') == 'flow'
 
     from pathlib import Path
-    # Data-driven clean images live in the persistent volume (added at runtime via
-    # the mapping editor); fall back to baked res/ for bundled images.
-    candidates = [
-        config.configsPath() / 'controllers' / (source + '.jpg'),
-        Path(__file__).resolve().parents[1] / 'res' / (source + '.jpg'),
-    ]
-    template_path = next((c for c in candidates if c.exists()), None)
-    if template_path is None:
-        raise FileNotFoundError(f"Clean image '{source}.jpg' not found in controllers/ or res/")
+    template_path = None
+    if not flow:
+        # Data-driven clean images live in the persistent volume (added at runtime via
+        # the mapping editor); fall back to baked res/ for bundled images.
+        candidates = [
+            config.configsPath() / 'controllers' / (source + '.jpg'),
+            Path(__file__).resolve().parents[1] / 'res' / (source + '.jpg'),
+        ]
+        template_path = next((c for c in candidates if c.exists()), None)
+        if template_path is None:
+            raise FileNotFoundError(f"Clean image '{source}.jpg' not found in controllers/ or res/")
 
-    with Image(filename=str(template_path)) as sourceImg:
+    styling = styling or mapping.get('styling', 'Group')
+    device_ids = imageDevices or mapping.get('device_ids') or []
+    boxes = []
+    for original_box in mapping.get('boxes', []):
+        box = copy.deepcopy(original_box)
+        # Resolve each row's coloured texts: from the user's real bindings
+        # (generation) or the row's sample binds (editor preview).
+        for row in box.get('rows', []):
+            if physicalKeys is not None:
+                row['_texts'] = (_buildJoyTexts(device_ids, row['joy'], deviceIndex,
+                                               physicalKeys, modifiers or {}, styling)
+                                 if row.get('joy') else [])
+            else:
+                row['_texts'] = [
+                    {'Text': b.get('name', ''), 'Group': b.get('group', 'General'),
+                     'Style': groupStyles.get(b.get('group', 'General'), groupStyles['General'])}
+                    for b in (row.get('binds') or [])
+                ]
+        # In generation mode, drop rows the user didn't bind and skip a box
+        # entirely if none of its controls are used (each user binds a different
+        # subset: VR/no-VR, multiple files, with/without pedals). Editor preview
+        # (physicalKeys is None) keeps every box/row so the layout stays visible.
+        if physicalKeys is not None:
+            kept = [r for r in box.get('rows', []) if r.get('_texts')]
+            if not kept:
+                continue
+            if not box.get('no_chrome'):
+                box = {**box, 'rows': kept}
+        boxes.append(box)
+
+    headings = []
+    if flow:
+        width = int(mapping['width'])
+        columns = max(1, int(mapping.get('flow_columns', 3)))
+        colw = _flowColumnWidth(width, columns)
+        heights = []
+        with Image(width=width, height=16, background=Color('white')) as probe, Drawing() as measure:
+            for box in boxes:
+                rows = box.get('rows', [])
+                rows_h = sum(_dataDrivenRowHeights(measure, probe, rows, colw, 10 ** 6, 40)[0]) if rows else 54
+                heights.append((40 if box.get('label') else 0) + rows_h)
+        boxes, headings, height = _flowPositions(boxes, heights, width, columns)
+        for box in boxes:
+            box['_header_h'] = 40
+        sourceImg = Image(width=width, height=max(height, _FLOW_TOP + _FLOW_MARGIN),
+                          background=Color('white'))
+    else:
+        sourceImg = Image(filename=str(template_path))
+
+    with sourceImg:
         with Drawing() as context:
             context.font = getFontPath('Regular', 'Normal')
             context.text_antialias = True
@@ -1696,33 +1802,18 @@ def createDataDrivenImage(mapping, config, public, physicalKeys=None, modifiers=
                          body=config.refcardURL() if public else Config.webRoot())
             context.pop()
 
-            styling = styling or mapping.get('styling', 'Group')
-            device_ids = imageDevices or mapping.get('device_ids') or []
-            for original_box in mapping.get('boxes', []):
-                box = copy.deepcopy(original_box)
-                # Resolve each row's coloured texts: from the user's real bindings
-                # (generation) or the row's sample binds (editor preview).
-                for row in box.get('rows', []):
-                    if physicalKeys is not None:
-                        row['_texts'] = (_buildJoyTexts(device_ids, row['joy'], deviceIndex,
-                                                       physicalKeys, modifiers or {}, styling)
-                                         if row.get('joy') else [])
-                    else:
-                        row['_texts'] = [
-                            {'Text': b.get('name', ''), 'Group': b.get('group', 'General'),
-                             'Style': groupStyles.get(b.get('group', 'General'), groupStyles['General'])}
-                            for b in (row.get('binds') or [])
-                        ]
-                # In generation mode, drop rows the user didn't bind and skip a box
-                # entirely if none of its controls are used (each user binds a different
-                # subset: VR/no-VR, multiple files, with/without pedals). Editor preview
-                # (physicalKeys is None) keeps every box/row so the layout stays visible.
-                if physicalKeys is not None:
-                    kept = [r for r in box.get('rows', []) if r.get('_texts')]
-                    if not kept:
-                        continue
-                    if not box.get('no_chrome'):
-                        box = {**box, 'rows': kept}
+            for text, hx, hy in headings:
+                context.push()
+                context.stroke_color = Color('transparent')
+                context.font = getFontPath('Bold', 'Normal')
+                context.font_size = 34
+                context.fill_color = Color('#333333')
+                context.text(x=int(hx), y=int(hy), body=text)
+                context.fill_color = Color(_LEADER_COLOR)
+                context.rectangle(left=hx, top=hy + 10, width=sourceImg.width - 2 * hx, height=3)
+                context.pop()
+
+            for box in boxes:
                 _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling=styling,
                                    compact=physicalKeys is not None)
 

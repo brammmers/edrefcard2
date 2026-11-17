@@ -177,7 +177,7 @@
 <script>
 const EXISTING = JSON.parse({{ existing_json|tojson }});
 const EDITOR_USER = {{ editor_user|default('mapper')|tojson }};
-const SYMS = ["","press","up","right","down","left","stage1","stage2","push","pull"];
+const SYMS = ["","press","up","right","down","left","stage1","stage2","push","pull","ccw","cw","mid"];
 
 let state = {title:"", image:null, width:0, height:0, boxes:[]};
 let sel = -1;          // primary selected box index (last clicked)
@@ -395,7 +395,7 @@ function drawStage(full){
   // Live content preview: the same header/rows the renderer will draw,
   // approximated in HTML (row grid = 72 image px, header = 40)
   const esc=s=>String(s??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  const GLYPH={press:'0',up:'^',right:'>',down:'v',left:'<',stage1:'stage 1',stage2:'stage 2',push:'push',pull:'pull'};
+  const GLYPH={press:'0',up:'^',right:'>',down:'v',left:'<',stage1:'stage 1',stage2:'stage 2',push:'push',pull:'pull',ccw:'ccw',cw:'cw',mid:'mid'};
   state.boxes.forEach((b,i)=>{
     const rows=b.rows||[], chrome=!b.no_chrome;
     const headerH=chrome&&b.label?Math.min(40,b.box_wh[1]/4)*scale:0;

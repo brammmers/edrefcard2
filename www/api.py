@@ -109,20 +109,23 @@ def generate_api():
 
         from web import generate_legacy_images, render_data_driven
 
+        # Data-driven controllers (from controller_mappings), same path as the
+        # web UI: first, so that a published mapping replaces a legacy template.
+        dd_created, handled_dd = [], set()
+        try:
+            dd_created, handled_dd = render_data_driven(physical_keys, modifiers, devices,
+                                                        config, True, styling, errors)
+        except Exception as e:
+            logError(f'API data-driven render failed for {run_id}: {e}')
+
         created_images, unsupported_devices = generate_legacy_images(
             physical_keys, modifiers, devices, config, True, styling,
-            errors.misconfigurationWarnings)
+            errors.misconfigurationWarnings, handled_dd)
 
         if devices.get('Keyboard::0') is not None:
             appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, True)
 
-        # Data-driven controllers (from controller_mappings), same path as the web UI.
-        try:
-            dd_created, _handled = render_data_driven(physical_keys, modifiers, devices,
-                                                      config, True, styling, errors)
-            created_images.extend(dd_created)
-        except Exception as e:
-            logError(f'API data-driven render failed for {run_id}: {e}')
+        created_images.extend(dd_created)
 
         # 4. Save Metadata to SQLite database (no longer using .replay pickle files)
         
