@@ -334,6 +334,12 @@ APP_PROBE = textwrap.dedent('''
                           legacy_get.status_code, legacy_get.headers.get('Location'),
                           client.get('/scripts/parser.py').status_code]
 
+    # --- admin dashboard: cards per day chart, period picked from an allow-list
+    pages = [client.get('/admin/?days=%s' % d, headers=headers) for d in ('30', '365', 'abc')]
+    out['dashboard'] = [[p.status_code, p.get_data(as_text=True).count('class="day'),
+                         'aria-current="page">%s days' % d in p.get_data(as_text=True)]
+                        for p, d in zip(pages, ('30', '365', '90'))]
+
     print('PROBE=' + json.dumps(out))
 ''')
 
@@ -480,6 +486,9 @@ class AppRegressionTests(unittest.TestCase):
         self.assertEqual(get_status, 301)
         self.assertTrue(get_to.endswith('/'), get_to)
         self.assertEqual(python_source, 404)
+
+    def test_dashboard_draws_one_bar_slot_per_day(self):
+        self.assertEqual(self.out['dashboard'], [[200, 30, True], [200, 365, True], [200, 90, True]])
 
 
 @unittest.skipUnless(all(importlib.util.find_spec(name) for name in APP_DEPENDENCIES),

@@ -27,6 +27,70 @@
     </div>
 </div>
 
+<div class="card activity">
+    <div class="card-header activity-header">
+        <h2>Cards created per day</h2>
+        <nav class="activity-ranges" aria-label="Period">
+            {% for r in ranges %}
+            <a href="{{ url_for('admin.dashboard', days=r) }}"{% if r == days %} class="active" aria-current="page"{% endif %}>{{ r }} days</a>
+            {% endfor %}
+        </nav>
+    </div>
+    <p class="activity-summary">
+        <strong>{{ chart.total }}</strong> cards over {{ days }} days
+        · <strong>{{ '%.1f' % chart.mean }}</strong> per day on average
+        {% if chart.best %}· best day <strong>{{ chart.best[1] }}</strong> on {{ chart.best[0].strftime('%d %b %Y') }}{% endif %}
+        · <strong>{{ chart.today }}</strong> today so far
+    </p>
+    <div class="activity-legend">
+        <span><i class="key-bar"></i>Cards per day (UTC)</span>
+        <span><i class="key-line"></i>7-day average</span>
+    </div>
+    <svg class="activity-chart" viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="img"
+         aria-label="Cards created per day over the last {{ days }} days: {{ chart.total }} in total">
+        {% for g in chart.grid %}
+        <line x1="{{ chart.left }}" x2="{{ chart.right }}" y1="{{ g.y }}" y2="{{ g.y }}" class="{{ 'axis' if loop.first else 'grid' }}"/>
+        <text x="{{ chart.left - 8 }}" y="{{ g.y + 4 }}" text-anchor="end" class="tick">{{ g.label }}</text>
+        {% endfor %}
+        {% for t in chart.ticks %}
+        <text x="{{ t.x }}" y="{{ chart.baseline + 20 }}" text-anchor="middle" class="tick">{{ t.label }}</text>
+        {% endfor %}
+        {% for b in chart.bars %}
+        <g class="day{{ ' partial' if b.partial }}">
+            <title>{{ b.title }}</title>
+            <rect x="{{ b.hit_x }}" y="0" width="{{ b.hit_w }}" height="{{ chart.baseline }}" class="hit"/>
+            {% if b.path %}<path d="{{ b.path }}" class="bar"/>{% endif %}
+        </g>
+        {% endfor %}
+        {% if chart.line %}<path d="{{ chart.line }}" class="average"/>{% endif %}
+    </svg>
+</div>
+
+<style>
+    .activity-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .activity-ranges { display: flex; gap: 0.25rem; }
+    .activity-ranges a { padding: 0.25rem 0.75rem; border: 1px solid var(--border-color); border-radius: 6px;
+        color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; }
+    .activity-ranges a.active { color: var(--bg-primary); background: var(--ed-orange); border-color: var(--ed-orange); }
+    .activity-summary { color: var(--text-secondary); margin: 0 0 0.75rem; }
+    .activity-summary strong { color: var(--text-primary); }
+    .activity-legend { display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .activity-legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
+    .activity-legend .key-bar { width: 12px; height: 12px; border-radius: 3px; background: #d9770b; }
+    .activity-legend .key-line { width: 18px; height: 2px; background: var(--text-primary); }
+    .activity-chart { width: 100%; height: auto; display: block; }
+    .activity-chart .grid { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1; }
+    .activity-chart .axis { stroke: rgba(255, 255, 255, 0.25); stroke-width: 1; }
+    .activity-chart .tick { fill: var(--text-muted); font-size: 13px; }
+    .activity-chart .bar { fill: #d9770b; }
+    .activity-chart .partial .bar { fill: #d9770b; opacity: 0.45; }
+    .activity-chart .hit { fill: transparent; }
+    .activity-chart .day:hover .hit { fill: rgba(255, 255, 255, 0.06); }
+    .activity-chart .day:hover .bar { fill: var(--ed-orange-light); }
+    .activity-chart .average { fill: none; stroke: var(--text-primary); stroke-width: 2;
+        stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
+</style>
+
 <div class="card">
     <div class="card-header">
         <h2>🔥 Most Popular Controllers</h2>

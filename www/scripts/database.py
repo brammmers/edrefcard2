@@ -453,6 +453,26 @@ def get_configuration_stats():
             'popular_devices': [dict(d) for d in popular_devices]
         }
 
+def get_daily_creations(days, today=None):
+    """Cards created per UTC day over the last `days` days, today included.
+
+    Returns [(date, count)] oldest first, with a 0 for each day without a card.
+    """
+    import datetime
+    today = today or datetime.datetime.now(datetime.timezone.utc).date()
+    start = today - datetime.timedelta(days=days - 1)
+    with get_db() as conn:
+        rows = conn.execute("""
+            SELECT DATE(created_at) AS day, COUNT(*) AS count
+            FROM configurations
+            WHERE DATE(created_at) BETWEEN ? AND ?
+            GROUP BY DATE(created_at)
+        """, (start.isoformat(), today.isoformat())).fetchall()
+    counts = {row['day']: row['count'] for row in rows}
+    return [(day, counts.get(day.isoformat(), 0))
+            for day in (start + datetime.timedelta(days=i) for i in range(days))]
+
+
 def get_device_counts(public_only=False):
     """Get count of configurations for each device type.
     
