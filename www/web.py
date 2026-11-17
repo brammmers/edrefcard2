@@ -79,6 +79,11 @@ def render_data_driven(physical_keys, modifiers, devices, config, public, stylin
         m = index.get(dev_id.upper())
         if not m:
             continue
+        # Same hardware in another mode: VKB's "virtual controllers" split the
+        # S-TECS over two device instances with their own numbering, which the
+        # legacy VC1/VC2 templates already cover. Leave those cards to them.
+        if any(f'{dev_id}::{i}' in devices for i in m.get('legacy_when_index_present') or []):
+            continue
         try:
             createDataDrivenImage(m, config, public, physicalKeys=physical_keys,
                                   modifiers=modifiers, styling=styling,
@@ -213,9 +218,10 @@ def _store_render_cache(config, signature, result):
 
 
 def generate_legacy_images(physical_keys, modifiers, devices, config, public,
-                           styling, misconfiguration_warnings):
+                           styling, misconfiguration_warnings, skip_device_keys=()):
     """Render the legacy template-based cards for every supported device
-    present in the parsed bindings.
+    present in the parsed bindings, except the device keys already drawn from
+    a published controller mapping (skip_device_keys): the mapping wins.
 
     Shared by web.generate, web.show_binds and the API (was duplicated 3x).
     Returns (created_images, unsupported_devices): created_images entries are
@@ -244,7 +250,7 @@ def generate_legacy_images(physical_keys, modifiers, devices, config, public,
                         device_key = f'{handled_device}::{device_index}'
                         break
 
-            if not handled or device_key in already_handled_devices:
+            if not handled or device_key in already_handled_devices or device_key in skip_device_keys:
                 continue
 
             try:
@@ -387,9 +393,16 @@ def generate():
     try:
         (physical_keys, modifiers, devices) = parseBindings(run_id, xml, display_groups, errors)
 
+        # Data-driven controllers (from controller_mappings) - rendered from the
+        # clean image + box layout, filled with this config's real bindings.
+        # First, so that a published mapping replaces a legacy template.
+        dd_created, handled_dd = render_data_driven(physical_keys, modifiers, devices,
+                                                    config, public, styling, errors)
+        data_driven_images.extend(dd_created)
+
         created_images, unsupported_devices = generate_legacy_images(
             physical_keys, modifiers, devices, config, public, styling,
-            errors.misconfigurationWarnings)
+            errors.misconfigurationWarnings, handled_dd)
 
         if devices.get('Keyboard::0') is not None:
             layout = _VISUAL_KEYBOARD_LAYOUTS.get(keyboard_display)
@@ -404,12 +417,6 @@ def generate():
                     appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, public)
             else:
                 appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, public)
-
-        # Data-driven controllers (from controller_mappings) - rendered from the
-        # clean image + box layout, filled with this config's real bindings.
-        dd_created, handled_dd = render_data_driven(physical_keys, modifiers, devices,
-                                                    config, public, styling, errors)
-        data_driven_images.extend(dd_created)
 
     except RuntimeError as e:
         logError(f'Runtime error in generation for {run_id}: {e}\n')
@@ -684,9 +691,14 @@ def show_binds(run_id):
             _drop_rendered_images(config)
             (physical_keys, modifiers, devices) = parseBindings(run_id, xml, display_groups, errors)
 
+            # Data-driven controllers first (same order and reason as generate())
+            dd_created, handled_dd = render_data_driven(physical_keys, modifiers, devices,
+                                                        config, True, styling, errors)
+            data_driven_images.extend(dd_created)
+
             created_images, unsupported_devices = generate_legacy_images(
                 physical_keys, modifiers, devices, config, True, styling,
-                errors.misconfigurationWarnings)
+                errors.misconfigurationWarnings, handled_dd)
 
             if devices.get('Keyboard::0') is not None:
                 keyboard_display = db_config.get('keyboard_display', 'text') if db_config else 'text'
@@ -702,10 +714,6 @@ def show_binds(run_id):
                 else:
                     appendKeyboardImage(created_images, physical_keys, modifiers, display_groups, run_id, True)
 
-            # Data-driven controllers (from controller_mappings), same path as generate()
-            dd_created, handled_dd = render_data_driven(physical_keys, modifiers, devices,
-                                                        config, True, styling, errors)
-            data_driven_images.extend(dd_created)
             rendered = True
 
         else:
