@@ -80,7 +80,7 @@ class RenderingSafetyTests(unittest.TestCase):
             return []
         style = {'Font': 'test-font', 'Color': 'green'}
         self.env = functions('www/scripts/renderer.py',
-                             ['_drawDataDrivenBox', '_drawControlSymbol', '_symbolColumnWidth',
+                             ['_drawDataDrivenBox', '_drawControlSymbol', '_symbolColumnWidth', '_numberColumnWidth',
                               '_buildJoyTexts', '_dataDrivenRowHeights',
                               'calculateBestFitFontSize', 'calculateBestFontSize'], {
             'math': math, 'Image': ImageProbe, 'Color': lambda c: c,
@@ -123,6 +123,16 @@ class RenderingSafetyTests(unittest.TestCase):
         self.assertEqual(context.lines, [(p,'white',13) for p in route] +
                          [(p,'#962320',7) for p in route])
         self.assertEqual(context.circles[0][0][0], (800,500))
+
+    def test_long_number_label_widens_its_column_instead_of_touching_the_text(self):
+        boxes = {}
+        for number in ('27', 'M2 27'):
+            self.rectangles.clear()
+            row = {'symbol':'up','number':number,'_texts':[{'Text':'Thrust Up'}]}
+            self.env['_drawDataDrivenBox'](DrawingProbe(), None, {
+                'label':'Hat','box_xy':[0,0],'box_wh':[900,100],'rows':[row]})
+            boxes[number] = self.rectangles[0]['x']
+        self.assertEqual(boxes['M2 27'] - boxes['27'], 28)
 
     def test_compact_leader_starts_at_actual_frame_not_reserved_height(self):
         context = DrawingProbe()

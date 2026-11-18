@@ -1372,6 +1372,12 @@ def _symbolColumnWidth(symbol):
     return 70 if len(g) == 3 else 44
 
 
+def _numberColumnWidth(number):
+    """Width reserved for the number column: 56 px fits three digits, a longer
+    label such as a mode prefix ('M2 27') gets 14 px per extra character."""
+    return 56 + 14 * max(0, len(str(number)) - 3)
+
+
 def _drawControlSymbol(context, x, y_center, symbol, scale=1):
     """Render the legacy text glyph for a control, vertically centred on y_center."""
     g = _SYMBOL_GLYPHS.get(symbol or '')
@@ -1406,7 +1412,7 @@ def _dataDrivenRowHeights(context, sourceImg, rows, width, available_height, big
                 scale = min(1, width / 400)
                 gutters = 16 + (_symbolColumnWidth(row.get('symbol')) if row.get('symbol') else 0)
                 if row.get('number') is not None:
-                    gutters += 56
+                    gutters += _numberColumnWidth(row['number'])
                 text_width = width - gutters * scale - 2 * min(10, width * 0.04)
                 if text_width <= 0:
                     raise ValueError('Controller row must have a positive text width.')
@@ -1541,7 +1547,7 @@ def _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling='Gro
             context.font_size = max(1, 24 * gutter_scale)
             context.text(x=int(col_x), y=int(row_cy + 8 * gutter_scale), body=str(row['number']))
             context.pop()
-            col_x += 56 * gutter_scale
+            col_x += _numberColumnWidth(row['number']) * gutter_scale
         # Binding text (pre-resolved by createDataDrivenImage), reusing layoutText fitting
         texts = row.get('_texts') or []
         if texts:
