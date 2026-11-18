@@ -1,5 +1,73 @@
 # Change Log
 
+## Unreleased (January to November 2026)
+
+Everything merged into `main` since 2.2.0. Since 16 November 2026 this code serves
+[edrefcard.info](https://edrefcard.info/).
+
+### Controller mappings (new controllers without code changes)
+* **Data-driven cards**: a controller's card can now be described as data (photo, boxes, rows, leader lines)
+  stored in the database, instead of coordinates hard-coded in `bindingsData.py`. Unused boxes and rows are
+  hidden for each player. A published mapping takes over the legacy template of the same controller.
+* **Mapping Editor** (`/admin/mapping-editor`): click-to-place boxes on a product photo, stamps (button, hats
+  with or without push, POV, 2-stage trigger, stick, axis) with auto-incremented `Joy_N`, automatic arrangement
+  in two columns, multi-select, alignment and spacing tools, snapping guides, draggable anchors, optional leader
+  detour, movable title and URL, JSON import and export, undo and redo, live checks, and a preview rendered with
+  any saved player profile, with a coverage report.
+* **Manufacturer sheets**: import of Virpil fillable PDFs and VKB worksheets, with a review of the declared
+  inputs before they are kept.
+* **Controllers page** (`/admin/controllers`): queue of the unknown hardware IDs seen in real uploads, with a
+  scaffold pre-filled from a real `.binds` or a blank scaffold from button, POV and axis counts; attachment of a
+  variant ID to a known controller; duplication with an optional mirror for left and right variants.
+* **Mapper accounts and review**: `admin` and `mapper` roles with session login (`/admin/users`); every save is
+  a draft, an admin reviews the changes with layout previews and publishes; full version history with rollback,
+  audit trail, concurrent-edit protection, recovery of unsaved work, Discord notifications.
+* **Photo-less cards**: a controller without a mapping or a template gets a text card listing its bindings by
+  group instead of an error.
+* The public `/devices` page lists the published mappings, and the mapper guide is available in the panel
+  (`/admin/help`) and in [CONTROLLER_MAPPING_GUIDE.md](CONTROLLER_MAPPING_GUIDE.md).
+
+### Cards and site
+* **Keyboard**: visual keyboard cards (US ANSI 104 and French AZERTY ISO 105) next to the text list; the text
+  card now shrinks until every column fits, with plain-text key labels.
+* **Controls**: Camera and Settlement categories.
+* **Unlisted cards**: uploaders can keep a card out of the public catalogue; it stays reachable by its link.
+* **Catalogue** (`/list`): free-text search, pagination, device filters with consistent counts.
+* **Privacy policy and legal notice** (`/privacy`).
+* **Render cache**: generated cards are reused until the code or the card's data changes; stale images and PDFs
+  are dropped before a card is drawn again.
+* Same-named uploads no longer overwrite an existing card.
+* Several legacy cards fixed (Thrustmaster TCA left sidestick, Cougar throttle radio buttons) and 21 phantom
+  device entries removed.
+
+### Moving edrefcard.info to this code
+* `flask import-live` brings the original site's cards over with their six-letter IDs, title and date, so old
+  links keep working; untitled cards come over as unlisted.
+* Uploads still sent to the original `scripts/bindings.py` address reach `/generate`.
+* `CANONICAL_URL` and `REDIRECT_HOSTS`: 301 redirects from the site's former host names, path kept.
+
+### Admin and operations
+* **Backups**: scheduled local and SFTP backups with retention, restore from a local, SFTP or uploaded archive,
+  hourly health check, Discord notifications labelled per environment (`BACKUP_ENV_LABEL`), maintenance mode.
+  Controller mappings and their images are part of the backup.
+* **Dashboard**: cards created per day (30, 90 or 365 days, with a 7-day average), per month, and top 5
+  controllers.
+* `flask rebuild-db` rebuilds the database from the `.binds` files on disk.
+* `ACCESS_TOKEN` puts a staging site behind an access code.
+* Gunicorn workers are recycled to cap memory growth.
+
+### Security
+* Database, logs and source code are no longer reachable through the static routes.
+* Restore hardened against path traversal in archives; SFTP host keys pinned; SSRF guards on SFTP and Discord
+  settings.
+* Same-origin CSRF guard on the admin panel, constant-time credential checks, login rate limiting, hardened
+  session cookies revalidated on each request.
+* Escaped error pages, scoped configuration deletion, configurable trusted proxy hops (`TRUSTED_PROXY_HOPS`).
+
+### Development
+* CI gates releases on real card rendering and on the mapper workflow.
+* Legacy CGI `bindings.py` monolith removed; a single generation loop for legacy cards.
+
 ## 2.2.0 (2026-01-18)
 ### Features
 * **Friendly URLs**: Configurations now use the upload filename as ID (slugified) instead of random strings.
@@ -13,6 +81,7 @@
 * **Legacy Code Removal**: Completely removed obsolete pickle migration logic (auto-migration, CLI commands, and admin buttons).
 * **Code Quality**: Unified ID generation logic and improved error handling in the renderer.
 
+## 2.0.1 (2025-12-31)
 ### Bug Fixes
 * **Template Error**: Fixed Jinja2 TemplateSyntaxError in `refcard.html` that caused 500 errors on configuration pages
 * **Data Migration**: Fixed auto-migration to handle partial database states (88 configs successfully restored)
