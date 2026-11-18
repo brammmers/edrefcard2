@@ -2,177 +2,177 @@
 
 {% block title %}EDRefCard - Elite: Dangerous Reference Card Generator{% endblock %}
 
+{% block styles %}
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,100..125,500..900;1,100..125,500..900&family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('web.serve_static', filename='home.css') }}">
+{% endblock %}
+
+{% block body_attrs %} class="home"{% endblock %}
+
+{% macro fmt(n) %}{{ "{:,}".format(n) }}{% endmacro %}
+{% macro day(d) %}{% if d %}{{ d.day }} {{ d.strftime('%b %Y') }}{% endif %}{% endmacro %}
+
 {% block content %}
-<div id="container">
-    <div id="banner">
-        <h1>EDRefCard</h1>
-        <p class="text-muted">Generate printable reference cards for your Elite: Dangerous bindings</p>
-    </div>
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="{{ url_for('web.index') }}">
+      <!-- mark: a stick seen from above inside targeting brackets -->
+      <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 9V2h7M21 2h7v7M28 21v7h-7M9 28H2v-7"/><circle cx="15" cy="15" r="5"/><path d="M15 6v4M15 20v4"/></svg>
+      EDRefCard
+    </a>
+    <nav class="tabs" aria-label="Main">
+      <a class="on" href="{{ url_for('web.index') }}" aria-current="page">Generate</a>
+      <a href="{{ url_for('web.list_configs') }}">Published cards</a>
+      <a href="{{ url_for('web.list_devices') }}">Supported devices</a>
+      <a href="{{ url_for('web.stats') }}">Stats</a>
+    </nav>
+    <details class="menu">
+      <summary>Menu</summary>
+      <nav aria-label="Main">
+        <a href="{{ url_for('web.list_configs') }}">Published cards</a>
+        <a href="{{ url_for('web.list_devices') }}">Supported devices</a>
+        <a href="{{ url_for('web.stats') }}">Stats</a>
+      </nav>
+    </details>
+  </header>
 
-    <div id="content">
-        <!-- Navigation Links -->
-        <div class="nav-links">
-            <a href="{{ url_for('web.list_configs') }}" class="nav-link">View published bindings</a>
-            <a href="{{ url_for('web.list_devices') }}" class="nav-link">Supported devices</a>
+  <!-- canopy: official game image (Type-11 Prospector, Frontier press kit) -->
+  <section class="canopy cham" aria-label="Introduction">
+    <div class="in" style="--hero: url('{{ url_for('web.serve_static', filename='static/images/ed-type11-prospector.jpg') }}')">
+      <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+      <div class="hero-txt">
+        <h1>Every binding.<br><em>One printed sheet.</em></h1>
+        <p>Upload your Elite: Dangerous <b>.binds</b> file and get a reference card for each of your controllers, ready to print and pin next to your HOTAS.</p>
+      </div>
+      {% if home.total is not none %}
+      <dl class="readouts">
+        <div><dt>cards generated</dt><dd>{{ fmt(home.total) }}</dd></div>
+        <div><dt>shared by CMDRs</dt><dd>{{ fmt(home.public) }}</dd></div>
+        <div><dt>controllers</dt><dd>{{ home.controllers }}</dd></div>
+      </dl>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- the form, split into three panels like the cockpit's side panels -->
+  <form id="uploadbindings" class="console" enctype="multipart/form-data" method="post"
+        action="{{ url_for('web.generate') }}" accept-charset="utf-8">
+    <div class="panel p-left cham"><div class="in">
+      <h2><span class="n">01</span>Load your bindings</h2>
+      <p class="sub">Your custom <b>.binds</b> file, straight from the game folder.</p>
+      <div class="drop-wrap">
+        <label for="fileupload" class="drop cham" id="dropZone">
+          <span class="in"></span>
+          <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+          <svg class="ret" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="32" cy="32" r="22"/><circle cx="32" cy="32" r="3" fill="currentColor"/><path d="M32 4v12M32 48v12M4 32h12M48 32h12"/></svg>
+          <span class="file-upload-text"><strong>Drop your .binds file</strong><span>or click to browse</span></span>
+        </label>
+        <input id="fileupload" name="bindings" type="file" accept=".binds" required>
+      </div>
+      <p class="path">Found in <code>%LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings</code></p>
+    </div></div>
+
+    <div class="panel cham"><div class="in">
+      <h2><span class="n">02</span>Choose what goes on the card</h2>
+      <p class="sub">All 13 categories are on by default.</p>
+      <fieldset class="sw">
+        <legend class="sr-only">Control categories</legend>
+        <label><input type="checkbox" checked name="showship" value="on">Ship</label>
+        <label><input type="checkbox" checked name="showsrv" value="on">SRV</label>
+        <label><input type="checkbox" checked name="showscanners" value="on">Scanners</label>
+        <label><input type="checkbox" checked name="showfighter" value="on">Fighter</label>
+        <label><input type="checkbox" checked name="showonfoot" value="on">On foot</label>
+        <label><input type="checkbox" checked name="showmulticrew" value="on">Multicrew</label>
+        <label><input type="checkbox" checked name="showheadlook" value="on">Head look</label>
+        <label><input type="checkbox" checked name="showui" value="on">UI</label>
+        <label><input type="checkbox" checked name="showgalaxymap" value="on">Galaxy map</label>
+        <label><input type="checkbox" checked name="showcamera" value="on">Camera</label>
+        <label><input type="checkbox" checked name="showsettlement" value="on">Settlement</label>
+        <label><input type="checkbox" checked name="showcommandercreator" value="on">Holo-Me</label>
+        <label><input type="checkbox" checked name="showmisc" value="on">Misc</label>
+      </fieldset>
+    </div></div>
+
+    <div class="panel p-right cham"><div class="in">
+      <h2><span class="n">03</span>Set up the print</h2>
+      <fieldset class="opt" style="margin-top:14px">
+        <legend>Colour coding</legend>
+        <div class="seg">
+          <label><input type="radio" name="styling" value="modifier" checked>By modifier</label>
+          <label><input type="radio" name="styling" value="group">By type</label>
+          <label><input type="radio" name="styling" value="none">None</label>
         </div>
+      </fieldset>
+      <fieldset class="opt">
+        <legend>Keyboard</legend>
+        <div class="seg">
+          <label><input type="radio" name="keyboard_display" value="text" checked>Text list</label>
+          <label title="Visual ANSI 104 keyboard, QWERTY key labels"><input type="radio" name="keyboard_display" value="visual-ansi">QWERTY</label>
+          <label title="Visual ISO 105 keyboard, AZERTY key labels"><input type="radio" name="keyboard_display" value="visual-iso-azerty">AZERTY</label>
+        </div>
+        <p class="hint">Text list works with every layout. QWERTZ is not available yet.</p>
+      </fieldset>
+      <div class="opt">
+        <label class="lbl" for="description">Card title</label>
+        <input class="field" id="description" type="text" name="description" placeholder="e.g. My HOTAS setup for combat" maxlength="190">
+      </div>
+      <label class="pub"><input type="checkbox" name="public" checked><span>List it in the public catalogue so other CMDRs can borrow ideas. Untick to keep it unlisted: only people with the link will see it. Titles are curated.</span></label>
+      <button type="submit" class="go">
+        <svg width="20" height="20" viewBox="0 0 15 15" aria-hidden="true"><path fill="none" stroke="currentColor" d="M3.5 12.5h-2a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-2m-8-6v-5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v5m-8 4h8v4h-8z"/></svg>
+        Generate my cards
+      </button>
+    </div></div>
+  </form>
 
-        <form id="uploadbindings" enctype="multipart/form-data" method="post" action="{{ url_for('web.generate') }}"
-            accept-charset="utf-8">
-
-            <!-- File Upload Section -->
-            <div class="form-section">
-                <h3>📂 Choose a bindings file</h3>
-                <p>Your custom bindings files reside as <code>.binds</code> files in your local data directory:</p>
-                <p class="text-muted" style="font-size: 0.9rem;">
-                    <code>%LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings</code>
-                </p>
-
-                <div class="file-upload-wrapper">
-                    <label for="fileupload" class="file-upload" id="dropZone">
-                        <div class="file-upload-icon">📁</div>
-                        <div class="file-upload-text">
-                            <strong>Click to select a file</strong><br>
-                            or drag and drop your .binds file here
-                        </div>
-                    </label>
-                    <input id="fileupload" name="bindings" type="file" accept=".binds" required>
-                </div>
-            </div>
-
-            <!-- Filtering Section -->
-            <div class="form-section">
-                <h3>🎮 Control Categories</h3>
-                <p>Select which categories to include on your reference card:</p>
-
-                <div class="checkbox-grid">
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showship" value="on">
-                        <span>🚀 Ship</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showsrv" value="on">
-                        <span>🚗 SRV</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showscanners" value="on">
-                        <span>📡 Scanners</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showfighter" value="on">
-                        <span>✈️ Fighter</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showonfoot" value="on">
-                        <span>🚶 On Foot</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showmulticrew" value="on">
-                        <span>👥 Multicrew</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showheadlook" value="on">
-                        <span>👀 Head Look</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showui" value="on">
-                        <span>📱 UI</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showgalaxymap" value="on">
-                        <span>🗺️ Galaxy Map</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showcamera" value="on">
-                        <span>📷 Camera</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showsettlement" value="on">
-                        <span>🏘️ Settlement</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showcommandercreator" value="on">
-                        <span>👤 Holo-Me</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked name="showmisc" value="on">
-                        <span>⚙️ Misc</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Color Options Section -->
-            <div class="form-section">
-                <h3>🎨 Color Scheme</h3>
-                <p>Choose how to highlight your controls:</p>
-
-                <div class="radio-group">
-                    <label class="radio-item">
-                        <input type="radio" checked name="styling" value="modifier">
-                        <span>Color by Modifier</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="styling" value="group">
-                        <span>Color by Type</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="styling" value="none">
-                        <span>No Colors</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Keyboard Display Section -->
-            <div class="form-section">
-                <h3>⌨️ Keyboard Display</h3>
-                <p>Choose how to display your keyboard bindings:</p>
-
-                <div class="radio-group">
-                    <label class="radio-item">
-                        <input type="radio" name="keyboard_display" value="text" checked>
-                        <span>📄 Text List (Recommended for all layouts)</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="keyboard_display" value="visual-ansi">
-                        <span>🎹 Visual ANSI 104 (QWERTY key labels)</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="keyboard_display" value="visual-iso-azerty">
-                        <span>🎹 Visual ISO 105 (AZERTY key labels)</span>
-                    </label>
-                </div>
-
-                <p class="text-muted mt-1" style="font-size: 0.85rem;">
-                    💡 Pick the visual keyboard matching your OS layout.
-                    QWERTZ layout not available yet: use Text List for now.
-                </p>
-            </div>
-
-            <!-- Sharing Section -->
-            <div class="form-section">
-                <h3>📤 Sharing</h3>
-                <p>Card title (optional):</p>
-
-                <input type="text" name="description" placeholder="e.g., My HOTAS setup for combat..." maxlength="190">
-
-                <label style="display:flex;gap:0.5rem;align-items:flex-start;margin-top:0.75rem;cursor:pointer">
-                    <input type="checkbox" name="public" checked style="margin-top:0.2rem">
-                    <span>List this card in the public catalogue, so other CMDRs can browse it for
-                        binding ideas. Untick to keep it <strong>unlisted</strong>: only people with
-                        the link will be able to view it.</span>
-                </label>
-
-                <p class="text-muted mt-1" style="font-size: 0.85rem;">
-                    Titles are curated. Offensive or spammy content will be removed.
-                </p>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn-primary">
-                🚀 Generate Reference Card
-            </button>
-        </form>
+  {% if home.cards or home.rows %}
+  <section class="sec" aria-labelledby="latest">
+    <div class="sec-h">
+      <h2 id="latest"><svg viewBox="0 0 15 15" aria-hidden="true"><path fill="none" stroke="currentColor" d="M4 7.5h11m-15 0h2m2-4h11m-15 0h2m2 8h11m-15 0h2"/></svg>Fresh from the catalogue</h2>
+      <a href="{{ url_for('web.list_configs') }}">Browse {% if home.public %}{{ fmt(home.public) }} {% endif %}cards <svg width="16" height="16" viewBox="0 0 15 15" aria-hidden="true"><path fill="none" stroke="currentColor" d="m13.5 7.5l-4-4m4 4l-4 4m4-4H1"/></svg></a>
     </div>
+    {% if home.cards %}
+    <div class="cards">
+      {% for c in home.cards %}
+      <article class="card cham"><div class="in">
+        <a href="{{ c.url }}">
+          <div class="shot"><img src="{{ c.thumb }}" alt="" loading="lazy" width="720" height="504"></div>
+          <div class="meta"><h3>{{ c.title }}</h3><p>{{ c.devices }}</p></div>
+        </a>
+      </div></article>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if home.rows %}
+    <div class="contacts">
+      {% for r in home.rows %}
+      <a href="{{ r.url }}"><i></i><b>{{ r.title }}</b><span>{{ r.devices }}</span><time{% if r.date %} datetime="{{ r.date.strftime('%Y-%m-%d') }}"{% endif %}>{{ day(r.date) }}</time></a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section class="devices" aria-label="Supported controllers">
+    <p class="big">{{ home.controllers }}<small>controllers mapped, button by button</small></p>
+    <div>
+      <ul class="dev-list">
+        {% set shown = namespace(names=[]) %}
+        {% for name in home.community[:8] %}{% set shown.names = shown.names + [name] %}<li class="new">{{ name }}</li>{% endfor %}
+        {% for name in home.popular if name not in shown.names %}{% if loop.index <= 16 - shown.names|length %}<li>{{ name }}</li>{% endif %}{% endfor %}
+      </ul>
+      <p class="note">{% if home.community %}Cyan: mapped by the community. {% endif %}Missing your stick? <a href="https://forums.frontier.co.uk/threads/627609/">Tell us on the forum thread.</a> <a href="{{ url_for('web.list_devices') }}">See all supported devices.</a></p>
+    </div>
+  </section>
 </div>
+{% endblock %}
+
+{% block footer %}
+<footer class="home-footer">
+  <div class="wrap">
+    <p>EDRefCard {{ version }} · open source, run by CMDRs for CMDRs<br>Elite Dangerous © Frontier Developments plc. Game imagery used for non-commercial purposes.</p>
+    <p><a href="https://forums.frontier.co.uk/threads/627609/">Forum thread</a> · <a href="{{ url_for('web.privacy') }}">Privacy &amp; legal notice</a> · <a href="https://github.com/brammmers/edrefcard2">GitHub</a></p>
+  </div>
+</footer>
 {% endblock %}
 
 {% block scripts %}

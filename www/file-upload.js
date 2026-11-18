@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropZone.classList.add('error');
         const textElement = dropZone.querySelector('.file-upload-text');
         if (textElement) {
-            textElement.innerHTML = `<div class="error-message">❌ ${message}</div>`;
+            textElement.innerHTML = `<div class="error-message">${message}</div>`;
         }
         // Hide preview if exists
         if (previewContainer) previewContainer.style.display = 'none';
@@ -113,7 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateFileLabel(filename) {
         const textElement = dropZone.querySelector('.file-upload-text');
         if (textElement) {
-            textElement.innerHTML = `<strong>Selected:</strong> ${filename}`;
+            // textContent: the file name comes from the user's disk, never as HTML
+            const title = document.createElement('strong');
+            title.textContent = 'Ready to upload';
+            const name = document.createElement('span');
+            name.textContent = filename;
+            textElement.replaceChildren(title, name);
         }
     }
 
@@ -156,13 +161,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         previewEl.innerHTML = `
             <div class="preview-badge">
-                <span class="preview-icon">✨</span>
                 <div class="preview-info">
                     <span class="preview-title">Preset detected</span>
-                    <span class="preview-value">${presetName} (v${version})</span>
+                    <span class="preview-value"></span>
                 </div>
             </div>
         `;
+        // the preset name is read from the file: insert it as text
+        previewEl.querySelector('.preview-value').textContent = `${presetName} (v${version})`;
         previewEl.style.display = 'block';
     }
 });

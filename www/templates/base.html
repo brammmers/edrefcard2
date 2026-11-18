@@ -12,19 +12,22 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {% block styles %}
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('web.serve_css') }}">
+  {% endblock %}
 
   {% block head %}{% endblock %}
 </head>
 
-<body>
+<body{% block body_attrs %}{% endblock %}>
   <main>
     {% block content %}{% endblock %}
   </main>
 
+  {% block footer %}
   <footer class="site-footer">
     <div class="footer-content">
       <p>
@@ -35,6 +38,7 @@
       <p><a href="/">← Home</a> | <a href="{{ url_for('web.privacy') }}">Privacy Policy & Legal Notice</a></p>
     </div>
   </footer>
+  {% endblock %}
 
   {% block scripts %}{% endblock %}
 </body>
