@@ -302,10 +302,31 @@ def _home_card_images(run_id):
     return sorted(images, key=lambda p: (p.name.endswith('keyboard.jpg'), p.name))
 
 
-def _home_devices_label(device_names):
-    names = [d.strip() for d in (device_names or '').split(',') if d.strip()]
-    names.sort(key=lambda d: (d.lower() == 'keyboard', d.lower()))
-    return ', '.join(names) if names else 'Unknown'
+def _home_readable(key):
+    """'SaitekX56' -> 'Saitek X56', 'VKB-Gladiator-NXT-Premium-Right' -> 'VKB Gladiator NXT Premium Right'."""
+    import re
+    return re.sub(r'(?<=[a-z])(?=[A-Z0-9])|(?<=[0-9])(?=[A-Z][a-z])', ' ', key).replace('-', ' ')
+
+
+def _home_device_names(community_rows):
+    """Template name (as stored with each card) -> name shown on the home."""
+    names = {}
+    for key, info in supportedDevices.items():
+        names.setdefault(info.get('Template', key), _home_readable(key))
+    for row in community_rows:
+        if row.get('template_name') and row.get('device_name'):
+            names[row['template_name']] = row['device_name']
+    return names
+
+
+def _home_devices_label(device_names, names):
+    shown = []
+    for d in (device_names or '').split(','):
+        d = d.strip()
+        if d and names.get(d, d) not in shown:
+            shown.append(names.get(d, d))
+    shown.sort(key=lambda d: (d.lower() == 'keyboard', d.lower()))
+    return ', '.join(shown) if shown else 'Unknown'
 
 
 def _home_date(created_at):
@@ -328,30 +349,34 @@ def _home_data():
     from scripts.database import get_configuration_stats
     data = {'total': None, 'public': None, 'controllers': None,
             'cards': [], 'rows': [], 'community': [], 'popular': []}
-    try:
-        stats = get_configuration_stats()
-        data['total'] = stats.get('total_configurations')
-        data['public'] = stats.get('public_configurations')
-        data['popular'] = [row['device_display_name'] for row in stats.get('popular_devices', [])
-                           if row['device_display_name'].lower() != 'keyboard']
-    except Exception as e:
-        logError(f'home: cannot load stats: {e}\n')
-
+    community = []
     try:
         community = sorted(database.get_published_controller_mappings(),
                            key=lambda r: str(r.get('updated_at') or ''), reverse=True)
         data['community'] = [r['device_name'] for r in community if r.get('device_name')]
     except Exception as e:
         logError(f'home: cannot load community mappings: {e}\n')
+    names = _home_device_names(community)
+
+    try:
+        stats = get_configuration_stats()
+        data['total'] = stats.get('total_configurations')
+        data['public'] = stats.get('public_configurations')
+        for row in stats.get('popular_devices', []):
+            name = names.get(row['device_display_name'], row['device_display_name'])
+            if name.lower() != 'keyboard' and name not in data['popular']:
+                data['popular'].append(name)
+    except Exception as e:
+        logError(f'home: cannot load stats: {e}\n')
     data['controllers'] = len([n for n in supportedDevices if n.lower() != 'keyboard']) + len(data['community'])
 
     try:
-        recent, _ = database.list_configurations(page=1, per_page=40, public_only=True)
+        recent, _ = database.list_configurations(page=1, per_page=100, public_only=True)
         for row in recent:
             item = {
                 'url': url_for('web.show_binds', run_id=row['id']),
                 'title': row.get('description') or 'Untitled',
-                'devices': _home_devices_label(row.get('device_names')),
+                'devices': _home_devices_label(row.get('device_names'), names),
                 'date': _home_date(row.get('created_at')),
             }
             if len(data['cards']) < 3 and Config.isValidName(row['id']) and _home_card_images(row['id']):
