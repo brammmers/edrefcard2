@@ -458,7 +458,9 @@ function drawStage(full){
       const ax = Math.min(Math.max(bx, b.box_xy[0]), b.box_xy[0] + b.box_wh[0]);
       const ay = Math.min(Math.max(by, b.box_xy[1]), b.box_xy[1] + b.box_wh[1]);
       if(ax === bx && ay === by) return;  // button inside the box
-      ctx.beginPath(); ctx.moveTo(ax * scale, ay * scale); ctx.lineTo(bx * scale, by * scale); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ax * scale, ay * scale);
+      if(typeof b.leader_via_y === 'number'){ ctx.lineTo(ax * scale, b.leader_via_y * scale); ctx.lineTo(bx * scale, b.leader_via_y * scale); }
+      ctx.lineTo(bx * scale, by * scale); ctx.stroke();
     });
     if(guides.length){
       ctx.save(); ctx.strokeStyle='#2b6cb0'; ctx.setLineDash([6,4]); ctx.lineWidth=1;
