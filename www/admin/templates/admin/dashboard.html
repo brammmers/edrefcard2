@@ -28,20 +28,20 @@
 
 <div class="stats-grid">
     <div class="stat-card">
-        <div class="stat-value">{{ stats.total_configurations }}</div>
+        <div class="stat-value">{{ '{:,}'.format(stats.total_configurations) }}</div>
         <div class="stat-label">Total Configurations</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value">{{ stats.public_configurations }}</div>
+        <div class="stat-value">{{ '{:,}'.format(stats.public_configurations) }}</div>
         <div class="stat-label">Public Configurations</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value">{{ stats.popular_devices | length }}</div>
-        <div class="stat-label">Device Types Used</div>
+        <div class="stat-value">{{ '{:,}'.format(stats.last_30_days) }}</div>
+        <div class="stat-label">Cards in the last 30 days</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value">{{ stats.daily_stats | length }}</div>
-        <div class="stat-label">Days with Activity</div>
+        <div class="stat-value">{{ stats.device_types }}</div>
+        <div class="stat-label">Controller models used (keyboards aside)</div>
     </div>
 </div>
 
@@ -55,7 +55,7 @@
         </nav>
     </div>
     <p class="activity-summary">
-        <strong>{{ chart.total }}</strong> cards over {{ days }} days
+        <strong>{{ '{:,}'.format(chart.total) }}</strong> cards over {{ days }} days
         · <strong>{{ '%.1f' % chart.mean }}</strong> per day on average
         {% if chart.best %}· best day <strong>{{ chart.best[1] }}</strong> on {{ chart.best[0].strftime('%d %b %Y') }}{% endif %}
         · <strong>{{ chart.today }}</strong> today so far
@@ -63,10 +63,12 @@
     <div class="activity-legend">
         <span><i class="key-bar"></i>Cards per day (UTC)</span>
         <span><i class="key-line"></i>7-day average</span>
+        <span><i class="key-bar partial"></i>Today so far</span>
     </div>
     {{ plot(chart, 'Cards created per day over the last %d days: %d in total' % (days, chart.total)) }}
 </div>
 
+<div class="activity-pair">
 <div class="card activity">
     <div class="card-header">
         <h2>Cards created per month</h2>
@@ -74,7 +76,7 @@
     <p class="activity-summary">
         <strong>{{ '{:,}'.format(monthly.total) }}</strong> cards since {{ monthly.since }}
         · <strong>{{ '{:,}'.format(stats.public_configurations) }}</strong> shared publicly in the gallery
-        · current month in a lighter shade
+        · current month hatched
     </p>
     {{ plot(monthly, 'Cards created per month since %s: %d in total' % (monthly.since, monthly.total)) }}
 </div>
@@ -102,6 +104,7 @@
     <p style="color: var(--text-muted);">No card made for a known controller over this period.</p>
     {% endif %}
 </div>
+</div>
 
 <style>
     .activity-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
@@ -114,23 +117,34 @@
     .activity-legend { display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.75rem; }
     .activity-legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
     .activity-legend .key-bar { width: 12px; height: 12px; border-radius: 3px; background: #d9770b; }
+    .activity-legend .key-bar.partial { background: repeating-linear-gradient(135deg, #d9770b 0 3px, rgba(217, 119, 11, 0.35) 3px 6px); }
     .activity-legend .key-line { width: 18px; height: 2px; background: var(--text-primary); }
     /* Plot area: fixed height, labels in real pixels whatever the card width */
-    .activity-chart { position: relative; height: 220px; margin: 0.5rem 0 1.75rem 2.5rem; }
+    /* Height follows the card width (container units), capped so a 34" ultrawide does not flatten it into a strip */
+    .card.activity { container-type: inline-size; }
+    .activity-chart { position: relative; height: 260px; height: clamp(220px, 24cqi, 400px); margin: 1.25rem 0 2.25rem 3rem; }
+    .activity-pair { display: grid; grid-template-columns: 1fr; gap: 0 1.5rem; }
+    @media (min-width: 1500px) {
+        .activity-pair { grid-template-columns: 3fr 2fr; }
+        /* side by side: the top 5 rows spread over the height of the monthly chart */
+        .activity-pair .card { display: flex; flex-direction: column; }
+        .activity-pair .top-controllers { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+    }
     .activity-chart .grid-line { position: absolute; left: 0; right: 0; height: 0;
         border-top: 1px solid rgba(255, 255, 255, 0.07); }
     .activity-chart .grid-line.axis { border-top-color: rgba(255, 255, 255, 0.25); }
-    .activity-chart .grid-label, .activity-chart .tick { position: absolute; color: var(--text-muted);
-        font-size: 0.75rem; line-height: 1; white-space: nowrap; }
+    .activity-chart .grid-label, .activity-chart .tick { position: absolute; color: var(--text-secondary);
+        font-size: 0.85rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
     .activity-chart .grid-label { right: calc(100% + 8px); top: 0; transform: translateY(-50%); }
-    .activity-chart .tick { top: calc(100% + 8px); transform: translateX(-50%); }
+    .activity-chart .tick { top: calc(100% + 10px); transform: translateX(-50%); }
     .activity-chart .tick.first { transform: none; }
     .activity-chart .tick.last { transform: translateX(-100%); }
     .activity-chart .activity-bars { position: absolute; inset: 0; display: flex; }
     .activity-chart .day { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; padding: 0 1px; }
     .activity-chart.dense .day { padding: 0; }
     .activity-chart .day i { display: block; width: 100%; min-height: 1px; background: #d9770b; border-radius: 4px 4px 0 0; }
-    .activity-chart .day.partial i { opacity: 0.45; }
+    /* Day or month still running: hatched, not a darker shade that reads as another series */
+    .activity-chart .day.partial i { background: repeating-linear-gradient(135deg, #d9770b 0 3px, rgba(217, 119, 11, 0.35) 3px 6px); }
     .activity-chart .day:hover { background: rgba(255, 255, 255, 0.06); }
     .activity-chart .day:hover i { background: var(--ed-orange-light); }
     .activity-chart .activity-line { position: absolute; inset: 0; width: 100%; height: 100%;
