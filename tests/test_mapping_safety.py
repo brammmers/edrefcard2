@@ -41,6 +41,15 @@ class MappingSafetyTests(unittest.TestCase):
         mapping.update(show_title=False, url_xy=[40, 2500])
         validation.validate_mapping(mapping)
 
+    def test_leader_detour_must_stay_inside_the_image(self):
+        mapping = document()
+        mapping['boxes'][0]['leader_via_y'] = 80
+        validation.validate_mapping(mapping)
+        for value in (-1, mapping['height'], float('inf'), '80'):
+            mapping['boxes'][0]['leader_via_y'] = value
+            with self.assertRaises(ValueError):
+                validation.validate_mapping(mapping)
+
     def test_imported_header_geometry_rejects_invalid_metadata(self):
         for value in ([40, 2560], [-1, 100], [40, float('nan')], '40,100'):
             mapping = document()

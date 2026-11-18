@@ -43,6 +43,10 @@ def validate_mapping(mapping):
                     any(type(v) not in (int, float) or not math.isfinite(v) or
                         (v <= 0 if key == 'box_wh' else v < 0) for v in value)):
                 raise ValueError(f'Group {index}: invalid {key}.')
+        via = box.get('leader_via_y')
+        if via is not None and (type(via) not in (int, float) or not math.isfinite(via) or
+                                via < 0 or via >= mapping['height']):
+            raise ValueError(f'Group {index}: the leader detour must stay inside the image.')
         rows = box.get('rows')
         if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
             raise ValueError(f'Group {index}: rows must be a list of objects.')

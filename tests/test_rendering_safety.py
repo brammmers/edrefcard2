@@ -113,6 +113,17 @@ class RenderingSafetyTests(unittest.TestCase):
         self.assertEqual(context.balance, 0)
         self.assertEqual(box, before)
 
+    def test_leader_detour_drops_vertically_onto_a_boxed_in_control(self):
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'box_xy':[100,200], 'box_wh':[400,120], 'button_xy':[800,500],
+            'leader_via_y':80, 'rows':[{}]})
+        route = [((500,260),(650,260)), ((650,260),(650,80)), ((650,80),(800,80)),
+                 ((800,80),(800,500))]
+        self.assertEqual(context.lines, [(p,'white',13) for p in route] +
+                         [(p,'#962320',7) for p in route])
+        self.assertEqual(context.circles[0][0][0], (800,500))
+
     def test_compact_leader_starts_at_actual_frame_not_reserved_height(self):
         context = DrawingProbe()
         self.env['_drawDataDrivenBox'](context, None, {
