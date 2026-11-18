@@ -21,6 +21,7 @@
     {% endfor %}
 </div>
 {% endmacro %}
+<div class="dashboard">
 <div class="page-header">
     <h1>📊 Dashboard</h1>
     <p>Welcome to the EDRefCard admin panel</p>
@@ -41,7 +42,7 @@
     </div>
     <div class="stat-card">
         <div class="stat-value">{{ stats.device_types }}</div>
-        <div class="stat-label">Controller models used (keyboards aside)</div>
+        <div class="stat-label">Controller models used</div>
     </div>
 </div>
 
@@ -121,6 +122,8 @@
     .activity-legend .key-line { width: 18px; height: 2px; background: var(--text-primary); }
     /* Plot area: fixed height, labels in real pixels whatever the card width */
     /* Height follows the card width (container units), capped so a 34" ultrawide does not flatten it into a strip */
+    /* Readable width like any site: on a 34" ultrawide the page would otherwise stretch to 2700px */
+    .dashboard { max-width: 1320px; margin: 0 auto; }
     .card.activity { container-type: inline-size; }
     .activity-chart { position: relative; height: 260px; height: clamp(220px, 24cqi, 400px); margin: 1.25rem 0 2.25rem 3rem; }
     .activity-pair { display: grid; grid-template-columns: 1fr; gap: 0 1.5rem; }
@@ -152,19 +155,19 @@
     .activity-chart .activity-line path { fill: none; stroke: var(--text-primary); stroke-width: 2;
         stroke-linejoin: round; stroke-linecap: round; }
     .top-controllers { list-style: none; margin: 0; padding: 0; }
-    .top-controllers li { display: grid; grid-template-columns: 1.5rem minmax(10rem, 16rem) 1fr auto;
-        align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    /* name and value on one line, the bar underneath at full width */
+    .top-controllers li { display: grid; grid-template-columns: 1.5rem 1fr auto; align-items: center;
+        gap: 0.4rem 0.75rem; padding: 0.7rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
     .top-controllers li:last-child { border-bottom: 0; }
     .top-controllers .rank { color: var(--ed-orange); font-weight: 700; }
     .top-controllers .name { color: var(--text-primary); }
-    .top-controllers .track { height: 14px; }
+    .top-controllers .rank { grid-row: 1; grid-column: 1; }
+    .top-controllers .name { grid-row: 1; grid-column: 2; }
+    .top-controllers .value { grid-row: 1; grid-column: 3; }
+    .top-controllers .track { grid-row: 2; grid-column: 2 / -1; height: 10px; }
     .top-controllers .track i { display: block; height: 100%; background: #d9770b; border-radius: 0 4px 4px 0; }
     .top-controllers .value { color: var(--text-secondary); white-space: nowrap; text-align: right; }
     .top-controllers .value strong { color: var(--text-primary); }
-    @media (max-width: 640px) {
-        .top-controllers li { grid-template-columns: 1.5rem 1fr auto; }
-        .top-controllers .track { grid-column: 2 / -1; grid-row: 2; }
-    }
 </style>
 
 <div class="card">
@@ -237,5 +240,6 @@
             📤 Batch Import
         </a>
     </div>
+</div>
 </div>
 {% endblock %}
