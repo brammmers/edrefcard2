@@ -446,9 +446,19 @@ def get_configuration_stats():
             LIMIT 10
         """).fetchall()
         
+        device_types = conn.execute("""
+            SELECT COUNT(DISTINCT device_display_name) FROM config_devices
+            WHERE device_display_name IS NOT NULL AND device_display_name != 'keyboard'
+        """).fetchone()[0]
+        last_30_days = conn.execute(
+            "SELECT COUNT(*) FROM configurations WHERE DATE(created_at) > DATE('now', '-30 days')"
+        ).fetchone()[0]
+
         return {
             'total_configurations': total,
             'public_configurations': public,
+            'device_types': device_types,
+            'last_30_days': last_30_days,
             'daily_stats': [dict(d) for d in daily],
             'popular_devices': [dict(d) for d in popular_devices]
         }
