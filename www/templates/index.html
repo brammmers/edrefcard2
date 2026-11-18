@@ -157,8 +157,8 @@
     <div>
       <ul class="dev-list">
         {% set shown = namespace(names=[]) %}
-        {% for name in home.community[:6] %}{% set shown.names = shown.names + [name] %}<li class="new">{{ name }}</li>{% endfor %}
-        {% for name in home.popular if name not in shown.names %}{% if loop.index <= 14 - shown.names|length %}<li>{{ name }}</li>{% endif %}{% endfor %}
+        {% for name in home.community[:8] %}{% set shown.names = shown.names + [name] %}<li class="new">{{ name }}</li>{% endfor %}
+        {% for name in home.popular if name not in shown.names %}{% if loop.index <= 16 - shown.names|length %}<li>{{ name }}</li>{% endif %}{% endfor %}
       </ul>
       <p class="note">{% if home.community %}Cyan: mapped by the community. {% endif %}Missing your stick? <a href="https://forums.frontier.co.uk/threads/627609/">Tell us on the forum thread.</a> <a href="{{ url_for('web.list_devices') }}">See all supported devices.</a></p>
     </div>
