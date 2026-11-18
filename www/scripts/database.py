@@ -473,6 +473,51 @@ def get_daily_creations(days, today=None):
             for day in (start + datetime.timedelta(days=i) for i in range(days))]
 
 
+def get_monthly_creations(since='2024-01', today=None):
+    """Cards created per UTC month from `since` (YYYY-MM) to the current month.
+
+    Returns [('YYYY-MM', count)] oldest first, with a 0 for each empty month.
+    """
+    import datetime
+    today = today or datetime.datetime.now(datetime.timezone.utc).date()
+    with get_db() as conn:
+        rows = conn.execute("""
+            SELECT substr(created_at, 1, 7) AS month, COUNT(*) AS count
+            FROM configurations
+            WHERE substr(created_at, 1, 7) BETWEEN ? AND ?
+            GROUP BY month
+        """, (since, today.strftime('%Y-%m'))).fetchall()
+    counts = {row['month']: row['count'] for row in rows}
+    year, month = map(int, since.split('-'))
+    months = []
+    while (year, month) <= (today.year, today.month):
+        key = '%04d-%02d' % (year, month)
+        months.append((key, counts.get(key, 0)))
+        year, month = (year + 1, 1) if month == 12 else (year, month + 1)
+    return months
+
+
+def get_controller_cards(days, today=None):
+    """Which controllers the cards of the last `days` days were made for.
+
+    Returns (cards in the period, distinct [(template name, config id)]),
+    keyboards and unrecognised devices left out.
+    """
+    import datetime
+    today = today or datetime.datetime.now(datetime.timezone.utc).date()
+    period = ((today - datetime.timedelta(days=days - 1)).isoformat(), today.isoformat())
+    with get_db() as conn:
+        total = conn.execute("""SELECT COUNT(*) FROM configurations
+            WHERE DATE(created_at) BETWEEN ? AND ?""", period).fetchone()[0]
+        pairs = conn.execute("""
+            SELECT DISTINCT d.device_display_name, d.config_id
+            FROM config_devices d JOIN configurations c ON c.id = d.config_id
+            WHERE DATE(c.created_at) BETWEEN ? AND ?
+              AND d.device_display_name IS NOT NULL AND d.device_display_name != 'keyboard'
+        """, period).fetchall()
+    return total, [(row[0], row[1]) for row in pairs]
+
+
 def get_device_counts(public_only=False):
     """Get count of configurations for each device type.
     

@@ -3,6 +3,24 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+{% macro plot(c, label) %}
+<div class="activity-chart{{ ' dense' if c.dense }}" role="img" aria-label="{{ label }}">
+    {% for g in c.grid %}
+    <span class="grid-line{{ ' axis' if loop.first }}" style="bottom: {{ g.pct }}%"><span class="grid-label">{{ g.label }}</span></span>
+    {% endfor %}
+    <div class="activity-bars">
+        {% for b in c.bars %}<div class="day{{ ' partial' if b.partial }}" title="{{ b.title }}">{% if b.height %}<i style="height: {{ b.height }}%"></i>{% endif %}</div>{% endfor %}
+    </div>
+    {% if c.line %}
+    <svg class="activity-line" viewBox="0 0 {{ c.days }} 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="{{ c.line }}" vector-effect="non-scaling-stroke"/>
+    </svg>
+    {% endif %}
+    {% for t in c.ticks %}
+    <span class="tick{{ ' first' if t.pct < 4 else (' last' if t.pct > 96 else '') }}" style="left: {{ t.pct }}%">{{ t.label }}</span>
+    {% endfor %}
+</div>
+{% endmacro %}
 <div class="page-header">
     <h1>📊 Dashboard</h1>
     <p>Welcome to the EDRefCard admin panel</p>
@@ -46,24 +64,43 @@
         <span><i class="key-bar"></i>Cards per day (UTC)</span>
         <span><i class="key-line"></i>7-day average</span>
     </div>
-    <svg class="activity-chart" viewBox="0 0 {{ chart.width }} {{ chart.height }}" role="img"
-         aria-label="Cards created per day over the last {{ days }} days: {{ chart.total }} in total">
-        {% for g in chart.grid %}
-        <line x1="{{ chart.left }}" x2="{{ chart.right }}" y1="{{ g.y }}" y2="{{ g.y }}" class="{{ 'axis' if loop.first else 'grid' }}"/>
-        <text x="{{ chart.left - 8 }}" y="{{ g.y + 4 }}" text-anchor="end" class="tick">{{ g.label }}</text>
+    {{ plot(chart, 'Cards created per day over the last %d days: %d in total' % (days, chart.total)) }}
+</div>
+
+<div class="card activity">
+    <div class="card-header">
+        <h2>Cards created per month</h2>
+    </div>
+    <p class="activity-summary">
+        <strong>{{ '{:,}'.format(monthly.total) }}</strong> cards since {{ monthly.since }}
+        · <strong>{{ '{:,}'.format(stats.public_configurations) }}</strong> shared publicly in the gallery
+        · current month in a lighter shade
+    </p>
+    {{ plot(monthly, 'Cards created per month since %s: %d in total' % (monthly.since, monthly.total)) }}
+</div>
+
+<div class="card activity">
+    <div class="card-header">
+        <h2>Top 5 controllers</h2>
+    </div>
+    <p class="activity-summary">
+        Share of the <strong>{{ '{:,}'.format(top_total) }}</strong> cards created over the last {{ days }} days.
+        Keyboards left out; left and right hand sticks and the Xbox pads count once.
+    </p>
+    {% if top %}
+    <ol class="top-controllers">
+        {% for row in top %}
+        <li>
+            <span class="rank">{{ row.rank }}</span>
+            <span class="name">{{ row.name }}</span>
+            <span class="track"><i style="width: {{ row.width }}%"></i></span>
+            <span class="value"><strong>{{ '{:,}'.format(row.count) }}</strong> cards · {{ row.share }}%</span>
+        </li>
         {% endfor %}
-        {% for t in chart.ticks %}
-        <text x="{{ t.x }}" y="{{ chart.baseline + 20 }}" text-anchor="middle" class="tick">{{ t.label }}</text>
-        {% endfor %}
-        {% for b in chart.bars %}
-        <g class="day{{ ' partial' if b.partial }}">
-            <title>{{ b.title }}</title>
-            <rect x="{{ b.hit_x }}" y="0" width="{{ b.hit_w }}" height="{{ chart.baseline }}" class="hit"/>
-            {% if b.path %}<path d="{{ b.path }}" class="bar"/>{% endif %}
-        </g>
-        {% endfor %}
-        {% if chart.line %}<path d="{{ chart.line }}" class="average"/>{% endif %}
-    </svg>
+    </ol>
+    {% else %}
+    <p style="color: var(--text-muted);">No card made for a known controller over this period.</p>
+    {% endif %}
 </div>
 
 <style>
@@ -74,21 +111,46 @@
     .activity-ranges a.active { color: var(--bg-primary); background: var(--ed-orange); border-color: var(--ed-orange); }
     .activity-summary { color: var(--text-secondary); margin: 0 0 0.75rem; }
     .activity-summary strong { color: var(--text-primary); }
-    .activity-legend { display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .activity-legend { display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.75rem; }
     .activity-legend span { display: inline-flex; align-items: center; gap: 0.5rem; }
     .activity-legend .key-bar { width: 12px; height: 12px; border-radius: 3px; background: #d9770b; }
     .activity-legend .key-line { width: 18px; height: 2px; background: var(--text-primary); }
-    .activity-chart { width: 100%; height: auto; display: block; }
-    .activity-chart .grid { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1; }
-    .activity-chart .axis { stroke: rgba(255, 255, 255, 0.25); stroke-width: 1; }
-    .activity-chart .tick { fill: var(--text-muted); font-size: 13px; }
-    .activity-chart .bar { fill: #d9770b; }
-    .activity-chart .partial .bar { fill: #d9770b; opacity: 0.45; }
-    .activity-chart .hit { fill: transparent; }
-    .activity-chart .day:hover .hit { fill: rgba(255, 255, 255, 0.06); }
-    .activity-chart .day:hover .bar { fill: var(--ed-orange-light); }
-    .activity-chart .average { fill: none; stroke: var(--text-primary); stroke-width: 2;
-        stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
+    /* Plot area: fixed height, labels in real pixels whatever the card width */
+    .activity-chart { position: relative; height: 220px; margin: 0.5rem 0 1.75rem 2.5rem; }
+    .activity-chart .grid-line { position: absolute; left: 0; right: 0; height: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.07); }
+    .activity-chart .grid-line.axis { border-top-color: rgba(255, 255, 255, 0.25); }
+    .activity-chart .grid-label, .activity-chart .tick { position: absolute; color: var(--text-muted);
+        font-size: 0.75rem; line-height: 1; white-space: nowrap; }
+    .activity-chart .grid-label { right: calc(100% + 8px); top: 0; transform: translateY(-50%); }
+    .activity-chart .tick { top: calc(100% + 8px); transform: translateX(-50%); }
+    .activity-chart .tick.first { transform: none; }
+    .activity-chart .tick.last { transform: translateX(-100%); }
+    .activity-chart .activity-bars { position: absolute; inset: 0; display: flex; }
+    .activity-chart .day { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; padding: 0 1px; }
+    .activity-chart.dense .day { padding: 0; }
+    .activity-chart .day i { display: block; width: 100%; min-height: 1px; background: #d9770b; border-radius: 4px 4px 0 0; }
+    .activity-chart .day.partial i { opacity: 0.45; }
+    .activity-chart .day:hover { background: rgba(255, 255, 255, 0.06); }
+    .activity-chart .day:hover i { background: var(--ed-orange-light); }
+    .activity-chart .activity-line { position: absolute; inset: 0; width: 100%; height: 100%;
+        overflow: visible; pointer-events: none; }
+    .activity-chart .activity-line path { fill: none; stroke: var(--text-primary); stroke-width: 2;
+        stroke-linejoin: round; stroke-linecap: round; }
+    .top-controllers { list-style: none; margin: 0; padding: 0; }
+    .top-controllers li { display: grid; grid-template-columns: 1.5rem minmax(10rem, 16rem) 1fr auto;
+        align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+    .top-controllers li:last-child { border-bottom: 0; }
+    .top-controllers .rank { color: var(--ed-orange); font-weight: 700; }
+    .top-controllers .name { color: var(--text-primary); }
+    .top-controllers .track { height: 14px; }
+    .top-controllers .track i { display: block; height: 100%; background: #d9770b; border-radius: 0 4px 4px 0; }
+    .top-controllers .value { color: var(--text-secondary); white-space: nowrap; text-align: right; }
+    .top-controllers .value strong { color: var(--text-primary); }
+    @media (max-width: 640px) {
+        .top-controllers li { grid-template-columns: 1.5rem 1fr auto; }
+        .top-controllers .track { grid-column: 2 / -1; grid-row: 2; }
+    }
 </style>
 
 <div class="card">
