@@ -281,10 +281,126 @@ def _config_not_found(run_id=None):
     return render_template('error.html', error_message=message), 404
 
 
+# ---- home page -------------------------------------------------------------
+# The home shows live figures, the latest public cards and the controller list.
+# They change slowly, so the result is kept a couple of minutes per worker
+# rather than querying the database on every visit.
+_HOME_CACHE = {'at': 0.0, 'data': None}
+_HOME_CACHE_SECONDS = 120
+_HOME_THUMB_WIDTH = 720
+
+
+def _home_card_images(run_id):
+    """Rendered controller images of a config (keyboard last), excluding the
+    images of a longer sibling id sharing the same prefix."""
+    config_dir = Path(current_app.config['CONFIGS_FOLDER']) / run_id[:2]
+    if not config_dir.is_dir():
+        return []
+    siblings = [p.stem + '-' for p in config_dir.glob(f"{run_id}-*.binds")]
+    images = [p for p in config_dir.glob(f"{run_id}-*.jpg")
+              if not any(p.name.startswith(s) for s in siblings)]
+    return sorted(images, key=lambda p: (p.name.endswith('keyboard.jpg'), p.name))
+
+
+def _home_devices_label(device_names):
+    names = [d.strip() for d in (device_names or '').split(',') if d.strip()]
+    names.sort(key=lambda d: (d.lower() == 'keyboard', d.lower()))
+    return ', '.join(names) if names else 'Unknown'
+
+
+def _home_date(created_at):
+    if hasattr(created_at, 'strftime'):
+        return created_at
+    try:
+        from datetime import datetime
+        return datetime.fromisoformat(str(created_at)[:19])
+    except ValueError:
+        return None
+
+
+def _home_data():
+    """Figures, latest public cards and controllers for the home page."""
+    import time
+    now = time.monotonic()
+    if _HOME_CACHE['data'] is not None and now - _HOME_CACHE['at'] < _HOME_CACHE_SECONDS:
+        return _HOME_CACHE['data']
+
+    from scripts.database import get_configuration_stats
+    data = {'total': None, 'public': None, 'controllers': None,
+            'cards': [], 'rows': [], 'community': [], 'popular': []}
+    try:
+        stats = get_configuration_stats()
+        data['total'] = stats.get('total_configurations')
+        data['public'] = stats.get('public_configurations')
+        data['popular'] = [row['device_display_name'] for row in stats.get('popular_devices', [])
+                           if row['device_display_name'].lower() != 'keyboard']
+    except Exception as e:
+        logError(f'home: cannot load stats: {e}\n')
+
+    try:
+        community = sorted(database.get_published_controller_mappings(),
+                           key=lambda r: str(r.get('updated_at') or ''), reverse=True)
+        data['community'] = [r['device_name'] for r in community if r.get('device_name')]
+    except Exception as e:
+        logError(f'home: cannot load community mappings: {e}\n')
+    data['controllers'] = len([n for n in supportedDevices if n.lower() != 'keyboard']) + len(data['community'])
+
+    try:
+        recent, _ = database.list_configurations(page=1, per_page=40, public_only=True)
+        for row in recent:
+            item = {
+                'url': url_for('web.show_binds', run_id=row['id']),
+                'title': row.get('description') or 'Untitled',
+                'devices': _home_devices_label(row.get('device_names')),
+                'date': _home_date(row.get('created_at')),
+            }
+            if len(data['cards']) < 3 and Config.isValidName(row['id']) and _home_card_images(row['id']):
+                item['thumb'] = url_for('web.home_thumb', run_id=row['id'])
+                data['cards'].append(item)
+            elif len(data['rows']) < 3:
+                data['rows'].append(item)
+            if len(data['cards']) == 3 and len(data['rows']) == 3:
+                break
+    except Exception as e:
+        logError(f'home: cannot load recent cards: {e}\n')
+
+    _HOME_CACHE.update(at=now, data=data)
+    return data
+
+
 @web_bp.route('/')
 def index():
     """Render the home page."""
-    return render_template('index.html')
+    return render_template('index.html', home=_home_data())
+
+
+@web_bp.route('/thumb/<run_id>.jpg')
+@limiter.limit("120 per minute")
+def home_thumb(run_id):
+    """Small preview of a card's first controller image, for the home page.
+
+    Built once from the rendered card with Pillow and kept under
+    configs/_thumbs/, so the home never ships full-size card images.
+    """
+    if not Config.isValidName(run_id):
+        abort(404)
+    thumbs_dir = Path(current_app.config['CONFIGS_FOLDER']) / '_thumbs'
+    thumb = thumbs_dir / f'{run_id}.jpg'
+    if not thumb.exists():
+        images = _home_card_images(run_id)
+        if not images:
+            abort(404)
+        from PIL import Image
+        thumbs_dir.mkdir(parents=True, exist_ok=True)
+        with Image.open(images[0]) as img:
+            img = img.convert('RGB')
+            if img.width > _HOME_THUMB_WIDTH:
+                img = img.resize((_HOME_THUMB_WIDTH, round(img.height * _HOME_THUMB_WIDTH / img.width)),
+                                 Image.LANCZOS)
+            tmp = thumb.with_suffix('.tmp')
+            img.save(tmp, 'JPEG', quality=80, optimize=True)
+            os.replace(tmp, thumb)
+    return send_from_directory(thumbs_dir, thumb.name, max_age=86400)
 
 @web_bp.route('/privacy')
 def privacy():

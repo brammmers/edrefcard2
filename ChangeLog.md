@@ -28,6 +28,10 @@ Everything merged into `main` since 2.2.0. Since 16 November 2026 this code serv
   (`/admin/help`) and in [CONTROLLER_MAPPING_GUIDE.md](CONTROLLER_MAPPING_GUIDE.md).
 
 ### Cards and site
+* **New home page** ("Cockpit"): an official Elite Dangerous image framed like a canopy, live figures, the
+  upload form as three side panels, the latest public cards with small previews (`/thumb/<id>.jpg`, built once
+  with Pillow under `configs/_thumbs/`) and the supported controllers. Its own stylesheet (`home.css`), so the
+  other pages are unchanged.
 * **Keyboard**: visual keyboard cards (US ANSI 104 and French AZERTY ISO 105) next to the text list; the text
   card now shrinks until every column fits, with plain-text key labels.
 * **Controls**: Camera and Settlement categories.
