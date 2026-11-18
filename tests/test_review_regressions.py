@@ -336,7 +336,8 @@ APP_PROBE = textwrap.dedent('''
 
     # --- admin dashboard: cards per day chart, period picked from an allow-list
     pages = [client.get('/admin/?days=%s' % d, headers=headers) for d in ('30', '365', 'abc')]
-    out['dashboard'] = [[p.status_code, p.get_data(as_text=True).count('class="day'),
+    daily_part = lambda html: html.split('Cards created per month')[0]
+    out['dashboard'] = [[p.status_code, daily_part(p.get_data(as_text=True)).count('class="day'),
                          'aria-current="page">%s days' % d in p.get_data(as_text=True)]
                         for p, d in zip(pages, ('30', '365', '90'))]
 
