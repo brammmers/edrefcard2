@@ -59,11 +59,23 @@ class SQLiteStorage(Storage):
         if conn is not None and getattr(self._local, 'pid', None) == os.getpid():
             return conn
         conn = sqlite3.connect(self.path, timeout=5, isolation_level=None)
-        conn.execute('PRAGMA journal_mode=WAL')
+        # When every worker opens the new file at once, switching it to WAL
+        # can fail with "database is locked" without waiting for the busy
+        # timeout: retry for a few seconds before giving up.
+        for attempt in range(50):
+            try:
+                if conn.execute('PRAGMA journal_mode').fetchone()[0].lower() != 'wal':
+                    conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute(
+                    'CREATE TABLE IF NOT EXISTS counters ('
+                    ' key TEXT PRIMARY KEY, value INTEGER NOT NULL, expiry REAL NOT NULL)')
+                break
+            except sqlite3.OperationalError:
+                if attempt == 49:
+                    conn.close()
+                    raise
+                time.sleep(0.1)
         conn.execute('PRAGMA synchronous=OFF')
-        conn.execute(
-            'CREATE TABLE IF NOT EXISTS counters ('
-            ' key TEXT PRIMARY KEY, value INTEGER NOT NULL, expiry REAL NOT NULL)')
         self._local.conn = conn
         self._local.pid = os.getpid()
         return conn
