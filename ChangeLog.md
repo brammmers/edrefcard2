@@ -67,6 +67,9 @@ Everything merged into `main` since 2.2.0. Since 16 November 2026 this code serv
 * Same-origin CSRF guard on the admin panel, constant-time credential checks, login rate limiting, hardened
   session cookies revalidated on each request.
 * Escaped error pages, scoped configuration deletion, configurable trusted proxy hops (`TRUSTED_PROXY_HOPS`).
+* Rate limits are counted once for all gunicorn workers (SQLite counters, `RATELIMIT_STORAGE_URI`) instead of
+  once per worker, and crawlers that ignore robots.txt are refused by User-Agent (`BLOCKED_USER_AGENTS`,
+  default `CorsairBot`).
 
 ### Development
 * CI gates releases on real card rendering and on the mapper workflow.

@@ -17,6 +17,9 @@ services:
       - TRUSTED_PROXY_HOPS
       - CANONICAL_URL
       - REDIRECT_HOSTS
+      - BLOCKED_USER_AGENTS
+      # A bare name would erase the Dockerfile value when Dokploy does not set it
+      - RATELIMIT_STORAGE_URI=${RATELIMIT_STORAGE_URI:-sqlite:////tmp/edrefcard-ratelimit.db}
       - EDREFCARD_CONFIGS_DIR=/app/www/configs
     restart: unless-stopped
     # NO PORT MAPPING - Dokploy/Traefik handles routing automatically
