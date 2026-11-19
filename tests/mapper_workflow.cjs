@@ -185,7 +185,7 @@ async function run() {
     await publicPage.goto(base + '/');
     await publicPage.locator('#fileupload').setInputFiles(path.join(state.root,'ci-upload.binds'));
     await publicPage.locator('[name=public]').uncheck();
-    await publicPage.getByRole('button',{name:/Generate Reference Card/}).click();
+    await publicPage.getByRole('button',{name:/^Generate/}).click();
     await publicPage.locator('img.refcard-image[alt="Controller Reference Card"]').waitFor();
     check('Fresh .binds upload renders the published controller');
     await publicPage.reload();
