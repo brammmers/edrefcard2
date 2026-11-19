@@ -44,6 +44,8 @@ ENV PYTHONIOENCODING=utf-8
 ENV EDREFCARD_ADMIN_USER=admin
 ENV EDREFCARD_ADMIN_PASS=changeme
 ENV FLASK_SECRET_KEY=change-this-in-production
+# Rate-limit counters shared by the gunicorn workers (see www/ratelimit_storage.py)
+ENV RATELIMIT_STORAGE_URI=sqlite:////tmp/edrefcard-ratelimit.db
 
 # Container starts as root, entrypoint will fix permissions and drop to appuser
 # This is necessary because Docker volumes are mounted as root

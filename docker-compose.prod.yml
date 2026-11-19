@@ -17,6 +17,8 @@ services:
       - TRUSTED_PROXY_HOPS
       - CANONICAL_URL
       - REDIRECT_HOSTS
+      - BLOCKED_USER_AGENTS
+      - RATELIMIT_STORAGE_URI
       - EDREFCARD_CONFIGS_DIR=/app/www/configs
     restart: unless-stopped
     # NO PORT MAPPING - Dokploy/Traefik handles routing automatically
