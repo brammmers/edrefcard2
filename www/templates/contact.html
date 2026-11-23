@@ -24,9 +24,16 @@
         </div>
         {% else %}
 
+        {% set field_names = ['subject', 'card', 'message', 'email'] %}
+        {% set ns = namespace(first='') %}
+        {% for name in field_names %}{% if name in errors and not ns.first %}{% set ns.first = name %}{% endif %}{% endfor %}
+        {% macro invalid(name, errors, first) %}{% if name in errors %} class="invalid" aria-invalid="true" aria-describedby="{{ name }}-error"{% if first == name %} autofocus{% endif %}{% endif %}{% endmacro %}
+        {% macro error_for(name, errors) %}{% if name in errors %}<p class="field-error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}{% endmacro %}
+
         {% if errors %}
         <div class="alert alert-error" role="alert">
-            {% for error in errors %}<p>{{ error }}</p>{% endfor %}
+            {% if errors.form %}<p>{{ errors.form }}</p>{% endif %}
+            {% if ns.first %}<p>{% if errors|length - (1 if errors.form else 0) > 1 %}Some fields need a correction{% else %}One field needs a correction{% endif %}: see the message in red below.</p>{% endif %}
         </div>
         {% endif %}
 
@@ -36,32 +43,36 @@
             <div class="form-section">
                 <div class="field">
                     <label for="subject">What is it about?</label>
-                    <select id="subject" name="subject" required>
+                    <select id="subject" name="subject" required{{ invalid('subject', errors, ns.first) }}>
                         <option value="" {% if not values.subject %}selected{% endif %} disabled>Choose…</option>
                         {% for key, label in subjects.items() %}
                         <option value="{{ key }}" {% if values.subject == key %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
                     </select>
+                    {{ error_for('subject', errors) }}
                 </div>
 
                 <div class="field">
                     <label for="card">Card reference <span class="text-muted">(optional)</span></label>
                     <input type="text" id="card" name="card" value="{{ values.card }}" maxlength="250"
-                        placeholder="custom-4-2-s8j5" autocomplete="off" spellcheck="false">
+                        placeholder="custom-4-2-s8j5" autocomplete="off" spellcheck="false"{{ invalid('card', errors, ns.first) }}>
+                    {{ error_for('card', errors) }}
                     <p class="field-help">The end of your card's address (edrefcard.info/binds/<strong>custom-4-2-s8j5</strong>).
                         With it we can read your bindings file and your controller's hardware IDs, so there is nothing to attach.</p>
                 </div>
 
                 <div class="field">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" rows="8" required maxlength="{{ message_max }}"
+                    <textarea id="message" name="message" rows="8" required maxlength="{{ message_max }}"{{ invalid('message', errors, ns.first) }}
                         placeholder="Which controller, what looks wrong on the card, what you expected…">{{ values.message }}</textarea>
+                    {{ error_for('message', errors) }}
                 </div>
 
                 <div class="field">
                     <label for="email">Your email <span class="text-muted">(optional, only if you want a reply)</span></label>
                     <input type="email" id="email" name="email" value="{{ values.email }}" maxlength="254"
-                        autocomplete="email" placeholder="cmdr@example.com">
+                        autocomplete="email" placeholder="cmdr@example.com"{{ invalid('email', errors, ns.first) }}>
+                    {{ error_for('email', errors) }}
                 </div>
 
                 <div class="field-trap" aria-hidden="true">

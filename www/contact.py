@@ -109,31 +109,32 @@ def same_origin():
 
 
 def validate(form):
-    """Return (clean values, error messages)."""
+    """Return (clean values, {field name: error message})."""
     values = {
         'email': (form.get('email') or '').strip(),
         'subject': form.get('subject') or '',
         'card': (form.get('card') or '').strip(),
         'message': (form.get('message') or '').replace('\r\n', '\n').strip(),
     }
-    errors = []
-    if values['email'] and not valid_email(values['email']):
-        errors.append('This email address does not look valid. Leave it empty if you do not want a reply.')
+    errors = {}
     if values['subject'] not in SUBJECTS:
-        errors.append('Please choose what your message is about.')
+        errors['subject'] = 'Please choose what your message is about.'
+    if values['email'] and not valid_email(values['email']):
+        errors['email'] = 'This email address does not look valid. Leave it empty if you do not want a reply.'
+
     if values['card']:
         # Accept a pasted card link as well as the bare reference.
         match = re.search(r'/binds/([^/?#\s]+)', values['card'])
         if match:
             values['card'] = match.group(1)
         if not valid_card(values['card']):
-            errors.append('The card reference may only contain letters, digits, "-" and "_" '
-                          '(for example custom-4-2-s8j5).')
+            errors['card'] = ('This is not a card reference: only letters, digits, "-" and "_", '
+                              'for example custom-4-2-s8j5. Leave it empty if you have no card.')
     if len(values['message']) < MESSAGE_MIN:
-        errors.append('Please write a message (a few words at least).')
+        errors['message'] = 'Please write a message (a few words at least).'
     elif len(values['message']) > MESSAGE_MAX:
-        errors.append(f'Your message is too long ({len(values["message"])} characters, '
-                      f'{MESSAGE_MAX} at most).')
+        errors['message'] = (f'Your message is too long ({len(values["message"])} characters, '
+                             f'{MESSAGE_MAX} at most).')
     return values, errors
 
 
@@ -203,7 +204,7 @@ def contact_form():
         values = {'email': '', 'message': '',
                   'subject': subject if subject in SUBJECTS else '',
                   'card': card if valid_card(card) else ''}
-        return render_template('contact.html', values=values, errors=[],
+        return render_template('contact.html', values=values, errors={},
                                sent=request.args.get('sent') == '1',
                                token=form_token(), **context)
 
@@ -211,7 +212,7 @@ def contact_form():
         abort(403, description='Cross-origin request blocked')
     values, errors = validate(request.form)
     if settings is None:
-        return render_template('contact.html', values=values, errors=[], sent=False,
+        return render_template('contact.html', values=values, errors={}, sent=False,
                                token=form_token(), **context), 503
 
     # Bots that fill every field get a fake success and no mail.
@@ -221,9 +222,10 @@ def contact_form():
 
     age = form_age(request.form.get('token'))
     if age is None:
-        errors.insert(0, 'This form has expired. Please send it again.')
+        errors['form'] = 'This form has expired. Please send it again.'
     elif age < MIN_FILL_SECONDS:
-        errors.insert(0, 'That was very quick. Please check your message and send it again.')
+        errors['form'] = 'That was very quick. Please check your message and send it again.'
+
 
     if errors:
         return render_template('contact.html', values=values, errors=errors, sent=False,
@@ -235,8 +237,8 @@ def contact_form():
         send_message(msg, settings)
     except Exception as e:  # never echo the server's reply: it may quote credentials
         _log(f'contact: cannot send mail ({type(e).__name__})\n')
-        errors = ['Your message could not be sent right now. Please try again later, '
-                  'or post it on the forum thread.']
+        errors = {'form': 'Your message could not be sent right now. Please try again later, '
+                          'or post it on the forum thread.'}
         return render_template('contact.html', values=values, errors=errors, sent=False,
                                token=form_token(), **context), 502
     return redirect(url_for('contact.contact_form', sent=1))
