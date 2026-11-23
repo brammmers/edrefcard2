@@ -1121,3 +1121,19 @@ main {
 .contact-page .alert-error {
   color: #ff7a87;
 }
+
+/* Link to the contact form under a generated card */
+.card-report {
+  margin: var(--spacing-xl) auto 0;
+  max-width: 720px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--ed-orange);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  text-align: left;
+}
+
+.card-report a {
+  font-weight: 600;
+}

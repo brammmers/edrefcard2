@@ -119,6 +119,9 @@
         {% endif %}
 
         {% if run_id and not device_for_block_image and (created_images or data_driven_images or keyboard_layout_image) %}
+        <p class="card-report">Something wrong on this card? A missing button, a wrong label, a controller drawn wrong:
+            <a href="{{ url_for('contact.contact_form', subject='card', card=run_id) }}">tell us</a>, your card reference is filled in for you.</p>
+
         <div class="form-section tools-section" style="margin-top: 2rem;">
             <h3>🔗 Export & Tools</h3>
 
