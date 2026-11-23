@@ -124,6 +124,10 @@ app.register_blueprint(api_bp)
 from web import web_bp  # noqa: E402
 app.register_blueprint(web_bp)
 
+# Register Contact blueprint (/contact)
+from contact import contact_bp  # noqa: E402
+app.register_blueprint(contact_bp)
+
 
 # Initialize Limiter
 # (Limiter is defined in extensions.py which web.py uses)

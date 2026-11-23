@@ -378,7 +378,10 @@ input[type="radio"]:checked::after {
 }
 
 /* Text Input */
-input[type="text"] {
+input[type="text"],
+input[type="email"],
+select,
+textarea {
   width: 100%;
   padding: var(--spacing-md);
   background: rgba(0, 0, 0, 0.3);
@@ -389,13 +392,18 @@ input[type="text"] {
   transition: all var(--transition-fast);
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--ed-orange);
   box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
 }
 
-input[type="text"]::placeholder {
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+textarea::placeholder {
   color: var(--text-muted);
 }
 
@@ -593,6 +601,16 @@ main {
   background: rgba(255, 193, 7, 0.1);
   border: 1px solid rgba(255, 193, 7, 0.3);
   color: #ffc107;
+}
+
+.alert-success {
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--text-primary);
+}
+
+.alert p:last-child {
+  margin-bottom: 0;
 }
 
 .alert-error {
@@ -1017,4 +1035,65 @@ main {
     transform: scale(1);
     opacity: 1;
   }
+}
+/* ===== Contact form ===== */
+.contact-page {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.contact-form .field + .field {
+  margin-top: var(--spacing-lg);
+}
+
+.contact-form label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+}
+
+.contact-form label .text-muted {
+  font-weight: 400;
+}
+
+.contact-form textarea {
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 10rem;
+}
+
+.contact-form select {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.contact-form select option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.field-help {
+  margin: var(--spacing-sm) 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.contact-privacy {
+  margin-top: var(--spacing-md);
+  text-align: center;
+}
+
+/* Honeypot: off-screen for people, still filled in by naive bots */
+.field-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.alert-action {
+  margin: var(--spacing-md) 0 0;
 }

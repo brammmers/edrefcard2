@@ -588,7 +588,7 @@ def generate():
             except Exception as e:
                 logError(f'{run_id}: cannot record unknown device sighting: {e}\n')
             if errors.unhandledDevicesWarnings == '':
-                errors.unhandledDevicesWarnings = f'<h1>Unknown controller detected</h1>You have a device that is not supported at this time. Please report details of your device by following the link at the bottom of this page supplying the reference "{run_id}" and we will attempt to add support for it.'
+                errors.unhandledDevicesWarnings = f'<h1>Unknown controller detected</h1>You have a device that is not supported at this time. Please report it with the link below (your card reference "{run_id}" is filled in for you) and we will attempt to add support for it.'
     
     if len(created_images) == 0 and len(data_driven_images) == 0 and not errors.misconfigurationWarnings and not errors.unhandledDevicesWarnings and not errors.errors:
         errors.errors = '<h1>The file supplied does not have any bindings for a supported controller or keyboard.</h1>'

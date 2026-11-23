@@ -21,6 +21,13 @@ services:
       # A bare name would erase the Dockerfile value when Dokploy does not set it
       - RATELIMIT_STORAGE_URI=${RATELIMIT_STORAGE_URI:-sqlite:////tmp/edrefcard-ratelimit.db}
       - EDREFCARD_CONFIGS_DIR=/app/www/configs
+      # Contact form (/contact). Secrets stay bare names, set in the Dokploy env.
+      # 587 = STARTTLS: dp (Hetzner) blocks outgoing 25 and 465.
+      - SMTP_HOST=${SMTP_HOST:-smtp.purelymail.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER
+      - SMTP_PASSWORD
+      - CONTACT_TO
     restart: unless-stopped
     # NO PORT MAPPING - Dokploy/Traefik handles routing automatically
     # The container listens on port 8000 internally (defined in Dockerfile)

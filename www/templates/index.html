@@ -160,7 +160,7 @@
         {% for name in home.community[:8] %}{% set shown.names = shown.names + [name] %}<li class="new">{{ name }}</li>{% endfor %}
         {% for name in home.popular if name not in shown.names %}{% if loop.index <= 16 - shown.names|length %}<li>{{ name }}</li>{% endif %}{% endfor %}
       </ul>
-      <p class="note">{% if home.community %}Cyan: mapped by the community. {% endif %}Missing your stick? <a href="https://forums.frontier.co.uk/threads/627609/">Tell us on the forum thread.</a> <a href="{{ url_for('web.list_devices') }}">See all supported devices.</a></p>
+      <p class="note">{% if home.community %}Cyan: mapped by the community. {% endif %}Missing your stick? <a href="{{ url_for('contact.contact_form', subject='controller') }}">Tell us.</a> <a href="{{ url_for('web.list_devices') }}">See all supported devices.</a></p>
     </div>
   </section>
 </div>
@@ -170,7 +170,7 @@
 <footer class="home-footer">
   <div class="wrap">
     <p>EDRefCard {{ version }} · open source, run by CMDRs for CMDRs<br>Elite Dangerous © Frontier Developments plc. Game imagery used for non-commercial purposes.</p>
-    <p><a href="https://forums.frontier.co.uk/threads/627609/">Forum thread</a> · <a href="{{ url_for('web.privacy') }}">Privacy &amp; legal notice</a> · <a href="https://github.com/brammmers/edrefcard2">GitHub</a></p>
+    <p><a href="{{ url_for('contact.contact_form') }}">Contact</a> · <a href="https://forums.frontier.co.uk/threads/627609/">Forum thread</a> · <a href="{{ url_for('web.privacy') }}">Privacy &amp; legal notice</a> · <a href="https://github.com/brammmers/edrefcard2">GitHub</a></p>
   </div>
 </footer>
 {% endblock %}

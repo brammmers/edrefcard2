@@ -38,6 +38,11 @@ Everything merged into `main` since 2.2.0. Since 16 November 2026 this code serv
 * **Unlisted cards**: uploaders can keep a card out of the public catalogue; it stays reachable by its link.
 * **Catalogue** (`/list`): free-text search, pagination, device filters with consistent counts.
 * **Privacy policy and legal notice** (`/privacy`).
+* **Contact form** (`/contact`): missing controller, wrong card or anything else, with an optional card
+  reference (prefilled from the unsupported-controller warnings) and an optional reply address. Sent by SMTP
+  from the maintainers' mailbox (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `CONTACT_TO`); without
+  that configuration the page points to the forum thread. Spam is filtered without a captcha (hidden field,
+  minimal fill time, same-origin check, 5 messages per hour per IP).
 * **Render cache**: generated cards are reused until the code or the card's data changes; stale images and PDFs
   are dropped before a card is drawn again.
 * Same-named uploads no longer overwrite an existing card.
