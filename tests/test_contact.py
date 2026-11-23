@@ -194,6 +194,26 @@ class ContactTests(unittest.TestCase):
             self.assertEqual(self.post(card=card).status_code, 400, card)
         self.smtp.assert_not_called()
 
+    def test_error_is_shown_under_the_faulty_field(self):
+        response = self.post(card='Que passes-t-il', message='Mon contrôleur disparait !')
+        page = response.get_data(as_text=True)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('id="card-error"', page)
+        self.assertIn('class="invalid" aria-invalid="true" aria-describedby="card-error" autofocus', page)
+        self.assertIn('One field needs a correction', page)
+        self.assertNotIn('id="message-error"', page)
+        self.assertIn('value="Que passes-t-il"', page)  # what was typed is kept
+        self.assertIn('Mon contrôleur disparait !', page)
+        self.smtp.assert_not_called()
+
+    def test_several_faulty_fields_focus_the_first_one(self):
+        page = self.post(card='a b', email='nope', message='').get_data(as_text=True)
+        self.assertIn('Some fields need a correction', page)
+        for name in ('card', 'email', 'message'):
+            self.assertIn(f'id="{name}-error"', page)
+        self.assertEqual(page.count(' autofocus'), 1)
+        self.assertIn('aria-describedby="card-error" autofocus', page)
+
     def test_message_length_limits(self):
         self.assertEqual(self.post(message='hi').status_code, 400)
         response = self.post(message='x' * (contact.MESSAGE_MAX + 1))

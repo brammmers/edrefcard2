@@ -1097,3 +1097,27 @@ main {
 .alert-action {
   margin: var(--spacing-md) 0 0;
 }
+
+.contact-form .invalid,
+.contact-form .invalid:focus {
+  border-color: #ff5c6c;
+}
+
+.contact-form .invalid:focus {
+  box-shadow: 0 0 0 3px rgba(255, 92, 108, 0.25);
+}
+
+.field-error {
+  margin: var(--spacing-sm) 0 0;
+  color: #ff7a87;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contact-page .alert p {
+  color: inherit;
+}
+
+.contact-page .alert-error {
+  color: #ff7a87;
+}
