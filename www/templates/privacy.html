@@ -32,7 +32,7 @@
             </p>
 
             <h3>1. What data do we collect?</h3>
-            <p><strong>Absolutely no personal identifying information is collected, stored, or processed</strong> beyond what is strictly necessary for the technical operation of the service and security.</p>
+            <p><strong>Absolutely no personal identifying information is collected, stored, or processed</strong> beyond what is strictly necessary for the technical operation of the service and security, and what you choose to send us through the contact form (see section 3).</p>
             <ul>
                 <li><strong>No tracking:</strong> We do not use Google Analytics, tracking pixels, or any third-party marketing tools.</li>
                 <li><strong>No cookies:</strong> We do not set any tracking cookies on your device.</li>
@@ -53,12 +53,23 @@
             </ul>
             <p>These temporary logs are not shared with any third party and are automatically rotated and deleted after a short period.</p>
 
-            <h3>3. Your Rights</h3>
+            <h3>3. Contact Form</h3>
             <p>
-                Under the General Data Protection Regulation (GDPR), you have the right to access, rectify, or erase any personal data concerning you. However, since we do not require account creation and do not associate uploaded configurations with identifiable individuals (we do not collect names or emails), we generally cannot identify which data belongs to you.
+                When you write to us through the <a href="{{ url_for('contact.contact_form') }}">contact form</a>, we receive by email your message, the card reference if you give one, your email address if you choose to give it (it is optional), and your IP address and browser User-Agent (to fight spam and abuse).
+            </p>
+            <ul>
+                <li><strong>Purpose:</strong> answering your message and fixing the problem you report (for example adding support for your controller). Nothing else: no newsletter, no profiling, no sharing with third parties.</li>
+                <li><strong>Storage:</strong> the message is only kept in the maintainers' mailbox (hosted by Purelymail). It is not stored in the website's database.</li>
+                <li><strong>Legal basis:</strong> Legitimate Interest (Article 6(1)(f) GDPR), and your consent for the optional email address.</li>
+                <li><strong>Retention:</strong> as long as needed to handle your request; you can ask for its deletion at any time through the same form.</li>
+            </ul>
+
+            <h3>4. Your Rights</h3>
+            <p>
+                Under the General Data Protection Regulation (GDPR), you have the right to access, rectify, or erase any personal data concerning you. However, since we do not require account creation and do not associate uploaded configurations with identifiable individuals (we do not collect names, and an email address only when you give one in the contact form), we generally cannot identify which data belongs to you.
             </p>
             <p>
-                If you wish to have a configuration you uploaded removed, please contact the administrators via the community forums linked in the footer, providing the unique 6-character ID of the configuration to prove it is the one you wish to delete.
+                If you wish to have a configuration you uploaded removed, please contact the administrators through the <a href="{{ url_for('contact.contact_form') }}">contact form</a> or the community forums linked in the footer, providing the unique 6-character ID of the configuration to prove it is the one you wish to delete.
             </p>
         </div>
 

@@ -15,6 +15,7 @@
         {% if errors.unhandled_devices_warnings %}
         <div class="alert alert-warning">
             {{ errors.unhandled_devices_warnings|safe }}
+            <p class="alert-action"><a href="{{ url_for('contact.contact_form', subject='controller', card=run_id) }}">Report this controller through the contact form</a></p>
         </div>
         {% endif %}
 
@@ -51,9 +52,9 @@
                 <li>{{ device }}</li>
                 {% endfor %}
             </ul>
-            <p>These controllers do not have a visual layout yet. Please report them in the <a
-                    href="https://forums.frontier.co.uk/threads/627609/" target="_blank" rel="noopener">official forum
-                    thread</a> so we can add support for them.</p>
+            <p>These controllers do not have a visual layout yet. Please report them <a
+                    href="{{ url_for('contact.contact_form', subject='controller', card=run_id) }}">through the contact form</a>
+                (your card reference is filled in for you) so we can add support for them.</p>
         </div>
         {% endif %}
 

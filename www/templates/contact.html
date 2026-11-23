@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - EDRefCard{% endblock %}
+
+{% block content %}
+<div id="container">
+    <div id="banner">
+        <h1>Contact</h1>
+        <p class="text-muted">A missing controller, a wrong card, anything else: write to the maintainers</p>
+        <a href="{{ url_for('web.index') }}" class="banner-home-link" title="Return to homepage">✕</a>
+    </div>
+
+    <div id="content" class="text-left contact-page">
+        {% if sent %}
+        <div class="alert alert-success" role="status">
+            <p><strong>Message sent, thank you.</strong></p>
+            <p>We read every message. If you left an address, we will reply by email.</p>
+            <p><a href="{{ url_for('web.index') }}">Back to the home page</a></p>
+        </div>
+        {% elif not available %}
+        <div class="alert alert-warning">
+            <p><strong>The contact form is unavailable at the moment.</strong></p>
+            <p>Please post your message on <a href="{{ forum_url }}">the thread on the official Elite: Dangerous forums</a> instead.</p>
+        </div>
+        {% else %}
+
+        {% if errors %}
+        <div class="alert alert-error" role="alert">
+            {% for error in errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('contact.contact_form') }}" class="contact-form">
+            <input type="hidden" name="token" value="{{ token }}">
+
+            <div class="form-section">
+                <div class="field">
+                    <label for="subject">What is it about?</label>
+                    <select id="subject" name="subject" required>
+                        <option value="" {% if not values.subject %}selected{% endif %} disabled>Choose…</option>
+                        {% for key, label in subjects.items() %}
+                        <option value="{{ key }}" {% if values.subject == key %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="card">Card reference <span class="text-muted">(optional)</span></label>
+                    <input type="text" id="card" name="card" value="{{ values.card }}" maxlength="250"
+                        placeholder="custom-4-2-s8j5" autocomplete="off" spellcheck="false">
+                    <p class="field-help">The end of your card's address (edrefcard.info/binds/<strong>custom-4-2-s8j5</strong>).
+                        With it we can read your bindings file and your controller's hardware IDs, so there is nothing to attach.</p>
+                </div>
+
+                <div class="field">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="8" required maxlength="{{ message_max }}"
+                        placeholder="Which controller, what looks wrong on the card, what you expected…">{{ values.message }}</textarea>
+                </div>
+
+                <div class="field">
+                    <label for="email">Your email <span class="text-muted">(optional, only if you want a reply)</span></label>
+                    <input type="email" id="email" name="email" value="{{ values.email }}" maxlength="254"
+                        autocomplete="email" placeholder="cmdr@example.com">
+                </div>
+
+                <div class="field-trap" aria-hidden="true">
+                    <label for="{{ honeypot }}">Leave this field empty</label>
+                    <input type="text" id="{{ honeypot }}" name="{{ honeypot }}" value="" tabindex="-1" autocomplete="off">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Send message</button>
+            <p class="field-help contact-privacy">Your message, your address and your IP address go to the maintainers' mailbox
+                and are only used to answer you. See the <a href="{{ url_for('web.privacy') }}">privacy policy</a>.</p>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
