@@ -189,6 +189,43 @@ def logout_session_user():
     session.pop('edrc_user', None)
 
 
+def own_account_can_change_password():
+    """True for a named account signed in with the form; False for the env
+    admin and HTTP Basic, whose password lives in the environment."""
+    u = session.get('edrc_user')
+    return bool(_session_user() and isinstance(u, dict) and u.get('src') == 'db')
+
+
+def change_own_password(current_password, new_password, confirmation):
+    """Change the signed-in named account's password. Returns an error message,
+    or None on success. The session gets the new stamp, so this browser stays
+    signed in while the sessions opened elsewhere with the old password end."""
+    from werkzeug.security import check_password_hash, generate_password_hash
+    from scripts import database
+
+    if not own_account_can_change_password():
+        return 'This account is configured on the server; its password cannot be changed here.'
+    row = database.get_user_by_username(session['edrc_user']['name'])
+    if not row or not check_password_hash(row['password_hash'], current_password or ''):
+        admin_logger.warning(f"PASSWORD CHANGE FAILED - User: {_sanitize_log(session['edrc_user']['name'])}"
+                             f" | IP: {_sanitize_log(request.remote_addr)}")
+        return 'Your current password is incorrect.'
+    if len(new_password or '') < 8:
+        return 'The new password must be at least 8 characters long.'
+    if len(new_password) > 256:
+        return 'The new password must be at most 256 characters long.'
+    if new_password != confirmation:
+        return 'The two new passwords do not match.'
+    if new_password == current_password:
+        return 'The new password is the same as the current one.'
+    password_hash = generate_password_hash(new_password)
+    database.update_user_password(row['id'], password_hash)
+    session['edrc_user'] = {**session['edrc_user'], 'stamp': _credential_stamp(password_hash)}
+    admin_logger.info(f"PASSWORD CHANGED - User: {_sanitize_log(row['username'])}"
+                      f" | IP: {_sanitize_log(request.remote_addr)}")
+    return None
+
+
 def current_user():
     """Resolve the request's (name, role): session first, then HTTP Basic
     against the env admin credentials. (None, None) when unauthenticated."""

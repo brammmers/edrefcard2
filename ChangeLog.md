@@ -21,7 +21,8 @@ Everything merged into `main` since 2.2.0. Since 16 November 2026 this code serv
   variant ID to a known controller; duplication with an optional mirror for left and right variants.
 * **Mapper accounts and review**: `admin` and `mapper` roles with session login (`/admin/users`); every save is
   a draft, an admin reviews the changes with layout previews and publishes; full version history with rollback,
-  audit trail, concurrent-edit protection, recovery of unsaved work, Discord notifications.
+  audit trail, concurrent-edit protection, recovery of unsaved work, Discord notifications. Each named account
+  changes its own password (`/admin/account/password`); its other sessions end.
 * **Photo-less cards**: a controller without a mapping or a template gets a text card listing its bindings by
   group instead of an error.
 * The public `/devices` page lists the published mappings, and the mapper guide is available in the panel
