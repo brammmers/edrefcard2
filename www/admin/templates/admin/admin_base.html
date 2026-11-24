@@ -251,6 +251,7 @@
 
         input[type="text"],
         input[type="search"],
+        input[type="password"],
         select {
             width: 100%;
             padding: 0.5rem 0.75rem;
@@ -435,6 +436,10 @@
             <a href="{{ url_for('admin.users') }}"
                 class="nav-item {% if request.endpoint == 'admin.users' %}active{% endif %}">
                 <span>👥</span> Users
+            </a>
+            <a href="{{ url_for('admin.account_password') }}"
+                class="nav-item {% if request.endpoint == 'admin.account_password' %}active{% endif %}">
+                <span>🔑</span> My password
             </a>
             <a href="/" class="nav-item">
                 <span>🏠</span> Back to Site

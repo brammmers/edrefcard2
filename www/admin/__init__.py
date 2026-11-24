@@ -15,7 +15,8 @@ from scripts.parser import ALL_DISPLAY_GROUPS
 from scripts.models import Config, Errors
 from extensions import limiter
 from .auth import (require_admin, require_mapper, current_user,
-                   login_session_user, logout_session_user)
+                   login_session_user, logout_session_user,
+                   own_account_can_change_password, change_own_password)
 
 
 
@@ -891,6 +892,24 @@ def login():
 def logout():
     logout_session_user()
     return redirect(url_for('admin.login'))
+
+
+@admin_bp.route('/account/password', methods=['GET', 'POST'])
+@limiter.limit("10 per hour", methods=['POST'])
+@require_mapper
+def account_password():
+    """Any named account (mapper or admin) changes its own password."""
+    error = None
+    if request.method == 'POST':
+        error = change_own_password(request.form.get('current_password', ''),
+                                    request.form.get('new_password', ''),
+                                    request.form.get('confirm_password', ''))
+        if error is None:
+            flash('Your password has been changed.', 'success')
+            return redirect(url_for('admin.account_password'))
+    name, _ = current_user()
+    return render_template('admin/account_password.html', error=error, name=name,
+                           can_change=own_account_can_change_password())
 
 
 @admin_bp.route('/users')
