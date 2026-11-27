@@ -94,6 +94,13 @@ def apply_legacy_device_aliases(aliases):
         for field in ('HandledDevices', 'KeyDevices'):
             if field in target and device_id not in target[field]:
                 target[field].append(device_id)
+        # The box positions are stored per hardware ID: without a copy, the new
+        # ID was recognised but its card came out empty.
+        if device_id not in hotasDetails:
+            source = next((d for d in target['HandledDevices']
+                           if d != device_id and d in hotasDetails), None)
+            if source is not None:
+                hotasDetails[device_id] = hotasDetails[source]
 
 #controls went in here!
 
