@@ -320,11 +320,7 @@ class RenderingSafetyTests(unittest.TestCase):
             self.skipTest('lxml required')
         controls = {name:{'Name':name,'Group':'Ship','Type':'Digital'}
                     for name in ['Left','Right','Empty','MissingKey']}
-        parser = functions('www/scripts/parser.py',['parseBindings','_rewriteVPCDevice'], {
-            '__name__':'standalone_probe', 'etree':etree, 'html':__import__('html'),
-            'OrderedDict':OrderedDict, 'controls':controls, 'supportedDevices':{},
-            'logError':lambda *args:None, 'mapping_software_warning':runtime.mapping_software_warning,
-        })
+        parser = self._parser(etree, controls, {})
         errors = SimpleNamespace(errors='',deviceWarnings='Old TARGET warning')
         xml = '<Root><Empty><Primary/><Secondary Device="{NoDevice}"/></Empty>' \
               '<MissingKey><Primary Device="TEST"/></MissingKey>' \
@@ -337,6 +333,46 @@ class RenderingSafetyTests(unittest.TestCase):
         self.assertEqual(actions['Right']['InputKey'],'Pos_Joy_RYAxis')
         self.assertEqual(errors.deviceWarnings,'')
         self.assertNotIn('InputKey',controls['Left'])
+
+    @staticmethod
+    def _parser(etree, controls, supported):
+        return functions('www/scripts/parser.py',
+                         ['parseBindings','_rewriteVPCDevice','_gamepadDevice'], {
+            '__name__':'standalone_probe', 'etree':etree, 'html':__import__('html'),
+            'OrderedDict':OrderedDict, 'controls':controls, 'supportedDevices':supported,
+            'logError':lambda *args:None, 'mapping_software_warning':runtime.mapping_software_warning,
+        })
+
+    def test_unknown_pad_in_xbox_mode_uses_the_gamepad_card(self):
+        try:
+            from lxml import etree
+        except ImportError:
+            self.skipTest('lxml required')
+        controls = {name:{'Name':name,'Group':'Ship','Type':'Digital'}
+                    for name in ['Fire','Boost','Throttle','Roll','EliteFire']}
+        gamepad = {'Template':'xbox','HandledDevices':['GamePad']}
+        elite = {'Template':'xboxelite','HandledDevices':['045E02E3']}
+        parser = self._parser(etree, controls, {'GamePad':gamepad,'XBoxElite':elite})
+        xml = '<Root>' \
+              '<Fire><Primary Device="2DC8310B" Key="GamePad_FaceDown"/></Fire>' \
+              '<Boost><Primary Device="2DC8310B" Key="GamePad_FaceUp">' \
+              '<Modifier Device="2DC8310B" Key="GamePad_LBumper"/></Primary></Boost>' \
+              '<Throttle><Primary Device="2DC8310B" Key="Pos_GamePad_RTrigger"/></Throttle>' \
+              '<Roll><Primary Device="2DC8310B" Key="Joy_XAxis"/></Roll>' \
+              '<EliteFire><Primary Device="045E02E3" Key="GamePad_FaceDown"/></EliteFire></Root>'
+        physical, modifiers, devices = parser['parseBindings'](
+            'test', xml, ['Ship'], SimpleNamespace(errors='', deviceWarnings=''))
+        self.assertIs(devices['GamePad::0'], gamepad)
+        self.assertIn('GamePad::0::GamePad_FaceDown', physical)
+        self.assertIn('GamePad::0::GamePad_RTrigger', physical)
+        # the modifier follows its pad, so the card can draw it
+        self.assertEqual(modifiers['GamePad::0::GamePad_LBumper'][0]['Device'], 'GamePad')
+        self.assertIn('GamePad::0::GamePad_LBumper',
+                      physical['GamePad::0::GamePad_FaceUp']['Binds'])
+        # joystick keys on the same ID and pads with their own card are left alone
+        self.assertIn('2DC8310B::0::Joy_XAxis', physical)
+        self.assertIs(devices['045E02E3::0'], elite)
+        self.assertIn('045E02E3::0::GamePad_FaceDown', physical)
 
 
 class FlowLayoutAndPrecedenceTests(unittest.TestCase):

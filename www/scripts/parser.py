@@ -143,6 +143,7 @@ def parseBindings(runId, xml, displayGroups, errors):
         )
 
         key = xmlBinding.get('Key')
+        device = _gamepadDevice(device, deviceIndex, key)
 
         # Remove Neg_ and Pos_ prefixes for digital buttons on analogue devices
         if key is not None:
@@ -152,7 +153,9 @@ def parseBindings(runId, xml, displayGroups, errors):
                 key = key.replace('Pos_', '', 1)
 
         def modifierSortKey(modifierInfo):
-            modifierDevice = modifierInfo.get('Device')
+            modifierDevice = _gamepadDevice(modifierInfo.get('Device'),
+                                            modifierInfo.get('DeviceIndex', 0),
+                                            modifierInfo.get('Key'))
             if modifierDevice == 'T16000M' and hasT16000MThrottle:
                 modifierDevice = 'T16000MFCS'
             return '%s::%s::%s' % (
@@ -184,7 +187,9 @@ def parseBindings(runId, xml, displayGroups, errors):
                 # Create individual modifiers
                 for modifierInfo in modifiersInfo:
                     modifier = {'ModifierKey': modifiersKey}
-                    modifierDevice = modifierInfo.get('Device')
+                    modifierDevice = _gamepadDevice(modifierInfo.get('Device'),
+                                                    modifierInfo.get('DeviceIndex', 0),
+                                                    modifierInfo.get('Key'))
                     
                     if modifierDevice == 'T16000M' and hasT16000MThrottle:
                         modifierDevice = 'T16000MFCS'
@@ -269,6 +274,28 @@ def parseBindings(runId, xml, displayGroups, errors):
 
     errors.deviceWarnings = mapping_software_warning(devices)
     return (physicalKeys, modifiers, devices)
+
+
+def _gamepadDevice(device, deviceIndex, key):
+    """Draw an unknown pad in Xbox mode on the generic gamepad card.
+
+    Elite writes XInput pads as GamePad_* keys under the pad's own hardware ID
+    (8BitDo, GameSir, newer Microsoft pads...). The layout is the Xbox one
+    whatever the ID, so a device no template handles is renamed 'GamePad'.
+    Pads that have their own card (Xbox Elite, Steam...) keep it.
+    """
+    bare = key or ''
+    for prefix in ('Neg_', 'Pos_'):
+        if bare.startswith(prefix):
+            bare = bare[len(prefix):]
+    if not bare.startswith('GamePad_') or device == 'GamePad':
+        return device
+    deviceKey = '%s::%s' % (device, deviceIndex)
+    for supportedDevice in supportedDevices.values():
+        handled = supportedDevice['HandledDevices']
+        if device in handled or deviceKey in handled:
+            return device
+    return 'GamePad'
 
 
 def _rewriteVPCDevice(device, deviceIndex, vpcCM3Throttle32buttonmode):
