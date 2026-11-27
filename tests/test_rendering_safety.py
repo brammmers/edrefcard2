@@ -32,6 +32,7 @@ class DrawingProbe:
         self.written = []
         self.lines = []
         self.circles = []
+        self.rectangles = []
 
     def push(self):
         self.balance += 1
@@ -49,7 +50,7 @@ class DrawingProbe:
         self.written.append(kwargs)
 
     def rectangle(self, **kwargs):
-        pass
+        self.rectangles.append(kwargs)
 
     def line(self, *args):
         self.lines.append((args, self.stroke_color, self.stroke_width))
@@ -85,7 +86,7 @@ class RenderingSafetyTests(unittest.TestCase):
                               'calculateBestFitFontSize', 'calculateBestFontSize'], {
             'math': math, 'Image': ImageProbe, 'Color': lambda c: c,
             'getFontPath': lambda *args: 'test-font', 'layoutText': layout,
-            '_LEADER_COLOR': '#962320', '_SYMBOL_GLYPHS': {'press':'0','up':'^','stage1':'stage 1'},
+            '_LEADER_COLOR': '#962320', '_LEADER_EDGE': 12, '_SYMBOL_GLYPHS': {'press':'0','up':'^','stage1':'stage 1'},
             'normalize_input': runtime.normalize_input, 'matches_input': runtime.matches_input,
             'groupStyles': {'Ship': style, 'Modifier': style, 'General': style},
             'categoryStyles': {'General': style},
@@ -124,6 +125,29 @@ class RenderingSafetyTests(unittest.TestCase):
                          [(p,'#962320',7) for p in route])
         self.assertEqual(context.circles[0][0][0], (800,500))
 
+    def test_leader_runs_straight_when_the_control_is_level_with_the_box(self):
+        # Button 10 px above the box middle: no small step at midx.
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'box_xy':[100,200], 'box_wh':[400,120], 'button_xy':[800,250], 'rows':[{}]})
+        route = [((500,250),(650,250)), ((650,250),(800,250))]
+        self.assertEqual(context.lines, [(p,'white',13) for p in route] +
+                         [(p,'#962320',7) for p in route])
+
+    def test_detour_level_with_the_box_leaves_it_at_that_height(self):
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'box_xy':[100,200], 'box_wh':[400,120], 'button_xy':[800,500],
+            'leader_via_y':300, 'rows':[{}]})
+        route = [((500,300),(650,300)), ((650,300),(800,300)), ((800,300),(800,500))]
+        self.assertEqual(context.lines[:3], [(p,'white',13) for p in route])
+
+    def test_leader_too_close_to_the_box_edge_still_starts_from_the_middle(self):
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'box_xy':[100,200], 'box_wh':[400,120], 'button_xy':[800,205], 'rows':[{}]})
+        self.assertEqual(context.lines[0][0], ((500,260),(650,260)))
+
     def test_long_number_label_widens_its_column_instead_of_touching_the_text(self):
         boxes = {}
         for number in ('27', 'M2 27'):
@@ -135,12 +159,33 @@ class RenderingSafetyTests(unittest.TestCase):
         self.assertEqual(boxes['M2 27'] - boxes['27'], 28)
 
     def test_compact_leader_starts_at_actual_frame_not_reserved_height(self):
+        # Control below the reserved area: the shrunk box stays at the top and
+        # the leader leaves its real middle, not the reserved one.
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'label':'Compact', 'box_xy':[100,200], 'box_wh':[900,600],
+            'button_xy':[50,900], 'rows':[{}]}, compact=True)
+        self.assertEqual(context.lines[0][0][0], (100,247))
+        self.assertEqual(context.circles[0][0][0], (50,900))
+
+    def test_compact_box_slides_to_its_control_for_a_straight_leader(self):
         context = DrawingProbe()
         self.env['_drawDataDrivenBox'](context, None, {
             'label':'Compact', 'box_xy':[100,200], 'box_wh':[900,600],
             'button_xy':[50,500], 'rows':[{}]}, compact=True)
-        self.assertEqual(context.lines[0][0][0], (100,247))
-        self.assertEqual(context.circles[0][0][0], (50,500))
+        self.assertEqual(context.lines[0][0], ((100,500),(75,500)))
+        self.assertEqual(len(context.lines), 4)   # two straight segments, halo + stroke
+
+    def test_compact_box_never_leaves_its_reserved_area(self):
+        context = DrawingProbe()
+        self.env['_drawDataDrivenBox'](context, None, {
+            'label':'Compact', 'box_xy':[100,200], 'box_wh':[900,600],
+            'button_xy':[50,795], 'rows':[{}]}, compact=True)
+        frames = [r for r in context.rectangles if r.get('width') == 900]
+        self.assertTrue(frames)
+        for r in frames:
+            self.assertGreaterEqual(r['top'], 200)
+            self.assertLessEqual(r['top'] + r['height'], 800)
 
     def test_no_anchor_or_imported_pdf_has_no_new_leader_or_endpoint(self):
         for extra in [{}, {'button_xy':[800,500], 'no_chrome':True}]:

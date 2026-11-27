@@ -1350,6 +1350,7 @@ def calculateBestFontSize(context, text, hotasDetail, biggestFontSize):
 # layoutText (added in a later step).
 
 _LEADER_COLOR = '#962320'
+_LEADER_EDGE = 12   # a straight leader keeps this far from the box's top and bottom edges
 
 
 # Legacy EdRefCard uses TEXT glyphs in the symbol column (matches the reference
@@ -1460,7 +1461,14 @@ def _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling='Gro
     if compact and chrome:
         row_heights, biggestFontSize = _dataDrivenRowHeights(
             context, sourceImg, rows, w, h - header_h, biggestFontSize)
-        h = header_h + sum(row_heights)
+        reserved_h, h = h, header_h + sum(row_heights)
+        # The shrunk box slides inside its reserved area to the height its
+        # leader runs at, so the leader leaves it straight (no small step).
+        anchor = box.get('button_xy')
+        if anchor:
+            level = box.get('leader_via_y', anchor[1])
+            if y <= level <= y + reserved_h:
+                y = min(max(level - h / 2, y), y + reserved_h - h)
 
     # Leader line (orthogonal elbow) from the box side facing the button to the button point
     btn = box.get('button_xy') if chrome else None
@@ -1469,16 +1477,20 @@ def _drawDataDrivenBox(context, sourceImg, box, biggestFontSize=40, styling='Gro
         context.push()
         context.fill_color = Color('transparent')
         sx = x + w if bx >= x + w else x
-        sy = y + h / 2
-        midx = (sx + bx) / 2
         # Optional detour for a control boxed in by its neighbours (e.g. a hat
         # between two buttons): run above or below the hardware at leader_via_y,
         # then drop vertically onto the centre of the control.
         via = box.get('leader_via_y')
+        level = via if via is not None else by
+        # Leave the box at the height the line runs at when that height is
+        # beside the box: a straight line instead of a small step at midx.
+        sy = level if y + _LEADER_EDGE <= level <= y + h - _LEADER_EDGE else y + h / 2
+        midx = (sx + bx) / 2
         if via is not None:
             points = [(sx, sy), (midx, sy), (midx, via), (bx, via), (bx, by)]
         else:
             points = [(sx, sy), (midx, sy), (midx, by), (bx, by)]
+        points = [p for i, p in enumerate(points) if i == 0 or p != points[i - 1]]
         # Keep the stored layout and existing route. A white halo separates the
         # stronger red leader from dark hardware without changing its anchor.
         for color, width in [('white', 13), (_LEADER_COLOR, 7)]:
