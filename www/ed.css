@@ -144,6 +144,12 @@ a:hover {
   letter-spacing: 2px;
 }
 
+/* A long title wraps instead of running under the home/close button */
+#banner:has(.banner-home-link) h1 {
+  padding: 0 72px; /* button inset (24px) + width (40px) + a gap */
+  text-wrap: balance;
+}
+
 #banner::after {
   content: '';
   display: block;
@@ -483,10 +489,20 @@ tr:hover td {
 }
 
 /* ===== List Pages ===== */
+#list {
+  position: relative;
+}
+
 #list h1 {
   text-align: left;
   font-size: 2rem;
   margin-bottom: var(--spacing-xl);
+  padding-right: 56px; /* room for the home/close button */
+}
+
+#list .banner-home-link {
+  top: 0;
+  right: 0;
 }
 
 /* Search Form */
