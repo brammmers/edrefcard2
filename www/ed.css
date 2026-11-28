@@ -483,10 +483,20 @@ tr:hover td {
 }
 
 /* ===== List Pages ===== */
+#list {
+  position: relative;
+}
+
 #list h1 {
   text-align: left;
   font-size: 2rem;
   margin-bottom: var(--spacing-xl);
+  padding-right: 56px; /* room for the home/close button */
+}
+
+#list .banner-home-link {
+  top: 0;
+  right: 0;
 }
 
 /* Search Form */
